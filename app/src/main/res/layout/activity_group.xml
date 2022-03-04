@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/floral"
+    tools:context=".GroupActivity"
+    android:orientation="vertical">
+
+
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/tablayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/transparent"
+        android:elevation="0dp">
+
+        <com.google.android.material.tabs.TabItem
+            android:id="@+id/tabmiembros"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Miembros"
+            android:icon="@drawable/ic_users_brown"/>
+
+        <com.google.android.material.tabs.TabItem
+            android:id="@+id/tabchat"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Chat"
+            android:icon="@drawable/ic_chat_multiple_white"/>
+
+        <com.google.android.material.tabs.TabItem
+            android:id="@+id/tabtareas"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Tareas"
+            android:icon="@drawable/ic_list_task_white"/>
+    </com.google.android.material.tabs.TabLayout>
+
+    <androidx.viewpager.widget.ViewPager
+        android:id="@+id/viewpager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"></androidx.viewpager.widget.ViewPager>
+</LinearLayout>

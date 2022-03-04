@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/cuadricula"
+    tools:context=".ChatActivity">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="66dp"
+        android:layout_marginStart="-10dp"
+        android:layout_marginTop="-10dp"
+        android:layout_marginEnd="-10dp"
+        android:background="@drawable/search_background"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+        <LinearLayout
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:background="@drawable/search_background"
+            >
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:src="@drawable/ic_arrow_back_brown"
+                android:padding="4dp"/>
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Nombre del usuario"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:textStyle="bold"
+            android:textColor="@color/coffee"
+            android:textSize="18dp"/>
+    </androidx.appcompat.widget.Toolbar>
+
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/messagesRecylerView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="21dp"
+        android:layout_marginEnd="21dp"
+        app:layout_constraintBottom_toTopOf="@+id/constraintLayout2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar"
+        tools:listitem="@layout/item_message" />
+
+    <GridLayout
+        android:layout_width="match_parent"
+        android:layout_height="98dp"
+        android:alignmentMode="alignMargins"
+        android:columnCount="3"
+        android:columnOrderPreserved="false"
+        android:rowCount="1"
+        android:layout_marginStart="21dp"
+        android:layout_marginEnd="21dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/constraintLayout2"
+        app:layout_constraintStart_toStartOf="parent">
+        
+        <LinearLayout
+            android:layout_width="118dp"
+            android:layout_height="match_parent"
+            android:background="@drawable/search_background"
+
+            >
+
+            <Button
+                android:paddingLeft="10dp"
+                android:layout_width="118dp"
+                android:layout_height="32dp"
+                android:background=""
+                android:gravity="left"
+
+                android:text="Galeria"
+                android:textColor="@color/coffee"
+                android:textSize="11dp"
+                android:textStyle="bold"
+
+                app:icon="@drawable/ic_image_brown"
+                app:iconPadding="4dp"
+                app:iconTint="@color/coffee"/>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="118dp"
+            android:layout_height="match_parent"
+            android:background="@drawable/search_background"
+            android:layout_marginLeft="-10dp"
+
+           >
+
+            <Button
+                android:layout_width="118dp"
+                android:layout_height="32dp"
+                android:background=""
+                android:gravity="left"
+                android:paddingLeft="10dp"
+
+                android:text="Archivo"
+                android:textColor="@color/coffee"
+                android:textSize="11dp"
+                android:textStyle="bold"
+
+                app:icon="@drawable/ic_paper_clip_brown"
+                app:iconPadding="4dp"
+                app:iconTint="@color/coffee" />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="118dp"
+            android:layout_height="match_parent"
+            android:background="@drawable/search_background"
+            android:layout_marginLeft="-10dp"
+            >
+
+            <Button
+                android:layout_width="118dp"
+                android:layout_height="32dp"
+                android:background=""
+                android:gravity="left"
+                android:paddingLeft="10dp"
+
+                android:text="Ubicar"
+                android:textColor="@color/coffee"
+                android:textSize="11dp"
+                android:textStyle="bold"
+
+                app:icon="@drawable/ic_map_pin_brown"
+                app:iconPadding="4dp"
+                app:iconTint="@color/coffee" />
+        </LinearLayout>
+    </GridLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/constraintLayout2"
+        android:layout_width="match_parent"
+        android:layout_height="76dp"
+        android:layout_marginStart="-10dp"
+        android:layout_marginEnd="-10dp"
+        android:layout_marginBottom="-10dp"
+        android:background="@drawable/search_background"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <EditText
+            android:id="@+id/messageTextField"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="32dp"
+            android:layout_marginBottom="11dp"
+            android:background="@drawable/search_background"
+            android:backgroundTint="@color/purrrpule"
+            android:backgroundTintMode="multiply"
+            android:ems="10"
+            android:hint="Escribe Mensaje"
+            android:inputType="textPersonName"
+            android:minHeight="41dp"
+            android:padding="13dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/sendMessageButton"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/sendMessageButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="30dp"
+            android:padding="12dp"
+            android:src="@drawable/ic_send_brown"
+            app:layout_constraintBottom_toBottomOf="@+id/messageTextField"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/messageTextField" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
