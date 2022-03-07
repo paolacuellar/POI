@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <item android:top="14dp"
+        android:width="20dp"
+        android:height="20dp"
+        android:gravity="right">
+        <rotate
+            android:fromDegrees="45"
+            android:pivotX="0%"
+            android:pivotY="0%"
+            android:toDegrees="0" >
+            <shape android:shape="rectangle" >
+                <size android:height="30dp"/>
+                <solid android:color="@color/mint" />
+                <corners
+                    android:radius="3dp"
+                    />
+                <stroke
+                    android:color="@color/coffee"
+                    android:width="2dp"
+                    />
+            </shape>
+        </rotate>
+    </item>
+
+    <item
+        android:right="18dp">
+        <shape xmlns:android="http://schemas.android.com/apk/res/android"
+            android:shape="rectangle">
+            <corners
+                android:radius="14dp"
+                />
+            <stroke
+                android:color="@color/coffee"
+                android:width="2dp"
+                />
+            <solid
+                android:color="@color/mint"/>
+        </shape>
+    </item>
+
+
+    <item android:top="14dp"
+        android:right="3dp"
+        android:width="20dp"
+        android:height="20dp"
+        android:gravity="right">
+        <rotate
+            android:fromDegrees="45"
+            android:pivotX="0%"
+            android:pivotY="0%"
+            android:toDegrees="0" >
+            <shape android:shape="rectangle" >
+                <size android:height="20dp"/>
+                <solid android:color="@color/mint" />
+                <corners
+                    android:radius="3dp"
+                    />
+            </shape>
+        </rotate>
+    </item>
+    <!--<item
+        android:right="50dp">
+        <shape xmlns:android="http://schemas.android.com/apk/res/android"
+            android:shape="rectangle">
+            <corners
+                android:radius="14dp"
+                />
+            <stroke
+                android:color="@color/coffee"
+                android:width="2dp"
+                />
+            <solid
+                android:color="@color/mint"/>
+        </shape>
+    </item>-->
+
+    <!--<item>
+        <vector xmlns:android="http://schemas.android.com/apk/res/android"
+            android:width="14dp"
+            android:height="15dp"
+            android:viewportWidth="14"
+            android:viewportHeight="15">
+            <path
+                android:fillColor="#FFB4E290"
+                android:pathData="M12.04 9.73c2-1.15 2-4.04 0-5.2L5.2 0.6c-2-1.16-4.5 0.29-4.5 2.6v7.9c0 2.3 2.5 3.74 4.5 2.59l6.84-3.95Z"/>
+        </vector>
+    </item>-->
+
+    <!--<item android:top="30dp">
+        <rotate
+            android:fromDegrees="45"
+            android:pivotX="50%"
+            android:pivotY="50%"
+            android:toDegrees="0" >
+            <shape android:shape="rectangle" >
+                <solid android:color="#CCC" />
+            </shape>
+        </rotate>
+    </item>-->
+    <!--<item android:left="0dp"
+        android:right="20dp">
+        <shape android:shape="rectangle" >
+            <solid android:color="#CCC" />
+
+            <corners android:radius="5dp" />
+        </shape>
+    </item>-->
+
+
+
+
+</layer-list>
+
