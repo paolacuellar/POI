@@ -66,7 +66,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/constraintLayout2"
         app:layout_constraintStart_toStartOf="parent">
-        
+        <!--
         <LinearLayout
             android:layout_width="118dp"
             android:layout_height="match_parent"
@@ -75,11 +75,11 @@
             >
 
             <Button
-                android:paddingLeft="10dp"
                 android:layout_width="118dp"
                 android:layout_height="32dp"
                 android:background=""
                 android:gravity="left"
+                android:paddingLeft="10dp"
 
                 android:text="Galeria"
                 android:textColor="@color/coffee"
@@ -88,7 +88,8 @@
 
                 app:icon="@drawable/ic_image_brown"
                 app:iconPadding="4dp"
-                app:iconTint="@color/coffee"/>
+                app:iconTint="@color/coffee"
+                tools:ignore="TouchTargetSizeCheck" />
         </LinearLayout>
         <LinearLayout
             android:layout_width="118dp"
@@ -112,7 +113,8 @@
 
                 app:icon="@drawable/ic_paper_clip_brown"
                 app:iconPadding="4dp"
-                app:iconTint="@color/coffee" />
+                app:iconTint="@color/coffee"
+                tools:ignore="TouchTargetSizeCheck" />
         </LinearLayout>
         <LinearLayout
             android:layout_width="118dp"
@@ -135,8 +137,10 @@
 
                 app:icon="@drawable/ic_map_pin_brown"
                 app:iconPadding="4dp"
-                app:iconTint="@color/coffee" />
+                app:iconTint="@color/coffee"
+                tools:ignore="TouchTargetSizeCheck" />
         </LinearLayout>
+        -->
     </GridLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout

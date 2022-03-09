@@ -3,27 +3,29 @@
     <string name="app_name">purrrfectPOI</string>
     <string name="login_lbl_header_login">Iniciar sesión</string>
     <string name="login_lbl_email">Email:</string>
-    <string name="login_input_email">Ingrese su Email</string>
     <string name="login_lbl_pw">Contraseña:</string>
-    <string name="login_input_pw">Ingrese su Contraseña</string>
     <string name="login_btn_login">Iniciar Sesión</string>
     <string name="login_lbl_registrarse">¿No tienes una cuenta? Registrate aqui</string>
 
     <string name="register_lbl_header_register">Nuevo usuario</string>
     <string name="register_lbl_email">Email:</string>
-    <string name="register_input_email">Ingrese su Email</string>
     <string name="register_lbl_pw">Contraseña:</string>
-    <string name="register_input_pw">Ingrese su Contraseña</string>
     <string name="register_lbl_nombre">Nombre:</string>
-    <string name="register_input_nombre">Ingrese su Nombre</string>
     <string name="register_lbl_ap_paterno">Ap. Paterno:</string>
-    <string name="register_input_ap_paterno">Ingrese su Ap. Paterno</string>
     <string name="register_lbl_ap_materno">Ap. Materno:</string>
-    <string name="register_input_ap_materno">Ingrese su Ap. Materno</string>
     <string name="register_lbl_carrera">Carrera:</string>
-
     <string name="register_btn_register">Registrarse</string>
-
     <string name="register_lbl_logguearse">¿Ya tienes una cuenta? Inicia sesion</string>
+
+    <string name="profile_btn_editar">Editar</string>
+
+    <string-array name="Carreras">
+        <item>LMAD</item>
+        <item>LCC</item>
+        <item>LA</item>
+        <item>LSTI</item>
+        <item>LM</item>
+        <item>LF</item>
+    </string-array>
 
 </resources>

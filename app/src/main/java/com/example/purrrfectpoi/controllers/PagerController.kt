@@ -10,19 +10,23 @@ import com.example.purrrfectpoi.fragments.GrupoTareasFragment
 
 class PagerController(private val myContext: Context,fm:FragmentManager,internal var totalTabs:Int):FragmentPagerAdapter(fm) {
 
-    override fun getItem(position: Int):Fragment {
-        when(position){
-            0->{
+    override fun getItem(position: Int): Fragment {
+        var fragmentReturned =  when (position) {
+            0 -> {
                 return GrupoMiembrosFragment()
             }
-            1->{
+            1 -> {
                 return GrupoChatFragment()
             }
-            2->{
+            2 -> {
                 return GrupoTareasFragment()
             }
-            else->null
+            else -> GrupoTareasFragment()
+            // TODO: ESTO NO DEBE IR AQUÍ, CÓMO SOLUCIONAR?
+
         }
+
+        return fragmentReturned
     }
 
     override fun getCount(): Int {
