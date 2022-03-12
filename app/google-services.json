@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "602747166747",
+    "project_id": "poi-firebase-lmad",
+    "storage_bucket": "poi-firebase-lmad.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:602747166747:android:921566c9b23939a75d98be",
+        "android_client_info": {
+          "package_name": "com.example.purrrfectpoi"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "602747166747-t35ujouu23gdcsuo7hejcnujt8b43slk.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBsh5i39RnJft4e06ats4Pf9tmzJMURGmU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "602747166747-t35ujouu23gdcsuo7hejcnujt8b43slk.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

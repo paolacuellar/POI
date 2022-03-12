@@ -12,10 +12,13 @@ import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import com.example.purrrfectpoi.Models.AuthModel
 import com.example.purrrfectpoi.fragments.ChatsFragment
 import com.example.purrrfectpoi.fragments.GruposFragment
 import com.example.purrrfectpoi.fragments.MuroFragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.firebase.analytics.FirebaseAnalytics
+import com.google.firebase.auth.FirebaseAuth
 import com.psm.hiring.Utils.DataManager
 import java.math.BigInteger
 import kotlin.system.exitProcess
@@ -42,8 +45,10 @@ class LoginActivity : AppCompatActivity() {
     //var UsuarioLoggin : Usuarios_Model? = Usuarios_Model();
 
 
-    var CorreoUsuario : String? = null
-    var PasswordUsuario : String? = null
+    //var CorreoUsuario : String? = null
+    //var PasswordUsuario : String? = null
+
+    var authLogin : AuthModel = AuthModel()
 
 
 
@@ -51,6 +56,12 @@ class LoginActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
+/*
+        val analytics = FirebaseAnalytics.getInstance(this)
+        val bundle = Bundle()
+        bundle.putString("message", "Integración de Firebase completa")
+        analytics.logEvent("InitScreen", bundle)
+*/
 
         DataManager.progressDialog = ProgressDialog(this)
 
@@ -72,11 +83,11 @@ class LoginActivity : AppCompatActivity() {
 
         val sharedPref = this?.getPreferences(Context.MODE_PRIVATE) ?: return
         val defaultValue = ""
-        val IdUsuarioActivo = sharedPref.getString("IdUsuarioActivo", defaultValue)
+        val emailUsuario = sharedPref.getString("emailUsuario", defaultValue)
 
 
-        if(IdUsuarioActivo != ""){
-            DataManager.IdUsuario = BigInteger(IdUsuarioActivo)
+        if(emailUsuario != ""){
+            DataManager.emailUsuario = emailUsuario
 
             val vIntent =  Intent(this, MainActivity::class.java)
             startActivity(vIntent)
@@ -91,21 +102,35 @@ class LoginActivity : AppCompatActivity() {
         DataManager.progressDialog!!.show()
 
 
-        CorreoUsuario = editTextEmail?.text.toString()
-        PasswordUsuario = editTextPassword?.text.toString()
+        authLogin.Email = editTextEmail?.text.toString()
+        authLogin.Password = editTextPassword?.text.toString()
 
-        if(CorreoUsuario!!.isNullOrEmpty() || PasswordUsuario!!.isNullOrEmpty()){
+        if(authLogin.Email.isEmpty() || authLogin.Password.isEmpty()){
 
-            if(editTextEmail?.text.isNullOrEmpty()){
+            if(authLogin.Email.isEmpty()){
                 editTextEmail?.setError("Inserte un correo valido")
             }
-            if(editTextPassword?.text.isNullOrEmpty()){
+            if(authLogin.Password.isEmpty()){
                 editTextPassword?.setError("Campo vacio")
             }
             if(DataManager.progressDialog!!.isShowing) DataManager.progressDialog!!.dismiss()
         }else{
-            val vIntent =  Intent(this, MainActivity::class.java)
-            startActivity(vIntent)
+
+            FirebaseAuth.getInstance ()
+                .signInWithEmailAndPassword (
+                    authLogin.Email,
+                    authLogin.Password
+                ).addOnCompleteListener() {
+                    if (it.isSuccessful) {
+                        DataManager.emailUsuario = authLogin.Email
+
+                        val vIntent = Intent(this, MainActivity::class.java)
+                        startActivity(vIntent)
+                    } else {
+                        DataManager.showAlert(this, "Hubo un error al iniciar sesión")
+                        if(DataManager.progressDialog!!.isShowing) DataManager.progressDialog!!.dismiss()
+                    }
+                }
         }
 
     }
@@ -116,7 +141,8 @@ class LoginActivity : AppCompatActivity() {
 
         val sharedPref = LoginActivity.instance?.getPreferences(Context.MODE_PRIVATE) ?: return
         with (sharedPref.edit()) {
-            putString("IdUsuarioActivo", "")
+            putString("emailUsuario", "")
+            FirebaseAuth.getInstance().signOut()
             apply()
         }
 

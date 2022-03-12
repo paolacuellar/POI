@@ -5,8 +5,18 @@
       <map>
         <entry key="..\:/Documentos/FCFM/8 Semestre/7mo Progra Orientada a la internet/PIA/POI/app/src/main/res/drawable-v24/button_with_border.xml" value="0.30104166666666665" />
         <entry key="..\:/Documentos/FCFM/8 Semestre/7mo Progra Orientada a la internet/PIA/POI/app/src/main/res/drawable-v24/header_with_border.xml" value="0.30104166666666665" />
+        <entry key="..\:/Documentos/FCFM/8 Semestre/7mo Progra Orientada a la internet/PIA/POI/app/src/main/res/drawable/chat_icon.xml" value="0.23817567567567569" />
+        <entry key="..\:/Documentos/FCFM/8 Semestre/7mo Progra Orientada a la internet/PIA/POI/app/src/main/res/drawable/group_icon.xml" value="0.23817567567567569" />
+        <entry key="..\:/Documentos/FCFM/8 Semestre/7mo Progra Orientada a la internet/PIA/POI/app/src/main/res/drawable/ic_chat_multiple_brown.xml" value="0.23817567567567569" />
+        <entry key="..\:/Documentos/FCFM/8 Semestre/7mo Progra Orientada a la internet/PIA/POI/app/src/main/res/drawable/ic_chat_multiple_outlined_brown.xml" value="0.23817567567567569" />
+        <entry key="..\:/Documentos/FCFM/8 Semestre/7mo Progra Orientada a la internet/PIA/POI/app/src/main/res/drawable/ic_posts_brown.xml" value="0.23817567567567569" />
+        <entry key="..\:/Documentos/FCFM/8 Semestre/7mo Progra Orientada a la internet/PIA/POI/app/src/main/res/drawable/ic_posts_outlined_brown.xml" value="0.23817567567567569" />
+        <entry key="..\:/Documentos/FCFM/8 Semestre/7mo Progra Orientada a la internet/PIA/POI/app/src/main/res/drawable/ic_users_brown.xml" value="0.23817567567567569" />
+        <entry key="..\:/Documentos/FCFM/8 Semestre/7mo Progra Orientada a la internet/PIA/POI/app/src/main/res/drawable/ic_users_outlined_brown.xml" value="0.23817567567567569" />
         <entry key="..\:/Documentos/FCFM/8 Semestre/7mo Progra Orientada a la internet/PIA/POI/app/src/main/res/drawable/ic_users_white.xml" value="0.22135416666666666" />
         <entry key="..\:/Documentos/FCFM/8 Semestre/7mo Progra Orientada a la internet/PIA/POI/app/src/main/res/drawable/input_with_border.xml" value="0.30104166666666665" />
+        <entry key="..\:/Documentos/FCFM/8 Semestre/7mo Progra Orientada a la internet/PIA/POI/app/src/main/res/drawable/nav_item_colour_selected.xml" value="0.23817567567567569" />
+        <entry key="..\:/Documentos/FCFM/8 Semestre/7mo Progra Orientada a la internet/PIA/POI/app/src/main/res/drawable/post_icon.xml" value="0.23817567567567569" />
         <entry key="..\:/Documentos/FCFM/8 Semestre/7mo Progra Orientada a la internet/PIA/POI/app/src/main/res/drawable/search_background.xml" value="0.33697916666666666" />
         <entry key="..\:/Documentos/FCFM/8 Semestre/7mo Progra Orientada a la internet/PIA/POI/app/src/main/res/layout/activity_chat.xml" value="0.33" />
         <entry key="..\:/Documentos/FCFM/8 Semestre/7mo Progra Orientada a la internet/PIA/POI/app/src/main/res/layout/activity_group.xml" value="0.16148648648648647" />
@@ -19,9 +29,13 @@
         <entry key="..\:/Documentos/FCFM/8 Semestre/7mo Progra Orientada a la internet/PIA/POI/app/src/main/res/layout/fragment_grupos.xml" value="0.36666666666666664" />
         <entry key="..\:/Documentos/FCFM/8 Semestre/7mo Progra Orientada a la internet/PIA/POI/app/src/main/res/layout/fragment_muro.xml" value="0.36666666666666664" />
         <entry key="..\:/Documentos/FCFM/8 Semestre/7mo Progra Orientada a la internet/PIA/POI/app/src/main/res/layout/item_chat.xml" value="0.36666666666666664" />
-        <entry key="..\:/Documentos/FCFM/8 Semestre/7mo Progra Orientada a la internet/PIA/POI/app/src/main/res/layout/item_group.xml" value="0.1" />
+        <entry key="..\:/Documentos/FCFM/8 Semestre/7mo Progra Orientada a la internet/PIA/POI/app/src/main/res/layout/item_example.xml" value="0.67" />
+        <entry key="..\:/Documentos/FCFM/8 Semestre/7mo Progra Orientada a la internet/PIA/POI/app/src/main/res/layout/item_group.xml" value="0.18" />
         <entry key="..\:/Documentos/FCFM/8 Semestre/7mo Progra Orientada a la internet/PIA/POI/app/src/main/res/layout/item_reward.xml" value="0.9" />
         <entry key="..\:/Documentos/FCFM/8 Semestre/7mo Progra Orientada a la internet/PIA/POI/app/src/main/res/layout/item_reward2.xml" value="0.7454545454545455" />
+        <entry key="..\:/Documentos/FCFM/8 Semestre/7mo Progra Orientada a la internet/PIA/POI/app/src/main/res/layout/item_spinner.xml" value="0.19966216216216215" />
+        <entry key="..\:/Documentos/FCFM/8 Semestre/7mo Progra Orientada a la internet/PIA/POI/app/src/main/res/layout/list_item.xml" value="0.33" />
+        <entry key="..\:/Documentos/FCFM/8 Semestre/7mo Progra Orientada a la internet/PIA/POI/app/src/main/res/menu/menu_navigation.xml" value="0.2277027027027027" />
         <entry key="..\:/Users/PaolaAlejandra/AndroidStudioProjects/purrrfectPOI/app/src/main/res/drawable/chat_icon.xml" value="2.625" />
         <entry key="..\:/Users/PaolaAlejandra/AndroidStudioProjects/purrrfectPOI/app/src/main/res/drawable/group_icon.xml" value="0.3828125" />
         <entry key="..\:/Users/PaolaAlejandra/AndroidStudioProjects/purrrfectPOI/app/src/main/res/drawable/nav_item_colour_selected.xml" value="0.3828125" />
