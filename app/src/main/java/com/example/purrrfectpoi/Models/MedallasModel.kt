@@ -5,4 +5,6 @@ class MedallasModel {
     var Tipo : String = ""
     var CantidadRequerida : Int = 0
     var Foto : String = ""
+
+    var MedallaObtenida : Boolean = false
 }

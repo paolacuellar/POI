@@ -45,7 +45,8 @@ class MainActivity : AppCompatActivity() {
         val chatsFragment=ChatsFragment()
         val gruposFragment=GruposFragment()
 
-        setCurrentFragment(muroFragment) //TODO: COMO SETTEAR EN EL NAVBAR AL INICIO LA OPCION DE MURO?, DE MOMENTO SE SOLUCIONO PONIENDO AL FRAGMENT COMO PRIMERA OPCION
+        //TODO: COMO SETTEAR EN EL NAVBAR AL INICIO LA OPCION DE MURO?, DE MOMENTO SE SOLUCIONO PONIENDO AL FRAGMENT COMO PRIMERA OPCION
+        setCurrentFragment(muroFragment)
         this.titulo_pantalla!!.setText("Muro")
 
         val bottom_navigation=findViewById<BottomNavigationView>(R.id.bottom_navigation)
@@ -88,23 +89,6 @@ class MainActivity : AppCompatActivity() {
                 usuarioProfile.Foto =       if(it.get("Foto") != null)      it.get("Foto") as String else ""
 
                 if (usuarioProfile.Foto.isNotEmpty()) {
-                    /*
-                    val storageRef = FirebaseStorage.getInstance().reference.child("images/Usuarios/${usuarioProfile.Foto}")
-
-                    val localfile = File.createTempFile("tempImage", "jpg")
-                    storageRef.getFile(localfile)
-                        .addOnSuccessListener {
-
-                            val bitmap = BitmapFactory.decodeFile(localfile.absolutePath)
-                            image_Foto!!.setImageBitmap(bitmap)
-
-                        }
-                        .addOnFailureListener {
-                            Toast.makeText(this, "No pudo cargar la imagen del Usuario", Toast.LENGTH_SHORT).show()
-                        }
-
-                     */
-
                     FirebaseStorage.getInstance().getReference("images/Usuarios/${usuarioProfile.Foto}").downloadUrl
                         .addOnSuccessListener {
 
@@ -114,7 +98,7 @@ class MainActivity : AppCompatActivity() {
                         }
                 }
                 else {
-                    image_Foto!!.setImageResource(R.drawable.logo_app)
+                    image_Foto!!.setImageResource(R.drawable.foto_default_perfil)
                 }
             }
             .addOnFailureListener { exception ->

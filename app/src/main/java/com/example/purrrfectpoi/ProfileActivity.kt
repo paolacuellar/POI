@@ -1,32 +1,25 @@
 package com.example.purrrfectpoi
 
 import android.app.Activity
-import android.app.ProgressDialog
-import android.content.ContentValues
 import android.content.Intent
-import android.graphics.BitmapFactory
-import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Log
 import android.view.View
 import android.widget.*
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.purrrfectpoi.Models.MedallasModel
 import com.example.purrrfectpoi.Models.UsuariosModel
 import com.example.purrrfectpoi.adapters.MedallasAdapter
-import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.Query
 import com.google.firebase.storage.FirebaseStorage
-import com.google.firebase.storage.StorageReference
 import com.psm.hiring.Utils.DataManager
-import kotlinx.android.synthetic.main.item_group.view.*
-import java.io.File
 import java.util.*
-import kotlin.collections.ArrayList
 
 class ProfileActivity : AppCompatActivity() {
 
@@ -43,7 +36,7 @@ class ProfileActivity : AppCompatActivity() {
     var editTextApMaterno : EditText? = null;
 
     private lateinit var recyclerViewMedallas : RecyclerView
-    private lateinit var rewardsAdapter: MedallasAdapter
+    private lateinit var medallasAdapter: MedallasAdapter
 
     var usuarioProfile : UsuariosModel = UsuariosModel()
     var editable:Boolean = false
@@ -66,18 +59,16 @@ class ProfileActivity : AppCompatActivity() {
         this.editTextApMaterno = findViewById<EditText>(R.id.profile_input_ap_materno)
         this.recyclerViewMedallas = findViewById<RecyclerView>(R.id.profile_rv_medallas)
 
-        editTextNombre!!.isEnabled = false
-        editTextApPaterno!!.isEnabled = false
-        editTextApMaterno!!.isEnabled = false
+        habilitarBotones(false)
 
         setUpInfoProfile()
 
         this.btn_Editar?.setOnClickListener {
-            editarUsuario(this)
+            editarUsuario()
         }
 
         this.btn_Editar_Foto?.setOnClickListener {
-            editarFotoUsuario(this)
+            editarFotoUsuario()
         }
 
         this.navbar_back?.setOnClickListener {
@@ -90,7 +81,6 @@ class ProfileActivity : AppCompatActivity() {
             startActivity(vIntent)
         }
 
-
     }
 
     private fun setUpInfoProfile() {
@@ -101,11 +91,10 @@ class ProfileActivity : AppCompatActivity() {
                 usuarioProfile.Nombre =     if(it.get("Nombre") != null)    it.get("Nombre") as String else ""
                 usuarioProfile.ApPaterno =  if(it.get("ApPaterno") != null) it.get("ApPaterno") as String else ""
                 usuarioProfile.ApMaterno =  if(it.get("ApMaterno") != null) it.get("ApMaterno") as String else ""
-                usuarioProfile.Medallas =   if(it.get("Medallas") != null)  it.get("Medallas") as ArrayList<DocumentReference> else arrayListOf()
+                usuarioProfile.CantidadTareas =   if(it.get("CantidadTareas") != null)  it.get("CantidadTareas") as Long else 0
+                usuarioProfile.CantidadGrupos =   if(it.get("CantidadGrupos") != null)  it.get("CantidadGrupos") as Long else 0
+                usuarioProfile.CantidadPosts =   if(it.get("CantidadPosts") != null)  it.get("CantidadPosts") as Long else 0
                 usuarioProfile.Foto =       if(it.get("Foto") != null)      it.get("Foto") as String else ""
-
-
-                Log.w(TAG, "Medallas: ${usuarioProfile.Medallas}")
 
                 editTextNombre?.setText(usuarioProfile.Nombre)
                 editTextApPaterno?.setText(usuarioProfile.ApPaterno)
@@ -120,20 +109,11 @@ class ProfileActivity : AppCompatActivity() {
             }
     }
 
-    private fun editarUsuario(profileActivity: ProfileActivity) {
+    private fun editarUsuario() {
         if (!editable){
-            editTextNombre!!.isEnabled = true
-            editTextApPaterno!!.isEnabled = true
-            editTextApMaterno!!.isEnabled = true
-
-            editable = true
+            habilitarBotones(true)
         }
         else{
-            DataManager.progressDialog!!.setMessage("Ingresando")
-            DataManager.progressDialog!!.setCancelable(false)
-            DataManager.progressDialog!!.show()
-
-
             usuarioProfile.Nombre = editTextNombre?.text.toString()
             usuarioProfile.ApPaterno = editTextApPaterno?.text.toString()
             usuarioProfile.ApMaterno = editTextApMaterno?.text.toString()
@@ -153,9 +133,8 @@ class ProfileActivity : AppCompatActivity() {
                     editTextApMaterno?.setError("Campo vacio")
                 }
 
-                if(DataManager.progressDialog!!.isShowing) DataManager.progressDialog!!.dismiss()
             }else{
-
+                DataManager.showProgressDialog("Editando Perfil")
                 db.collection("Usuarios").document(DataManager.emailUsuario!!)
                     .update(
                         mapOf(
@@ -165,12 +144,7 @@ class ProfileActivity : AppCompatActivity() {
                         )
                     ).addOnCompleteListener{
                         if (it.isSuccessful) {
-                            editTextNombre!!.isEnabled = false
-                            editTextApPaterno!!.isEnabled = false
-                            editTextApMaterno!!.isEnabled = false
-
-                            editable = false
-
+                            habilitarBotones(false)
 
                             Toast.makeText(applicationContext, "Se ha editado con exito la información", Toast.LENGTH_SHORT).show()
                         }
@@ -178,17 +152,11 @@ class ProfileActivity : AppCompatActivity() {
                             DataManager.showAlert(this, "Se ha producido un error al editar el usuario")
                         }
                     }
-
-
             }
         }
     }
 
-    private fun editarFotoUsuario(profileActivity: ProfileActivity) {
-        startFileChooser()
-    }
-
-    private fun startFileChooser () {
+    private fun editarFotoUsuario () {
         var i = Intent ()
         i.setType ("image/*")
         i.setAction (Intent.ACTION_GET_CONTENT)
@@ -198,21 +166,15 @@ class ProfileActivity : AppCompatActivity() {
     override fun onActivityResult (requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
-        lateinit var filepath : Uri
-
         if (requestCode == 111 && resultCode == Activity.RESULT_OK && data != null)
         {
-            filepath = data!!.data!!
+            //Actualizar ImageView
+            var filepath = data!!.data!!
             var bitmap = MediaStore.Images.Media.getBitmap(contentResolver, filepath)
             image_Foto!!.setImageBitmap(bitmap)
 
-            var pd = ProgressDialog ( this)
-            pd.setTitle ("Uploading")
-            pd.show ()
-
-
-            var imageRef : StorageReference? = null
-            var pathImage : String = ""
+            //Subir Imagen a Firebase Storage y Actualizar campo "Foto" del Usuario
+            DataManager.showProgressDialog("Subiendo imagen")
 
             var editarPathFotoUsuario = false
             if (usuarioProfile.Foto.isEmpty()) {
@@ -220,14 +182,12 @@ class ProfileActivity : AppCompatActivity() {
                 editarPathFotoUsuario = true
             }
 
-            pathImage = "images/Usuarios/${usuarioProfile.Foto}"
+            var pathImage = "images/Usuarios/${usuarioProfile.Foto}"
 
-
-            imageRef = FirebaseStorage.getInstance().reference.child( pathImage)
-
+            var imageRef = FirebaseStorage.getInstance().reference.child( pathImage)
 
             imageRef.putFile (filepath)
-                .addOnSuccessListener { p0 ->
+                .addOnSuccessListener { responseImageUpload ->
                     if (editarPathFotoUsuario){
 
                         db.collection("Usuarios").document(DataManager.emailUsuario!!)
@@ -237,30 +197,27 @@ class ProfileActivity : AppCompatActivity() {
                                 )
                             ).addOnCompleteListener{
                                 if (it.isSuccessful) {
-                                    pd.dismiss()
+                                    DataManager.hideProgressDialog()
                                     Toast.makeText(applicationContext, "Foto del Usuario editada correctamente", Toast.LENGTH_LONG).show()
                                 }
                                 else{
-                                    pd.dismiss()
+                                    DataManager.hideProgressDialog()
                                     DataManager.showAlert(this, "Se ha producido un error al editar el usuario")
                                 }
                             }
-
-
                     }
                     else{
-                        pd.dismiss()
+                        DataManager.hideProgressDialog()
                         Toast.makeText(applicationContext, "Foto del Usuario editada correctamente", Toast.LENGTH_LONG).show()
                     }
-
                 }
-                .addOnFailureListener { p0 ->
-                    pd.dismiss()
-                    Toast.makeText(applicationContext, p0.message, Toast.LENGTH_LONG).show()
+                .addOnFailureListener { responseImageUpload ->
+                    DataManager.hideProgressDialog()
+                    Toast.makeText(applicationContext, responseImageUpload.message, Toast.LENGTH_LONG).show()
                 }
-                .addOnProgressListener { p0 ->
-                    var progress = (100.0 * p0.bytesTransferred) / p0.totalByteCount
-                    pd.setMessage("Uploaded ${progress.toInt()}%")
+                .addOnProgressListener { responseImageUpload ->
+                    var progressPercent = (100.0 * responseImageUpload.bytesTransferred) / responseImageUpload.totalByteCount
+                    DataManager.updateMessage("Uploaded ${progressPercent.toInt()}%")
                 }
 
         }
@@ -268,22 +225,7 @@ class ProfileActivity : AppCompatActivity() {
 
     private fun setUpImageUser(){
         if (usuarioProfile.Foto.isNotEmpty()) {
-            /*
-            val storageRef = FirebaseStorage.getInstance().reference.child("images/Usuarios/${usuarioProfile.Foto}")
-
-            val localfile = File.createTempFile("tempImage", "jpg")
-            storageRef.getFile(localfile)
-                .addOnSuccessListener {
-
-                    val bitmap = BitmapFactory.decodeFile(localfile.absolutePath)
-                    image_Foto!!.setImageBitmap(bitmap)
-
-                }
-                .addOnFailureListener {
-                    Toast.makeText(this, "No pudo cargar la imagen del Usuario", Toast.LENGTH_SHORT).show()
-                }
-            */
-
+            
             FirebaseStorage.getInstance().getReference("images/Usuarios/${usuarioProfile.Foto}").downloadUrl
                 .addOnSuccessListener {
 
@@ -293,81 +235,77 @@ class ProfileActivity : AppCompatActivity() {
                 }
         }
         else {
-            image_Foto!!.setImageResource(R.drawable.logo_app)
+            image_Foto!!.setImageResource(R.drawable.foto_default_perfil)
         }
     }
 
     private fun setupRecyclerView(){
-        db.collection("Medallas").get()
-            .addOnSuccessListener { medallas ->
+        db.collection("Medallas")
+            .orderBy("Tipo")
+            .orderBy("CantidadRequerida", Query.Direction.ASCENDING)
+            .get()
+            .addOnSuccessListener { responseMedallas ->
 
-                var medallasParam : MutableList<MedallasModel> = mutableListOf()
+                var listaMedallas : MutableList<MedallasModel> = mutableListOf()
 
-
-                for (medalla in medallas) {
-                    Log.d(TAG, "${medalla.id} => ${medalla.data}")
-
+                //TODO: VALIDAR QUE SI EL USUARIO YA TIENE LA MEDALLA O NO
+                for (responseMedalla in responseMedallas) {
                     var medallaAux = MedallasModel()
-                    medallaAux.Nombre = medalla.data.get("Nombre") as String
-                    medallaAux.Foto = medalla.data.get("Foto") as String
-                    medallaAux.Tipo = medalla.data.get("Tipo") as String
-                    medallaAux.CantidadRequerida = (medalla.data.get("CantidadRequerida") as Long).toInt()
-                    medallasParam.add(medallaAux)
+                    medallaAux.Nombre = responseMedalla.data.get("Nombre") as String
+                    medallaAux.Foto = responseMedalla.data.get("Foto") as String
+                    medallaAux.Tipo = responseMedalla.data.get("Tipo") as String
+                    medallaAux.CantidadRequerida = (responseMedalla.data.get("CantidadRequerida") as Long).toInt()
+
+                    medallaAux.MedallaObtenida =
+                    when (medallaAux.Tipo) {
+                        "Post" -> if (usuarioProfile.CantidadPosts >= medallaAux.CantidadRequerida) true else false
+                        "Grupo" -> if (usuarioProfile.CantidadGrupos >= medallaAux.CantidadRequerida) true else false
+                        "Tarea" -> if (usuarioProfile.CantidadTareas >= medallaAux.CantidadRequerida) true else false
+                        else -> false
+                    }
+
+                    listaMedallas.add(medallaAux)
                 }
 
-                //TODO: LA IDEA AQUI ES MANDAR medallas POR PARAMETRO, PERO NO SE PUEDE CASTEAR, POR LO QUE SE crea medallaAux
-
-
-                rewardsAdapter = MedallasAdapter(medallasParam)
+                medallasAdapter = MedallasAdapter(listaMedallas)
                 recyclerViewMedallas.apply {
-                    adapter = rewardsAdapter
+                    adapter = medallasAdapter
                     layoutManager = LinearLayoutManager(context)
                 }
             }
             .addOnFailureListener { exception ->
-                Log.w(TAG, "Error getting documents: ", exception)
+                Log.w(TAG, "Error al conseguir las medallas", exception)
             }
-
-
-        /*
-       if (!usuarioProfile.Medallas.isEmpty()) {
-
-           var stringMedalla : MutableList<String> = mutableListOf()
-           for (medalla in usuarioProfile.Medallas){
-               Log.d(TAG, "Id: ${medalla.id}")
-               Log.d(TAG, "Path: ${medalla.path}")
-
-               stringMedalla.add(medalla.id)
-           }
-
-
-
-
-           db.collection("Medallas").whereIn(FieldPath.documentId(), stringMedalla).get()
-               .addOnSuccessListener { medallas ->
-                   for (medalla in medallas) {
-                       Log.d(TAG, "${medalla.id} => ${medalla.data}")
-                   }
-
-                   //TODO: LA IDEA AQUI ES MANDAR medallas POR PARAMETRO
-                   rewardsAdapter = RewardsAdapter(medallas as MutableList<Medallas>)
-                   recyclerViewMedallas.apply {
-                       adapter = rewardsAdapter
-                       layoutManager = LinearLayoutManager(context)
-                   }
-               }
-               .addOnFailureListener { exception ->
-                   Log.w(TAG, "Error getting documents: ", exception)
-               }
-
-        }
-        else{
-            //MOSTRAR NOTA DE QUE NO HAY MEDALLAS
-        }
-
-        */
     }
 
+    private fun habilitarBotones(enable : Boolean) {
+        this.editable = enable
+
+        this.editTextNombre!!.isEnabled = enable
+        this.editTextApPaterno!!.isEnabled = enable
+        this.editTextApMaterno!!.isEnabled = enable
+
+        var background : Int? = null
+        var color : Int? = null
+        if (enable) {
+            background = R.drawable.search_background
+            color = R.color.black
+        }
+        else {
+            background = R.drawable.search_background_blocked
+            color = R.color.gray
+        }
+
+        this.editTextNombre!!.background = ContextCompat.getDrawable(this,background)
+        this.editTextApPaterno!!.background = ContextCompat.getDrawable(this, background)
+        this.editTextApMaterno!!.background = ContextCompat.getDrawable(this, background)
+
+
+        this.editTextNombre!!.setTextColor(ContextCompat.getColor(this, color))
+        this.editTextApPaterno!!.setTextColor(ContextCompat.getColor(this, color))
+        this.editTextApMaterno!!.setTextColor(ContextCompat.getColor(this, color))
+
+    }
 }
 
 

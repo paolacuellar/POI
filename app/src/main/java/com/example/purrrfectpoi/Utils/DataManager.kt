@@ -6,6 +6,7 @@ import android.content.Context
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.util.Log
+import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.LifecycleOwner
 import java.math.BigInteger
@@ -41,5 +42,23 @@ object DataManager {
         builder.setPositiveButton("Aceptar", null)
         val dialog: AlertDialog = builder.create()
         dialog.show()
+    }
+
+    fun showToast(context: Context, message: String){
+        Toast.makeText(context, message, Toast.LENGTH_LONG).show()
+    }
+
+    fun showProgressDialog(message: String){
+        this.progressDialog!!.setMessage(message)
+        this.progressDialog!!.setCancelable(false)
+        this.progressDialog!!.show()
+    }
+
+    fun updateMessage(message: String){
+        this.progressDialog!!.setMessage(message)
+    }
+
+    fun hideProgressDialog(){
+        if(this.progressDialog!!.isShowing) this.progressDialog!!.dismiss()
     }
 }

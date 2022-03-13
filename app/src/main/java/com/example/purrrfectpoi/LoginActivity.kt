@@ -1,6 +1,5 @@
 package com.example.purrrfectpoi
 
-import android.annotation.SuppressLint
 import android.app.ProgressDialog
 import android.content.Context
 import android.content.Intent
@@ -10,23 +9,14 @@ import android.util.Log
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
-import android.widget.Toast
-import androidx.fragment.app.Fragment
 import com.example.purrrfectpoi.Models.AuthModel
-import com.example.purrrfectpoi.fragments.ChatsFragment
-import com.example.purrrfectpoi.fragments.GruposFragment
-import com.example.purrrfectpoi.fragments.MuroFragment
-import com.google.android.material.bottomnavigation.BottomNavigationView
-import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.auth.FirebaseAuth
 import com.psm.hiring.Utils.DataManager
-import java.math.BigInteger
 import kotlin.system.exitProcess
 
 class LoginActivity : AppCompatActivity() {
 
     val TAG="LoginActivity"
-
 
     companion object {
         var instance: LoginActivity? = null
@@ -41,27 +31,12 @@ class LoginActivity : AppCompatActivity() {
     var editTextEmail : EditText? = null;
     var editTextPassword : EditText? = null;
 
-
-    //var UsuarioLoggin : Usuarios_Model? = Usuarios_Model();
-
-
-    //var CorreoUsuario : String? = null
-    //var PasswordUsuario : String? = null
-
     var authLogin : AuthModel = AuthModel()
-
-
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
-/*
-        val analytics = FirebaseAnalytics.getInstance(this)
-        val bundle = Bundle()
-        bundle.putString("message", "Integración de Firebase completa")
-        analytics.logEvent("InitScreen", bundle)
-*/
 
         DataManager.progressDialog = ProgressDialog(this)
 
@@ -70,10 +45,8 @@ class LoginActivity : AppCompatActivity() {
         this.editTextEmail = findViewById<EditText>(R.id.login_input_email)
         this.editTextPassword = findViewById<EditText>(R.id.login_input_pw)
 
-
         this.btn_Login?.setOnClickListener {
             logginUsuario(this)
-
         }
 
         this.lbl_Register?.setOnClickListener {
@@ -81,26 +54,12 @@ class LoginActivity : AppCompatActivity() {
             startActivity(vIntent)
         }
 
-        val sharedPref = this?.getPreferences(Context.MODE_PRIVATE) ?: return
-        val defaultValue = ""
-        val emailUsuario = sharedPref.getString("emailUsuario", defaultValue)
-
-
-        if(emailUsuario != ""){
-            DataManager.emailUsuario = emailUsuario
-
-            val vIntent =  Intent(this, MainActivity::class.java)
-            startActivity(vIntent)
-        }
+        revisarUsuarioLoggeadoCache()
     }
-
 
     fun logginUsuario(loginActivity: LoginActivity) {
 
-        DataManager.progressDialog!!.setMessage("Ingresando")
-        DataManager.progressDialog!!.setCancelable(false)
-        DataManager.progressDialog!!.show()
-
+        DataManager.showProgressDialog("Ingresando")
 
         authLogin.Email = editTextEmail?.text.toString()
         authLogin.Password = editTextPassword?.text.toString()
@@ -113,42 +72,47 @@ class LoginActivity : AppCompatActivity() {
             if(authLogin.Password.isEmpty()){
                 editTextPassword?.setError("Campo vacio")
             }
-            if(DataManager.progressDialog!!.isShowing) DataManager.progressDialog!!.dismiss()
+            DataManager.hideProgressDialog()
         }else{
 
             FirebaseAuth.getInstance ()
                 .signInWithEmailAndPassword (
                     authLogin.Email,
                     authLogin.Password
-                ).addOnCompleteListener() {
-                    if (it.isSuccessful) {
+                ).addOnCompleteListener() { responseSignUser ->
+                    if (responseSignUser.isSuccessful) {
+
                         DataManager.emailUsuario = authLogin.Email
 
-                        val vIntent = Intent(this, MainActivity::class.java)
+                        val sharedPref = loginActivity.getPreferences(Context.MODE_PRIVATE)
+                        with (sharedPref.edit()) {
+                            putString("emailUsuario", authLogin.Email)
+                            apply()
+                        }
+
+                        if(DataManager.progressDialog!!.isShowing)
+                            DataManager.progressDialog!!.dismiss()
+
+                        val vIntent =  Intent(loginActivity, ProfileActivity::class.java)
                         startActivity(vIntent)
+
                     } else {
-                        DataManager.showAlert(this, "Hubo un error al iniciar sesión")
-                        if(DataManager.progressDialog!!.isShowing) DataManager.progressDialog!!.dismiss()
+                        Log.d(TAG, "Exception: ${responseSignUser.exception!!.message}")
+
+                        DataManager.showToast(this,"Error: ${responseSignUser.exception!!.message}")
+                        DataManager.hideProgressDialog()
                     }
                 }
         }
 
     }
 
-
     override fun onResume() {
         super.onResume()
 
-        val sharedPref = LoginActivity.instance?.getPreferences(Context.MODE_PRIVATE) ?: return
-        with (sharedPref.edit()) {
-            putString("emailUsuario", "")
-            FirebaseAuth.getInstance().signOut()
-            apply()
-        }
+        eliminarUsuarioLoggeadoCache()
 
-        if(DataManager.progressDialog!!.isShowing) DataManager.progressDialog!!.dismiss()
     }
-
 
     override fun onBackPressed() {
         super.onBackPressed()
@@ -158,6 +122,30 @@ class LoginActivity : AppCompatActivity() {
     }
 
 
+    private fun revisarUsuarioLoggeadoCache() {
+        val sharedPref = this.getPreferences(Context.MODE_PRIVATE) ?: return
+        val defaultValue = ""
+        val emailUsuario = sharedPref.getString("emailUsuario", defaultValue)
+
+        if(emailUsuario != ""){
+            DataManager.emailUsuario = emailUsuario
+
+            val vIntent =  Intent(this, ProfileActivity::class.java)
+            startActivity(vIntent)
+        }
+    }
+
+
+    private fun eliminarUsuarioLoggeadoCache() {
+
+        val sharedPref = LoginActivity.instance?.getPreferences(Context.MODE_PRIVATE) ?: return
+        with (sharedPref.edit()) {
+            putString("emailUsuario", "")
+            FirebaseAuth.getInstance().signOut()
+            apply()
+        }
+
+    }
 }
 
 

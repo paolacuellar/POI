@@ -34,29 +34,27 @@ class GruposFragment: Fragment() {
 
         this.recyclerViewGrupos = view.findViewById<RecyclerView>(R.id.listGroupsRecyclerView)
 
-        var gruposCarrera = GruposModel();
+        setUpRecyclerView()
+    }
 
+    private fun setUpRecyclerView() {
         var documentReferenceUserLogged = FirebaseFirestore.getInstance().collection("Usuarios").document(DataManager.emailUsuario!!)
 
         FirebaseFirestore.getInstance().collection("Grupos")
             .whereArrayContains("Miembros", documentReferenceUserLogged)
             .get()
-            .addOnSuccessListener { grupos ->
+            .addOnSuccessListener { responseGrupos ->
 
                 var gruposParam : MutableList<GruposModel> = mutableListOf()
-                
-                for (grupo in grupos) {
-                    Log.d(TAG, "${grupo.id} => ${grupo.data}")
 
+                for (responseGrupo in responseGrupos) {
                     var grupoAux = GruposModel()
-                    grupoAux.Nombre = grupo.data.get("Nombre") as String
-                    grupoAux.Foto = grupo.data.get("Foto") as String
+                    grupoAux.Nombre = responseGrupo.data.get("Nombre") as String
+                    grupoAux.Foto = responseGrupo.data.get("Foto") as String
                     gruposParam.add(grupoAux)
                 }
 
                 //TODO: LA IDEA AQUI ES MANDAR grupos POR PARAMETRO, PERO NO SE PUEDE CASTEAR, POR LO QUE SE crea grupoAux
-
-
                 gruposAdapter = GruposAdapter(gruposParam)
                 recyclerViewGrupos.apply {
                     adapter = gruposAdapter
@@ -64,7 +62,7 @@ class GruposFragment: Fragment() {
                 }
             }
             .addOnFailureListener { exception ->
-                Log.w(TAG, "Error getting documents: ", exception)
+                Log.w(TAG, "Error consiguiendo los Grupos", exception)
             }
     }
 

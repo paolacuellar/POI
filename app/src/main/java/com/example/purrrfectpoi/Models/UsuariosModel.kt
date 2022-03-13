@@ -13,5 +13,8 @@ class UsuariosModel {
     var Conversaciones : ArrayList<DocumentReference> = arrayListOf()
 
     var Conectado : Boolean = true
-    var Medallas : ArrayList<DocumentReference> = arrayListOf()
+
+    var CantidadTareas : Long = 0
+    var CantidadGrupos : Long = 0
+    var CantidadPosts : Long = 0
 }

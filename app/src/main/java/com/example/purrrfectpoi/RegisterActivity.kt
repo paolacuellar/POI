@@ -9,9 +9,7 @@ import android.widget.*
 import com.google.firebase.firestore.FirebaseFirestore
 import com.psm.hiring.Utils.DataManager
 import java.util.*
-import java.util.regex.Pattern
 import android.widget.ArrayAdapter
-import androidx.appcompat.app.AlertDialog
 import com.example.purrrfectpoi.Models.AuthModel
 import com.example.purrrfectpoi.Models.UsuariosModel
 import com.google.firebase.auth.FirebaseAuth
@@ -20,7 +18,6 @@ import com.google.firebase.auth.FirebaseAuth
 class RegisterActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
 
     val TAG="RegisterActivity"
-
 
     var btn_Register : Button? = null;
     var lbl_Login : TextView? = null;
@@ -41,7 +38,6 @@ class RegisterActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_register)
 
-
         this.btn_Register = findViewById<Button>(R.id.register_btn_register)
         this.lbl_Login = findViewById<TextView>(R.id.register_lbl_logguearse)
         this.header_back = findViewById<View>(R.id.register_header_back)
@@ -59,15 +55,13 @@ class RegisterActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener
                 for (document in documents) {
                     carrerasFCFM.add(document.data.get("Nombre").toString())
                 }
-
             }
             .addOnFailureListener { exception ->
-                Log.w(TAG, "Error getting documents: ", exception)
+                Log.w(TAG, "Error consiguiendo Carreras", exception)
+                DataManager.showToast(this, "Error consiguiendo Carreras")
             }
 
         val adapter = ArrayAdapter(this, R.layout.item_spinner, carrerasFCFM)
-        //adapter.setDropDownViewResource(R.layout.item_spinner)
-        //adapter.notifyDataSetChanged()
 
         this.spinnerCarrera = findViewById<Spinner>(R.id.register_spinner_carreras)
 
@@ -99,12 +93,6 @@ class RegisterActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener
 
     private fun registerUsuario(registerActivity: RegisterActivity) {
 
-        DataManager.progressDialog!!.setMessage("Ingresando")
-        DataManager.progressDialog!!.setCancelable(false)
-        DataManager.progressDialog!!.show()
-
-
-
         authRegister.Email = editTextEmail?.text.toString()
         authRegister.Password = editTextPassword?.text.toString()
 
@@ -115,7 +103,7 @@ class RegisterActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener
 
         //usuarioRegister.Carrera = "5jUhUWbOUD9Yii3keJQ4"
         var Carrera = "5jUhUWbOUD9Yii3keJQ4"
-        usuarioRegister.Carrera =  db.document("Carrera/"+Carrera)
+        usuarioRegister.Carrera =  db.document("Carrera/${Carrera}")
 
         val validate_pass = isValidPassword(authRegister.Password)
 
@@ -129,6 +117,9 @@ class RegisterActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener
 
             if(authRegister.Email.isEmpty()){
                 editTextEmail?.setError("Inserte un correo valido")
+            }
+            else{
+                //TODO: HAY QUE VALIDAR SI EL CORREO ESTA REPETIDO? O YA QUE FIREBASE LO HAGA POR NOSOTROS?
             }
             if(authRegister.Password.isEmpty()){
                 editTextPassword?.setError("Campo vacio")
@@ -145,15 +136,18 @@ class RegisterActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener
             if(usuarioRegister.ApMaterno.isEmpty()){
                 editTextApMaterno?.setError("Campo vacio")
             }
+            if(Carrera.isEmpty()){
+                DataManager.showToast(this, "Error: \"Carrera\" no seleccionada")
+            }
 
-            if(DataManager.progressDialog!!.isShowing) DataManager.progressDialog!!.dismiss()
         }else{
+            DataManager.showProgressDialog("Creando usuario")
 
             FirebaseAuth.getInstance().createUserWithEmailAndPassword(
                 authRegister.Email,
                 authRegister.Password
-            ).addOnCompleteListener{
-                if (it.isSuccessful){
+            ).addOnCompleteListener{ responseAuthCreation ->
+                if (responseAuthCreation.isSuccessful){
 
                     db.collection("Usuarios").document(usuarioRegister.Email)
                         .set(
@@ -165,20 +159,22 @@ class RegisterActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener
                                 "Carrera" to usuarioRegister.Carrera,
                                 "Conversaciones" to usuarioRegister.Conversaciones,
                                 "Conectado" to usuarioRegister.Conectado,
-                                "Medallas" to usuarioRegister.Medallas
+                                "CantidadTareas" to usuarioRegister.CantidadTareas,
+                                "CantidadGrupos" to usuarioRegister.CantidadGrupos,
+                                "CantidadPosts" to usuarioRegister.CantidadPosts
                             )
-                        ).addOnCompleteListener{
-                            if (it.isSuccessful) {
+                        ).addOnCompleteListener{ responseUserCreation ->
+                            if (responseUserCreation.isSuccessful) {
                                 val vIntent = Intent(this, LoginActivity::class.java)
                                 startActivity(vIntent)
                             }
                             else{
-                                DataManager.showAlert(this, "Se ha producido un error al crear el usuario")
+                                DataManager.showToast(this,"Error: ${responseUserCreation.exception!!.message}")
                             }
                         }
                 }
                 else{
-                    DataManager.showAlert(this, "Se ha producido un error al crear la autentificación del usuario")
+                    DataManager.showToast(this,"Error: ${responseAuthCreation.exception!!.message}")
                 }
             }
 
@@ -215,10 +211,12 @@ class RegisterActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener
 
 
     fun isValidPassword(password : String): Boolean {
-        //val passwordPattern = "^(?=.*[0-9])(?=.*[A-Z])(?=.*[@#$%^&+=!])(?=\\S+$).{8,}$"
-        //val pattern = Pattern.compile(passwordPattern)
-        //val matcher = pattern.matcher(password)
-        //return matcher.matches()
+        /*
+        val passwordPattern = "^(?=.*[0-9])(?=.*[A-Z])(?=.*[@#$%^&+=!])(?=\\S+$).{8,}$"
+        val pattern = Pattern.compile(passwordPattern)
+        val matcher = pattern.matcher(password)
+        return matcher.matches()
+        */
 
         return true
     }
