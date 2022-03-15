@@ -78,7 +78,7 @@
                 android:paddingLeft="10dp"
                 android:layout_width="118dp"
                 android:layout_height="32dp"
-                android:background=""
+                android:background="@android:color/transparent"
                 android:gravity="left"
 
                 android:text="Galeria"
@@ -101,7 +101,7 @@
             <Button
                 android:layout_width="118dp"
                 android:layout_height="32dp"
-                android:background=""
+                android:background="@android:color/transparent"
                 android:gravity="left"
                 android:paddingLeft="10dp"
 
@@ -124,7 +124,7 @@
             <Button
                 android:layout_width="118dp"
                 android:layout_height="32dp"
-                android:background=""
+                android:background="@android:color/transparent"
                 android:gravity="left"
                 android:paddingLeft="10dp"
 
@@ -162,7 +162,6 @@
             android:backgroundTintMode="multiply"
             android:ems="10"
             android:hint="Escribe Mensaje"
-            android:inputType="textPersonName"
             android:minHeight="41dp"
             android:padding="13dp"
             app:layout_constraintBottom_toBottomOf="parent"

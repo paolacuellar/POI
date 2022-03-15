@@ -8,9 +8,9 @@ import com.example.purrrfectpoi.fragments.GrupoChatFragment
 import com.example.purrrfectpoi.fragments.GrupoMiembrosFragment
 import com.example.purrrfectpoi.fragments.GrupoTareasFragment
 
-class PagerController(private val myContext: Context,fm:FragmentManager,internal var totalTabs:Int):FragmentPagerAdapter(fm) {
+/*class PagerController(private val myContext: Context,fm:FragmentManager,internal var totalTabs:Int):FragmentPagerAdapter(fm) {
 
-    override fun getItem(position: Int):Fragment {
+    /*override fun getItem(position: Int):Fragment {
         when(position){
             0->{
                 return GrupoMiembrosFragment()
@@ -28,4 +28,4 @@ class PagerController(private val myContext: Context,fm:FragmentManager,internal
     override fun getCount(): Int {
         return totalTabs
     }
-}
+}*/

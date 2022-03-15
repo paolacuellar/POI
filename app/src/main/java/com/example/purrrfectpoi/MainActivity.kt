@@ -21,7 +21,7 @@ class MainActivity : AppCompatActivity() {
         val chatsFragment=ChatsFragment()
         val gruposFragment=GruposFragment()
 
-        setCurrentFragment(muroFragment)
+        setCurrentFragment(chatsFragment)
 
         val bottom_navigation=findViewById<BottomNavigationView>(R.id.bottom_navigation)
 
