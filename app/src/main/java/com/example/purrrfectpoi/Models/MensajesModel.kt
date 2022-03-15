@@ -4,6 +4,7 @@ import com.google.firebase.firestore.DocumentReference
 import com.google.type.Date
 
 class MensajesModel {
+    var id : String = ""
     var Texto : String = ""
     var Autor : DocumentReference? = null
     var Foto : String = ""

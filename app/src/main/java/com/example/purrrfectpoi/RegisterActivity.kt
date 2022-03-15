@@ -74,7 +74,7 @@ class RegisterActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener
 
 
         this.btn_Register?.setOnClickListener {
-            registerUsuario(this)
+            registerUsuario()
 
         }
 
@@ -91,7 +91,7 @@ class RegisterActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener
 
     }
 
-    private fun registerUsuario(registerActivity: RegisterActivity) {
+    private fun registerUsuario() {
 
         authRegister.Email = editTextEmail?.text.toString()
         authRegister.Password = editTextPassword?.text.toString()

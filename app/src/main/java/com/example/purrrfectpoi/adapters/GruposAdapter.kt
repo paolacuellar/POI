@@ -1,12 +1,9 @@
 package com.example.purrrfectpoi.adapters
 
-import android.content.ContentValues.TAG
-import android.graphics.BitmapFactory
-import android.util.Log
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.purrrfectpoi.Models.GruposModel
@@ -15,9 +12,8 @@ import com.example.purrrfectpoi.Models.GruposModel
 import com.example.purrrfectpoi.R
 import com.google.firebase.storage.FirebaseStorage
 import kotlinx.android.synthetic.main.item_group.view.*
-import kotlinx.android.synthetic.main.item_reward.view.item_medalla_nombre
-import java.io.File
-import java.nio.file.Paths
+
+import com.example.purrrfectpoi.GroupActivity
 
 
 class GruposAdapter(val grupos: MutableList<GruposModel>) : RecyclerView.Adapter<GruposAdapter.GruposViewHolder>(){
@@ -30,25 +26,21 @@ class GruposAdapter(val grupos: MutableList<GruposModel>) : RecyclerView.Adapter
     }
 
     override fun onBindViewHolder(holder: GruposViewHolder, position: Int) {
+        val Grupo : GruposModel = grupos.get(position)
 
-        val Grupos : GruposModel = grupos.get(position)
+        holder.render(Grupo, position)
 
-         holder.render(Grupos, position)
-
-        holder.view.setOnClickListener{
-
-        }
 
     }
 
     override fun getItemCount()= grupos.size
 
     class GruposViewHolder(val view: View): RecyclerView.ViewHolder(view){
-        fun render(Grupos: GruposModel, position: Int){
+        fun render(Grupo: GruposModel, position: Int){
 
-            view.item_grupo_nombre.setText(if (!Grupos.Nombre.isEmpty()) Grupos.Nombre else "Error")
+            view.item_grupo_nombre.setText(if (!Grupo.Nombre.isEmpty()) Grupo.Nombre else "Error")
 
-            FirebaseStorage.getInstance().getReference("images/Grupos/${Grupos.Foto}").downloadUrl
+            FirebaseStorage.getInstance().getReference("images/Grupos/${Grupo.Foto}").downloadUrl
                 .addOnSuccessListener {
 
                     Glide.with(view.context)
@@ -56,6 +48,12 @@ class GruposAdapter(val grupos: MutableList<GruposModel>) : RecyclerView.Adapter
                         .into(view.item_grupo_foto)
                 }
 
+
+            view.item_grupo_card.setOnClickListener{
+                val intent = Intent(view.context, GroupActivity::class.java)
+                intent.putExtra("groupId",Grupo.id)
+                view.context?.startActivity(intent)
+            }
         }
     }
 

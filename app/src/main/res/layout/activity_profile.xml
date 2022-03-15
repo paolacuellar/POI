@@ -57,8 +57,10 @@
         android:background="#40FFFFFF"
         app:layout_constraintBottom_toTopOf="@+id/profile_header_back"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0" />
 
     <View
         android:id="@+id/view2"
@@ -114,24 +116,12 @@
         app:srcCompat="@drawable/ic_box_arrow_left_white" />
 
     <TextView
-        android:id="@+id/lbl_nombre"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="2dp"
-        android:text="@string/register_lbl_nombre"
-        android:textColor="@color/coffee"
-        android:textSize="14sp"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@+id/profile_input_nombre"
-        app:layout_constraintStart_toStartOf="@+id/profile_input_nombre" />
-
-    <TextView
         android:id="@+id/lbl_nombre3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        android:text="@string/register_lbl_nombre"
+        android:text="@string/profile_lbl_medallas"
         android:textColor="@color/coffee"
         android:textSize="14sp"
         android:textStyle="bold"
@@ -139,72 +129,72 @@
         app:layout_constraintTop_toTopOf="@+id/view2" />
 
     <TextView
-        android:id="@+id/lbl_pw3"
+        android:id="@+id/profile_lbl_correo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="2dp"
-        android:text="@string/register_lbl_ap_paterno"
+        android:text="@string/profile_lbl_correo"
         android:textColor="@color/coffee"
         android:textSize="14sp"
         android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@+id/profile_input_ap_paterno"
-        app:layout_constraintStart_toStartOf="@+id/profile_input_ap_paterno" />
+        app:layout_constraintStart_toStartOf="@+id/profile_input_nombre"
+        app:layout_constraintTop_toTopOf="@+id/profile_image_foto" />
 
     <TextView
-        android:id="@+id/lbl_pw4"
+        android:id="@+id/profile_lbl_carrera"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="2dp"
-        android:text="@string/register_lbl_ap_materno"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        android:text="@string/profile_lbl_carrera"
         android:textColor="@color/coffee"
         android:textSize="14sp"
         android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@+id/profile_input_ap_materno"
-        app:layout_constraintStart_toStartOf="@+id/profile_input_ap_materno" />
+        app:layout_constraintBottom_toTopOf="@+id/profile_input_nombre"
+        app:layout_constraintStart_toStartOf="@+id/profile_input_nombre"
+        app:layout_constraintTop_toBottomOf="@+id/profile_lbl_correo" />
 
     <EditText
         android:id="@+id/profile_input_nombre"
         android:layout_width="0dp"
         android:layout_height="33dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="16dp"
         android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
         android:background="@drawable/search_background"
         android:ems="10"
         android:inputType="textPersonName"
         android:padding="8dp"
         android:textSize="16sp"
+        app:layout_constraintBottom_toTopOf="@+id/profile_input_ap_paterno"
         app:layout_constraintEnd_toEndOf="@+id/view"
-        app:layout_constraintStart_toEndOf="@+id/profile_image_foto"
-        app:layout_constraintTop_toTopOf="@+id/profile_image_foto" />
+        app:layout_constraintStart_toEndOf="@+id/profile_image_foto" />
 
     <EditText
         android:id="@+id/profile_input_ap_materno"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
         android:background="@drawable/search_background"
         android:ems="10"
         android:inputType="textPersonName"
         android:padding="8dp"
         android:textSize="16sp"
+        app:layout_constraintBottom_toBottomOf="@+id/profile_image_foto"
         app:layout_constraintEnd_toEndOf="@+id/profile_input_nombre"
-        app:layout_constraintStart_toStartOf="@+id/profile_input_nombre"
-        app:layout_constraintTop_toBottomOf="@+id/profile_input_ap_paterno" />
+        app:layout_constraintStart_toStartOf="@+id/profile_input_nombre" />
 
     <EditText
         android:id="@+id/profile_input_ap_paterno"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
+        android:layout_marginBottom="8dp"
         android:background="@drawable/search_background"
         android:ems="10"
         android:inputType="textPersonName"
         android:padding="8dp"
         android:textSize="16sp"
+        app:layout_constraintBottom_toTopOf="@+id/profile_input_ap_materno"
         app:layout_constraintEnd_toEndOf="@+id/profile_input_nombre"
-        app:layout_constraintStart_toStartOf="@+id/profile_input_nombre"
-        app:layout_constraintTop_toBottomOf="@+id/profile_input_nombre" />
+        app:layout_constraintStart_toStartOf="@+id/profile_input_nombre" />
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/profile_btn_editar"
@@ -251,7 +241,7 @@
         app:layout_constraintStart_toStartOf="@+id/view4"
 
         app:layout_constraintTop_toTopOf="@+id/view4"
-        app:spanCount="4"
+        app:spanCount="3"
         tools:listitem="@layout/item_reward" />
 
 

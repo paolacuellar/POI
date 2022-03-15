@@ -93,7 +93,7 @@ class LoginActivity : AppCompatActivity() {
                         if(DataManager.progressDialog!!.isShowing)
                             DataManager.progressDialog!!.dismiss()
 
-                        val vIntent =  Intent(loginActivity, ProfileActivity::class.java)
+                        val vIntent =  Intent(loginActivity, MainActivity::class.java)
                         startActivity(vIntent)
 
                     } else {
@@ -130,7 +130,7 @@ class LoginActivity : AppCompatActivity() {
         if(emailUsuario != ""){
             DataManager.emailUsuario = emailUsuario
 
-            val vIntent =  Intent(this, ProfileActivity::class.java)
+            val vIntent =  Intent(this, MainActivity::class.java)
             startActivity(vIntent)
         }
     }

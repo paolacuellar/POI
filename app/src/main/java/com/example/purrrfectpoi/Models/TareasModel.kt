@@ -4,6 +4,7 @@ import com.google.firebase.firestore.DocumentReference
 import com.google.type.Date
 
 class TareasModel {
+    var id : String = ""
     var Nombre : String = ""
     var Descripcion : String = ""
     var FechaCreacion : Date? = null

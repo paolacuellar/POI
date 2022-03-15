@@ -17,6 +17,9 @@
     <string name="register_btn_register">Registrarse</string>
     <string name="register_lbl_logguearse">¿Ya tienes una cuenta? Inicia sesion</string>
 
+    <string name="profile_lbl_correo">Correo@correo.com</string>
+    <string name="profile_lbl_carrera">Carrera</string>
+    <string name="profile_lbl_medallas">Medallas ganadas:</string>
     <string name="profile_btn_editar">Editar</string>
 
     <string-array name="Carreras">

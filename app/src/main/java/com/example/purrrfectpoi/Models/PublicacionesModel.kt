@@ -4,6 +4,7 @@ import com.google.firebase.firestore.DocumentReference
 import com.google.type.Date
 
 class PublicacionesModel {
+    var id : String = ""
     var Texto : String = ""
     var Foto : String = ""
 

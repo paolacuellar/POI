@@ -4,6 +4,7 @@ import com.google.firebase.firestore.DocumentReference
 import com.google.type.Date
 
 class ComentariosModel {
+    var id : String = ""
     var Texto : String = ""
 
     var Creador : DocumentReference? = null

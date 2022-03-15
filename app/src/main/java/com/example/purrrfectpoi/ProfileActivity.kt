@@ -15,10 +15,12 @@ import com.bumptech.glide.Glide
 import com.example.purrrfectpoi.Models.MedallasModel
 import com.example.purrrfectpoi.Models.UsuariosModel
 import com.example.purrrfectpoi.adapters.MedallasAdapter
+import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import com.google.firebase.storage.FirebaseStorage
 import com.psm.hiring.Utils.DataManager
+import org.w3c.dom.Text
 import java.util.*
 
 class ProfileActivity : AppCompatActivity() {
@@ -31,6 +33,8 @@ class ProfileActivity : AppCompatActivity() {
     var navbar_back : ImageView? = null;
 
     var image_Foto : ImageView? = null;
+    var textCorreo : TextView? = null;
+    var textCarrera : TextView? = null;
     var editTextNombre : EditText? = null;
     var editTextApPaterno : EditText? = null;
     var editTextApMaterno : EditText? = null;
@@ -54,6 +58,8 @@ class ProfileActivity : AppCompatActivity() {
         this.header_back = findViewById<View>(R.id.profile_header_back)
 
         this.image_Foto = findViewById<ImageView>(R.id.profile_image_foto)
+        this.textCorreo = findViewById<TextView>(R.id.profile_lbl_correo)
+        this.textCarrera = findViewById<TextView>(R.id.profile_lbl_carrera)
         this.editTextNombre = findViewById<EditText>(R.id.profile_input_nombre)
         this.editTextApPaterno = findViewById<EditText>(R.id.profile_input_ap_paterno)
         this.editTextApMaterno = findViewById<EditText>(R.id.profile_input_ap_materno)
@@ -86,19 +92,28 @@ class ProfileActivity : AppCompatActivity() {
     private fun setUpInfoProfile() {
         db = FirebaseFirestore.getInstance()
         db.collection("Usuarios").document(DataManager.emailUsuario!!).get()
-            .addOnSuccessListener {
+            .addOnSuccessListener { responseUsuario ->
 
-                usuarioProfile.Nombre =     if(it.get("Nombre") != null)    it.get("Nombre") as String else ""
-                usuarioProfile.ApPaterno =  if(it.get("ApPaterno") != null) it.get("ApPaterno") as String else ""
-                usuarioProfile.ApMaterno =  if(it.get("ApMaterno") != null) it.get("ApMaterno") as String else ""
-                usuarioProfile.CantidadTareas =   if(it.get("CantidadTareas") != null)  it.get("CantidadTareas") as Long else 0
-                usuarioProfile.CantidadGrupos =   if(it.get("CantidadGrupos") != null)  it.get("CantidadGrupos") as Long else 0
-                usuarioProfile.CantidadPosts =   if(it.get("CantidadPosts") != null)  it.get("CantidadPosts") as Long else 0
-                usuarioProfile.Foto =       if(it.get("Foto") != null)      it.get("Foto") as String else ""
+                usuarioProfile.Email = responseUsuario.id
+                usuarioProfile.Carrera =     if(responseUsuario.get("Carrera") != null)    responseUsuario.get("Carrera") as DocumentReference else null
+                usuarioProfile.Nombre =     if(responseUsuario.get("Nombre") != null)    responseUsuario.get("Nombre") as String else ""
+                usuarioProfile.ApPaterno =  if(responseUsuario.get("ApPaterno") != null) responseUsuario.get("ApPaterno") as String else ""
+                usuarioProfile.ApMaterno =  if(responseUsuario.get("ApMaterno") != null) responseUsuario.get("ApMaterno") as String else ""
+                usuarioProfile.CantidadTareas =   if(responseUsuario.get("CantidadTareas") != null)  responseUsuario.get("CantidadTareas") as Long else 0
+                usuarioProfile.CantidadGrupos =   if(responseUsuario.get("CantidadGrupos") != null)  responseUsuario.get("CantidadGrupos") as Long else 0
+                usuarioProfile.CantidadPosts =   if(responseUsuario.get("CantidadPosts") != null)  responseUsuario.get("CantidadPosts") as Long else 0
+                usuarioProfile.Foto =       if(responseUsuario.get("Foto") != null)      responseUsuario.get("Foto") as String else ""
 
-                editTextNombre?.setText(usuarioProfile.Nombre)
-                editTextApPaterno?.setText(usuarioProfile.ApPaterno)
-                editTextApMaterno?.setText(usuarioProfile.ApMaterno)
+                db.collection("Carrera").document(usuarioProfile.Carrera!!.id).get().addOnSuccessListener { responseCarrera ->
+                    var carreraUsuario =     if(responseCarrera.get("Nombre") != null)    responseCarrera.get("Nombre") as String else ""
+                    textCarrera?.text = carreraUsuario
+                    textCorreo?.text = usuarioProfile.Email
+                    editTextNombre?.setText(usuarioProfile.Nombre)
+                    editTextApPaterno?.setText(usuarioProfile.ApPaterno)
+                    editTextApMaterno?.setText(usuarioProfile.ApMaterno)
+                }
+
+
 
                 setUpImageUser()
 
@@ -251,6 +266,7 @@ class ProfileActivity : AppCompatActivity() {
                 //TODO: VALIDAR QUE SI EL USUARIO YA TIENE LA MEDALLA O NO
                 for (responseMedalla in responseMedallas) {
                     var medallaAux = MedallasModel()
+                    medallaAux.id = responseMedalla.id
                     medallaAux.Nombre = responseMedalla.data.get("Nombre") as String
                     medallaAux.Foto = responseMedalla.data.get("Foto") as String
                     medallaAux.Tipo = responseMedalla.data.get("Tipo") as String

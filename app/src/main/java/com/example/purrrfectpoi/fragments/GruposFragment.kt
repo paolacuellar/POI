@@ -1,15 +1,19 @@
 package com.example.purrrfectpoi.fragments
 
 import android.content.ContentValues.TAG
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.purrrfectpoi.AddGroupActivity
 import com.example.purrrfectpoi.Models.GruposModel
+import com.example.purrrfectpoi.ProfileActivity
 import com.example.purrrfectpoi.R
 import com.example.purrrfectpoi.adapters.GruposAdapter
 import com.google.firebase.firestore.DocumentReference
@@ -20,7 +24,8 @@ class GruposFragment: Fragment() {
 
     private lateinit var recyclerViewGrupos : RecyclerView
     private lateinit var gruposAdapter: GruposAdapter
-    
+    private lateinit var buttonCrearGrupo : Button
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -33,6 +38,16 @@ class GruposFragment: Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         this.recyclerViewGrupos = view.findViewById<RecyclerView>(R.id.listGroupsRecyclerView)
+
+
+        /*
+        this.buttonCrearGrupo = view.findViewById<Button>(R.id.button_dummy_add_group)
+
+        buttonCrearGrupo.setOnClickListener{
+            val intent = Intent(activity, AddGroupActivity::class.java)
+            startActivity(intent)
+        }
+        */
 
         setUpRecyclerView()
     }
@@ -49,6 +64,7 @@ class GruposFragment: Fragment() {
 
                 for (responseGrupo in responseGrupos) {
                     var grupoAux = GruposModel()
+                    grupoAux.id = responseGrupo.id
                     grupoAux.Nombre = responseGrupo.data.get("Nombre") as String
                     grupoAux.Foto = responseGrupo.data.get("Foto") as String
                     gruposParam.add(grupoAux)
