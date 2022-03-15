@@ -13,4 +13,11 @@
         <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
         <!-- Customize your theme here. -->
     </style>
+
+    <style name="font_text">
+        <item name="android:textColor">@color/coffee</item>
+        <!--        considerar quitar el textColorHint esta aplicado a textviews por ahora pero no es repetible-->
+        <item name="android:textColorHint">@color/coffee</item>
+        <item name="android:textSize">20sp</item>
+    </style>
 </resources>

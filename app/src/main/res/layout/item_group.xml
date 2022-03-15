@@ -23,7 +23,7 @@
 
             <de.hdodenhof.circleimageview.CircleImageView
                 xmlns:app="http://schemas.android.com/apk/res-auto"
-                android:id="@+id/cover"
+                android:id="@+id/item_grupo_foto"
                 android:layout_width="70dp"
                 android:layout_height="70dp"
                 android:src="@mipmap/ic_launcher"
@@ -31,6 +31,7 @@
                 />
 
             <TextView
+                android:id="@+id/item_grupo_nombre"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"

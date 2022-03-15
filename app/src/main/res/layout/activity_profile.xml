@@ -1,0 +1,258 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/floral"
+    tools:context=".MainActivity">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar2"
+        android:layout_width="match_parent"
+        android:layout_height="66dp"
+        android:layout_marginStart="-10dp"
+        android:layout_marginTop="-10dp"
+        android:layout_marginEnd="-10dp"
+        android:background="@drawable/search_background"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <LinearLayout
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:background="@drawable/search_background">
+
+            <ImageView
+                android:id="@+id/profile_image_btn_back"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:padding="4dp"
+                android:src="@drawable/ic_arrow_back_brown" />
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:text="Perfil"
+            android:textColor="@color/coffee"
+            android:textSize="18dp"
+            android:textStyle="bold" />
+    </androidx.appcompat.widget.Toolbar>
+
+    <View
+        android:id="@+id/view"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="90dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="20dp"
+        android:background="#40FFFFFF"
+        app:layout_constraintBottom_toTopOf="@+id/profile_header_back"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <View
+        android:id="@+id/view2"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="64dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="24dp"
+        android:background="#40FFFFFF"
+        app:layout_constraintBottom_toBottomOf="@+id/view"
+        app:layout_constraintEnd_toEndOf="@+id/view"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="@+id/view"
+        app:layout_constraintTop_toBottomOf="@+id/profile_image_foto"
+        app:layout_constraintVertical_bias="0.0" />
+
+
+        <View
+            android:id="@+id/view4"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="32dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="8dp"
+            android:background="#439E9E9E"
+            app:layout_constraintBottom_toBottomOf="@+id/view2"
+            app:layout_constraintEnd_toEndOf="@+id/view2"
+            app:layout_constraintStart_toStartOf="@+id/view2"
+            app:layout_constraintTop_toTopOf="@+id/view2"
+            />
+
+    <View
+        android:id="@+id/profile_header_back"
+        android:layout_width="60dp"
+        android:layout_height="90dp"
+        android:layout_marginStart="16dp"
+        android:background="@drawable/header_with_border"
+        android:rotationX="180"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+
+    <ImageView
+        android:id="@+id/imageView4"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        app:layout_constraintBottom_toBottomOf="@+id/profile_header_back"
+        app:layout_constraintEnd_toEndOf="@+id/profile_header_back"
+        app:layout_constraintStart_toStartOf="@+id/profile_header_back"
+        app:layout_constraintTop_toTopOf="@+id/profile_header_back"
+        app:srcCompat="@drawable/ic_box_arrow_left_white" />
+
+    <TextView
+        android:id="@+id/lbl_nombre"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="2dp"
+        android:text="@string/register_lbl_nombre"
+        android:textColor="@color/coffee"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/profile_input_nombre"
+        app:layout_constraintStart_toStartOf="@+id/profile_input_nombre" />
+
+    <TextView
+        android:id="@+id/lbl_nombre3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:text="@string/register_lbl_nombre"
+        android:textColor="@color/coffee"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="@+id/view2"
+        app:layout_constraintTop_toTopOf="@+id/view2" />
+
+    <TextView
+        android:id="@+id/lbl_pw3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="2dp"
+        android:text="@string/register_lbl_ap_paterno"
+        android:textColor="@color/coffee"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/profile_input_ap_paterno"
+        app:layout_constraintStart_toStartOf="@+id/profile_input_ap_paterno" />
+
+    <TextView
+        android:id="@+id/lbl_pw4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="2dp"
+        android:text="@string/register_lbl_ap_materno"
+        android:textColor="@color/coffee"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/profile_input_ap_materno"
+        app:layout_constraintStart_toStartOf="@+id/profile_input_ap_materno" />
+
+    <EditText
+        android:id="@+id/profile_input_nombre"
+        android:layout_width="0dp"
+        android:layout_height="33dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="8dp"
+        android:background="@drawable/search_background"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:padding="8dp"
+        android:textSize="16sp"
+        app:layout_constraintEnd_toEndOf="@+id/view"
+        app:layout_constraintStart_toEndOf="@+id/profile_image_foto"
+        app:layout_constraintTop_toTopOf="@+id/profile_image_foto" />
+
+    <EditText
+        android:id="@+id/profile_input_ap_materno"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:background="@drawable/search_background"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:padding="8dp"
+        android:textSize="16sp"
+        app:layout_constraintEnd_toEndOf="@+id/profile_input_nombre"
+        app:layout_constraintStart_toStartOf="@+id/profile_input_nombre"
+        app:layout_constraintTop_toBottomOf="@+id/profile_input_ap_paterno" />
+
+    <EditText
+        android:id="@+id/profile_input_ap_paterno"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:background="@drawable/search_background"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:padding="8dp"
+        android:textSize="16sp"
+        app:layout_constraintEnd_toEndOf="@+id/profile_input_nombre"
+        app:layout_constraintStart_toStartOf="@+id/profile_input_nombre"
+        app:layout_constraintTop_toBottomOf="@+id/profile_input_nombre" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/profile_btn_editar"
+        android:layout_width="0dp"
+        android:layout_height="24dp"
+        android:layout_marginStart="110dp"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/button_with_border"
+        android:text="@string/profile_btn_editar"
+        android:textColor="@color/white"
+        android:textSize="12sp"
+        app:layout_constraintEnd_toEndOf="@+id/profile_input_nombre"
+        app:layout_constraintStart_toStartOf="@+id/profile_input_nombre"
+        app:layout_constraintTop_toBottomOf="@+id/profile_input_ap_materno" />
+
+    <ImageView
+        android:id="@+id/profile_image_foto"
+        android:layout_width="171dp"
+        android:layout_height="174dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="24dp"
+        app:layout_constraintStart_toStartOf="@+id/view"
+        app:layout_constraintTop_toTopOf="@+id/view"
+        tools:srcCompat="@tools:sample/avatars" />
+
+
+    <ImageView
+        android:id="@+id/profile_image_btn_editar_foto"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="-5dp"
+        android:layout_marginBottom="-5dp"
+        app:layout_constraintBottom_toBottomOf="@+id/profile_image_foto"
+        app:layout_constraintStart_toStartOf="@+id/profile_image_foto"
+        app:srcCompat="@drawable/ic_pencil_square_bw" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/profile_rv_medallas"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+        app:layout_constraintBottom_toBottomOf="@+id/view4"
+        app:layout_constraintEnd_toEndOf="@+id/view4"
+        app:layout_constraintStart_toStartOf="@+id/view4"
+
+        app:layout_constraintTop_toTopOf="@+id/view4"
+        app:spanCount="4"
+        tools:listitem="@layout/item_reward" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
