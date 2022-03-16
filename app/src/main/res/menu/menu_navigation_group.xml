@@ -11,6 +11,6 @@
         android:title="Miembros" />
     <item
         android:id="@+id/nav_tasks"
-        android:icon="@drawable/group_icon"
+        android:icon="@drawable/taks_icon"
         android:title="Tareas" />
 </menu>
