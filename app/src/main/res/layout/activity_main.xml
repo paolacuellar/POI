@@ -28,8 +28,8 @@
                 android:id="@+id/main_image_profile"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:src="@drawable/ic_user_brown" 
-                android:padding="4dp"/>
+                android:padding="4dp"
+                android:src="@drawable/ic_user_brown" />
         </LinearLayout>
 
         <TextView
@@ -38,9 +38,9 @@
             android:layout_height="wrap_content"
             android:paddingLeft="15dp"
             android:text="NOMBRE DEL FRAGMENTO"
-            android:textStyle="bold" 
             android:textColor="@color/coffee"
-            android:textSize="18dp"/>
+            android:textSize="18dp"
+            android:textStyle="bold" />
     </androidx.appcompat.widget.Toolbar>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton

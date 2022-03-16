@@ -4,43 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/cuadricula"
-    tools:context=".ChatActivity">
-
-    <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="66dp"
-        android:layout_marginStart="-10dp"
-        android:layout_marginTop="-10dp"
-        android:layout_marginEnd="-10dp"
-        android:background="@drawable/search_background"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-        <LinearLayout
-            android:layout_width="36dp"
-            android:layout_height="36dp"
-            android:background="@drawable/search_background"
-            >
-            <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:src="@drawable/ic_arrow_back_brown"
-                android:padding="4dp"/>
-        </LinearLayout>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Nombre del usuario"
-            android:layout_gravity="center"
-            android:gravity="center"
-            android:textStyle="bold"
-            android:textColor="@color/coffee"
-            android:textSize="18dp"/>
-    </androidx.appcompat.widget.Toolbar>
-
+    android:background="@drawable/tabmembers_background_white"
+    >
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/messagesRecylerView"
@@ -48,21 +13,23 @@
         android:layout_height="0dp"
         android:layout_marginStart="21dp"
         android:layout_marginEnd="21dp"
+        android:layout_marginTop="50dp"
         app:layout_constraintBottom_toTopOf="@+id/constraintLayout2"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar"
-        tools:listitem="@layout/item_message" />
+        app:layout_constraintTop_toTopOf="parent"
+        tools:listitem="@layout/item_group_message" />
 
     <GridLayout
+        android:id="@+id/gridLayout2"
         android:layout_width="match_parent"
         android:layout_height="98dp"
+        android:layout_marginStart="21dp"
+        android:layout_marginEnd="21dp"
         android:alignmentMode="alignMargins"
         android:columnCount="3"
         android:columnOrderPreserved="false"
         android:rowCount="1"
-        android:layout_marginStart="21dp"
-        android:layout_marginEnd="21dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/constraintLayout2"
         app:layout_constraintStart_toStartOf="parent">
@@ -91,13 +58,14 @@
                 app:iconTint="@color/coffee"
                 tools:ignore="TouchTargetSizeCheck" />
         </LinearLayout>
+
         <LinearLayout
             android:layout_width="118dp"
             android:layout_height="match_parent"
-            android:background="@drawable/search_background"
             android:layout_marginLeft="-10dp"
+            android:background="@drawable/search_background"
 
-           >
+            >
 
             <Button
                 android:layout_width="118dp"
@@ -116,12 +84,12 @@
                 app:iconTint="@color/coffee"
                 tools:ignore="TouchTargetSizeCheck" />
         </LinearLayout>
+
         <LinearLayout
             android:layout_width="118dp"
             android:layout_height="match_parent"
-            android:background="@drawable/search_background"
             android:layout_marginLeft="-10dp"
-            >
+            android:background="@drawable/search_background">
 
             <Button
                 android:layout_width="118dp"
