@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
+
     <RelativeLayout
         android:id="@+id/myMessageContent"
         android:layout_width="match_parent"
@@ -63,6 +64,7 @@
         </LinearLayout>
     </RelativeLayout>
 
+
     <RelativeLayout
         android:id="@+id/otherMessageContent"
         android:layout_width="match_parent"
@@ -73,24 +75,39 @@
         app:layout_constraintTop_toBottomOf="@+id/myMessageContent"
         >
 
-        <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
+        <TextView
+            android:id="@+id/tv_nameUserMessage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignStart="@+id/otherMessageLayout"
+            android:layout_alignParentTop="true"
+            android:layout_marginStart="28dp"
+            android:layout_marginTop="0dp"
+            android:textColor="@android:color/black"
+            android:textSize="16dp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toTopOf="@+id/otherMessageLayout"
+            app:layout_constraintStart_toStartOf="@+id/otherMessageLayout"
+            tools:text="Nombre del usuario" />
+
+        <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/otherImageView"
             android:layout_width="46dp"
             android:layout_height="46dp"
+            android:layout_below="@+id/tv_nameUserMessage"
+            android:layout_marginTop="0dp"
             app:civ_border_color="@color/white"
             app:civ_border_width="2dp"
-            android:layout_alignTop="@+id/otherMessageLayout"
-            android:layout_alignParentStart="true"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@+id/otherMessageLayout"
             tools:src="@tools:sample/avatars" />
 
         <LinearLayout
             android:id="@+id/otherMessageLayout"
-            android:layout_width="3000dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="0dp"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="24dp"
             android:layout_marginEnd="84dp"
             android:layout_toEndOf="@+id/otherImageView"
             android:background="@drawable/other_msg"

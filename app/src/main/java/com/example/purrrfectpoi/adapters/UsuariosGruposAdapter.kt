@@ -8,8 +8,6 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.purrrfectpoi.Models.UsuariosModel
-
-
 import com.example.purrrfectpoi.R
 import com.google.firebase.storage.FirebaseStorage
 import kotlinx.android.synthetic.main.item_add_group_members.view.*
