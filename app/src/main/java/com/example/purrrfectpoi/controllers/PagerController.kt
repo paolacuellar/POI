@@ -11,6 +11,8 @@ import com.example.purrrfectpoi.fragments.GrupoTareasFragment
 class PagerController(private val myContext: Context,fm:FragmentManager,internal var totalTabs:Int):FragmentPagerAdapter(fm) {
 
     override fun getItem(position: Int):Fragment {
+        return GrupoMiembrosFragment()
+        /*
         when(position){
             0->{
                 return GrupoMiembrosFragment()
@@ -23,6 +25,8 @@ class PagerController(private val myContext: Context,fm:FragmentManager,internal
             }
             else->null
         }
+
+         */
     }
 
     override fun getCount(): Int {

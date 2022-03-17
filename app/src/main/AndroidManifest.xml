@@ -49,6 +49,9 @@
         <activity   android:name=".ProfileActivity">
 
         </activity>
+        <activity   android:name=".AddGroupActivity">
+
+        </activity>
     </application>
 
 </manifest>

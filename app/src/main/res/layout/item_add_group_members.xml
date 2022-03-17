@@ -20,8 +20,8 @@
         app:cardElevation="0dp">
 
         <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/item_add_grupo_foto"
             xmlns:app="http://schemas.android.com/apk/res-auto"
-            android:id="@+id/imageView"
             android:layout_marginTop="6dp"
             android:layout_marginLeft="16dp"
             android:layout_width="35dp"
@@ -29,7 +29,7 @@
             tools:src="@tools:sample/avatars" />
 
         <TextView
-            android:id="@+id/chatNameText"
+            android:id="@+id/item_add_grupo_nombre"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="62dp"
@@ -54,21 +54,36 @@
             android:minHeight="48dp"
             app:srcCompat="@drawable/ic_message_outlined_brown" />-->
 
-        <Button
-            android:id="@+id/btnconfirm"
-            android:minHeight="0dp"
-            android:minWidth="0dp"
+        <TextView
+            android:id="@+id/item_add_grupo_email"
             android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="62dp"
+            android:layout_marginLeft="32dp"
+            android:layout_marginTop="25dp"
+            android:text="Correo Usuario"
+            android:textColor="@color/black"
+            android:textSize="10sp"
+            android:textStyle="normal"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <Button
+            android:id="@+id/item_add_grupo_btn_eliminar"
+            android:layout_width="71dp"
             android:layout_height="wrap_content"
             android:layout_gravity="end"
             android:layout_marginTop="4dp"
             android:layout_marginRight="8dp"
             android:backgroundTint="@color/purrrpule"
+            android:minWidth="0dp"
+            android:minHeight="0dp"
+            android:paddingLeft="4dp"
+            android:paddingRight="4dp"
             android:text="Eliminar"
-            android:textSize="10sp"
-            android:textStyle="bold"
             android:textColor="@color/black"
-            />
+            android:textSize="10sp"
+            android:textStyle="bold" />
 
     </androidx.cardview.widget.CardView>
 

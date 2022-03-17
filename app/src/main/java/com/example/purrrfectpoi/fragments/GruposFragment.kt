@@ -12,10 +12,12 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.purrrfectpoi.AddGroupActivity
+import com.example.purrrfectpoi.GroupActivity
 import com.example.purrrfectpoi.Models.GruposModel
 import com.example.purrrfectpoi.ProfileActivity
 import com.example.purrrfectpoi.R
 import com.example.purrrfectpoi.adapters.GruposAdapter
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FirebaseFirestore
 import com.psm.hiring.Utils.DataManager
@@ -24,7 +26,7 @@ class GruposFragment: Fragment() {
 
     private lateinit var recyclerViewGrupos : RecyclerView
     private lateinit var gruposAdapter: GruposAdapter
-    private lateinit var buttonCrearGrupo : Button
+    private lateinit var buttonCrearGrupo : FloatingActionButton
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -40,14 +42,13 @@ class GruposFragment: Fragment() {
         this.recyclerViewGrupos = view.findViewById<RecyclerView>(R.id.listGroupsRecyclerView)
 
 
-        /*
-        this.buttonCrearGrupo = view.findViewById<Button>(R.id.button_dummy_add_group)
+        this.buttonCrearGrupo = requireActivity().findViewById<FloatingActionButton>(R.id.menu_btn_floating)
 
         buttonCrearGrupo.setOnClickListener{
             val intent = Intent(activity, AddGroupActivity::class.java)
             startActivity(intent)
         }
-        */
+
 
         setUpRecyclerView()
     }

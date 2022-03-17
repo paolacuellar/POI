@@ -242,10 +242,10 @@ class ProfileActivity : AppCompatActivity() {
         if (usuarioProfile.Foto.isNotEmpty()) {
             
             FirebaseStorage.getInstance().getReference("images/Usuarios/${usuarioProfile.Foto}").downloadUrl
-                .addOnSuccessListener {
+                .addOnSuccessListener { pathImageUser ->
 
                     Glide.with(this)
-                        .load(it.toString())
+                        .load(pathImageUser.toString())
                         .into(image_Foto!!)
                 }
         }

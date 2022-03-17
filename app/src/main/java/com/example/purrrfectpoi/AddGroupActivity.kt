@@ -1,5 +1,6 @@
 package com.example.purrrfectpoi
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.ContentValues.TAG
 import android.content.Intent
@@ -8,6 +9,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Log
+import android.view.Menu
 import android.view.View
 import android.widget.*
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -15,15 +17,13 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.purrrfectpoi.Models.GruposModel
 import com.example.purrrfectpoi.Models.UsuariosModel
-import com.example.purrrfectpoi.adapters.MedallasAdapter
 import com.example.purrrfectpoi.adapters.UsuariosGruposAdapter
-import com.google.firebase.auth.FirebaseAuth
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.firebase.firestore.DocumentReference
+import com.google.firebase.firestore.FieldPath
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.Query
 import com.google.firebase.storage.FirebaseStorage
 import com.psm.hiring.Utils.DataManager
-import com.psm.hiring.Utils.DataManager.context
 import java.util.*
 
 class AddGroupActivity : AppCompatActivity() {
@@ -31,13 +31,16 @@ class AddGroupActivity : AppCompatActivity() {
     var btn_Crear_Grupo : Button? = null;
     var header_back : View? = null;
 
+    var editTextAddMember : EditText? = null;
+    var btn_add_member : FloatingActionButton? = null
     var editTextNombre : EditText? = null;
     var editTextDescripcion : EditText? = null;
     var image_Foto : ImageView? = null;
+    var btn_image_Foto : FloatingActionButton? = null;
 
     var grupoCreado : GruposModel = GruposModel()
 
-    lateinit var filepath : Uri
+    var filepath : Uri? = null
     var editarPathFotoUsuario = false
     
     private lateinit var recyclerViewUsuarios : RecyclerView
@@ -45,29 +48,55 @@ class AddGroupActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_group)
+        setContentView(R.layout.activity_group_ac)
 
-        this.btn_Crear_Grupo = findViewById<Button>(R.id.register_btn_register)
-        this.header_back = findViewById<View>(R.id.register_header_back)
-        this.image_Foto = findViewById<ImageView>(R.id.profile_image_foto)
+        this.btn_Crear_Grupo = findViewById<Button>(R.id.add_group_btn_confirm)
+        this.header_back = findViewById<View>(R.id.add_group_header_back)
+        this.image_Foto = findViewById<ImageView>(R.id.add_group_image_foto)
+        this.btn_image_Foto = findViewById<FloatingActionButton>(R.id.add_group_btn_image_foto)
 
-        this.editTextNombre = findViewById<EditText>(R.id.register_input_email)
-        this.editTextDescripcion = findViewById<EditText>(R.id.register_input_nombre)
-        this.recyclerViewUsuarios = findViewById<RecyclerView>(R.id.profile_rv_medallas)
-        
+        this.editTextAddMember = findViewById<EditText>(R.id.add_group_input_add_member)
+        this.btn_add_member = findViewById<FloatingActionButton>(R.id.add_group_btn_add_member)
+
+        this.editTextNombre = findViewById<EditText>(R.id.add_group_input_nombre)
+        this.editTextDescripcion = findViewById<EditText>(R.id.add_group_input_descripcion)
+        this.recyclerViewUsuarios = findViewById<RecyclerView>(R.id.add_group_scrollview_miembros)
+
+        var listaUsuarios: MutableList<UsuariosModel> = mutableListOf()
+        usuariosAdapter = UsuariosGruposAdapter(listaUsuarios)
+        recyclerViewUsuarios.apply {
+            adapter = usuariosAdapter
+            layoutManager = LinearLayoutManager(context)
+        }
+
+        header_back!!.setOnClickListener{
+            val vIntent = Intent(this, MainActivity::class.java)
+            startActivity(vIntent)
+        }
+
+        btn_image_Foto!!.setOnClickListener{
+            editarFotoUsuario()
+        }
+
         btn_Crear_Grupo!!.setOnClickListener{
             crearEditarGrupo()
         }
 
-        image_Foto!!.setOnClickListener{
-            editarFotoUsuario()
+        btn_add_member!!.setOnClickListener {
+            agregarUsuarioAMiembros()
         }
 
-        val bundle = intent.extras
-        val grupoId = bundle!!.getString("grupoId")
+        if (intent.hasExtra("grupoId")) {
+        //if (true){
+            val bundle = intent.extras
+            val grupoId = bundle!!.getString("grupoId")
+            //val grupoId = "P7PhnW548H1IRSCnig6m"
 
-        setUpInfoCurso(grupoId!!)
-
+            setUpInfoCurso(grupoId!!)
+        }
+        else{
+            image_Foto!!.setImageResource(R.drawable.foto_default_perfil)
+        }
     }
 
     private fun setUpInfoCurso(grupoId : String) {
@@ -109,52 +138,105 @@ class AddGroupActivity : AppCompatActivity() {
                 }
         }
     }
-    
+
     private fun setupMiembrosRecyclerView(){
+
         if (grupoCreado.Miembros.isNotEmpty()) {
 
-            //TODO: PARECE QUE EL "whereIn" NOMAS JALA CON 10 USUARIOS, SI ES ASÍ DEBERE HACER UN CICLO FOR DE CONSULTAS
+            //TODO: PARECE QUE EL "whereIn" NOMAS JALA CON 10 USUARIOS, SI ES ASÍ DEBERE HACER UN CICLO FOR DE CONSULTAS, O DEBERE MANEJARLO DE OTRA MANERA?
             FirebaseFirestore.getInstance().collection("Usuarios")
-                .whereIn("Miembros", grupoCreado.Miembros)
+                .whereIn(FieldPath.documentId(), grupoCreado.Miembros)
                 .get()
                 .addOnSuccessListener { responseUsuarios ->
-
                     var listaUsuarios: MutableList<UsuariosModel> = mutableListOf()
 
                     for (responseUsuario in responseUsuarios) {
                         var usuarioAux = UsuariosModel()
 
-                        usuarioAux.Email = responseUsuario.id
-                        usuarioAux.Nombre = responseUsuario.data.get("Nombre") as String
-                        usuarioAux.Nombre = responseUsuario.data.get("Nombre") as String
-                        usuarioAux.Foto = responseUsuario.data.get("Foto") as String
-                        
-                        listaUsuarios.add(usuarioAux)
+                        if (responseUsuario.id != DataManager.emailUsuario) {
+                            usuarioAux.Email = responseUsuario.id
+                            usuarioAux.Nombre = responseUsuario.data.get("Nombre") as String
+                            usuarioAux.Nombre = responseUsuario.data.get("Nombre") as String
+                            usuarioAux.Foto = responseUsuario.data.get("Foto") as String
+
+                            listaUsuarios.add(usuarioAux)
+
+                            usuariosAdapter = UsuariosGruposAdapter(listaUsuarios)
+                            usuariosAdapter.notifyDataSetChanged()
+                        }
                     }
 
-                    usuariosAdapter = UsuariosGruposAdapter(listaUsuarios)
-                    recyclerViewUsuarios.apply {
-                        adapter = usuariosAdapter
-                        layoutManager = LinearLayoutManager(context)
-                    }
                 }
                 .addOnFailureListener { exception ->
                     Log.w(TAG, "Error al conseguir las medallas", exception)
                 }
         }
+
+
+
     }
     
     private fun agregarUsuarioAMiembros() {
-        var documentReferenceUserLogged = FirebaseFirestore.getInstance().collection("Usuarios").document(DataManager.emailUsuario!!)
-        grupoCreado.Miembros.add(documentReferenceUserLogged)
+        var userEmail : String = this.editTextAddMember!!.text.toString()
+        var isEmail = true
+
+        if(userEmail.isEmpty() || !isEmail) {
+            if(userEmail.isEmpty() || !isEmail){
+                editTextAddMember?.setError("Inserte un correo valido")
+            }
+        }
+        else{
+            if (!usuariosAdapter.isItemAdded(userEmail)) {
+                FirebaseFirestore.getInstance().collection("Usuarios")
+                    .document(userEmail)
+                    .get()
+                    .addOnSuccessListener { responseUsuario ->
+
+                        if (responseUsuario.data != null) {
+                            var usuarioAux = UsuariosModel()
+
+                            if (responseUsuario.id != DataManager.emailUsuario) {
+                                usuarioAux.Email = responseUsuario.id
+                                usuarioAux.Nombre = responseUsuario.data!!.get("Nombre") as String
+                                usuarioAux.Foto = responseUsuario.data!!.get("Foto") as String
+
+                                usuariosAdapter.addItem(usuarioAux)
+
+                                this.editTextAddMember!!.setText("")
+                            }
+                            else
+                                DataManager.showToast(this, "El usuario ya fue agregado")
+                        }
+                        else
+                            DataManager.showToast(this, "No se encontro al usuario \"${userEmail}\"")
+
+                    }
+                    .addOnFailureListener { exception ->
+                        DataManager.showToast(this, "Hubo un error al buscar al usuario \"${userEmail}\" Excepcion: ${exception.message}")
+                    }
+            }
+            else
+                DataManager.showToast(this, "El usuario creador ya es miembro del grupo")
+
+
+        }
+
     }
 
     private fun crearEditarGrupo() {
         grupoCreado.Nombre = editTextNombre?.text.toString()
         grupoCreado.Descripcion = editTextDescripcion?.text.toString()
 
+        var listaMiembros : MutableList<UsuariosModel>? = arrayListOf()
+        if (!usuariosAdapter.listaUsuariosGrupo.isEmpty())
+            listaMiembros = usuariosAdapter.listaUsuariosGrupo
+
+
+
         if(     grupoCreado.Nombre.isEmpty()
             ||  grupoCreado.Descripcion.isEmpty()
+            //||  listaMiembros!!.count() < 5
+            ||  filepath == null
         ){
 
             if(grupoCreado.Nombre.isEmpty()){
@@ -165,9 +247,25 @@ class AddGroupActivity : AppCompatActivity() {
                 editTextDescripcion?.setError("Campo vacio")
             }
 
+            if(listaMiembros!!.count() < 5){
+                DataManager.showToast(this, "Error, los miembros del grupo deben ser mayores a 5")
+            }
+
+
+            if(filepath == null){
+                DataManager.showToast(this, "Error, falta agregar una foto para el grupo")
+            }
+
         }else{
             var documentReferenceUserLogged = FirebaseFirestore.getInstance().collection("Usuarios").document(DataManager.emailUsuario!!)
             grupoCreado.Creador = documentReferenceUserLogged
+
+            grupoCreado.Miembros.add(grupoCreado.Creador!!)
+
+            for (miembroGrupo in listaMiembros!!){
+                var documentReferenceMiembro = FirebaseFirestore.getInstance().collection("Usuarios").document(miembroGrupo.Email)
+                grupoCreado.Miembros.add(documentReferenceMiembro)
+            }
 
             DataManager.showProgressDialog("Creando usuario")
 
@@ -177,9 +275,11 @@ class AddGroupActivity : AppCompatActivity() {
 
             var pathImage = "images/Grupos/${grupoCreado.Foto}"
 
-            FirebaseFirestore.getInstance().collection("Grupos").document()
-                .update(
-                    mapOf(
+            grupoCreado.id = FirebaseFirestore.getInstance().collection("Grupos").document().id
+
+            FirebaseFirestore.getInstance().collection("Grupos").document(grupoCreado.id)
+                .set(
+                    hashMapOf(
                         "Nombre" to grupoCreado.Nombre,
                         "Descripcion" to grupoCreado.Descripcion,
                         "Foto" to grupoCreado.Foto,
@@ -194,9 +294,9 @@ class AddGroupActivity : AppCompatActivity() {
                         if (editarPathFotoUsuario) {
                             var imageRef = FirebaseStorage.getInstance().reference.child(pathImage)
 
-                            imageRef.putFile(filepath)
+                            imageRef.putFile(filepath!!)
                                 .addOnSuccessListener { responseImageUpload ->
-                                    val vIntent = Intent(this, LoginActivity::class.java)
+                                    val vIntent = Intent(this, MainActivity::class.java)
                                     startActivity(vIntent)
                                 }
                                 .addOnFailureListener { responseImageUpload ->
@@ -240,7 +340,7 @@ class AddGroupActivity : AppCompatActivity() {
         if (requestCode == 111 && resultCode == Activity.RESULT_OK && data != null)
         {
             //Actualizar ImageView
-            var filepath = data!!.data!!
+            filepath = data!!.data!!
             var bitmap = MediaStore.Images.Media.getBitmap(contentResolver, filepath)
             image_Foto!!.setImageBitmap(bitmap)
 

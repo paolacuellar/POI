@@ -25,6 +25,7 @@
             android:background="@drawable/search_background">
 
             <ImageView
+                android:id="@+id/add_group_header_back"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:padding="4dp"
@@ -63,7 +64,7 @@
             android:layout_height="100dp">
 
             <de.hdodenhof.circleimageview.CircleImageView
-                android:id="@+id/imageView"
+                android:id="@+id/add_group_image_foto"
                 android:layout_width="100dp"
                 android:layout_height="100dp"
                 android:layout_alignParentTop="true"
@@ -72,7 +73,7 @@
                 app:civ_circle_background_color="@color/coffee" />
 
             <com.google.android.material.floatingactionbutton.FloatingActionButton
-                android:id="@+id/floatingActionButton"
+                android:id="@+id/add_group_btn_image_foto"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
@@ -95,7 +96,7 @@
             android:textColor="@color/coffee"/>
 
         <EditText
-            android:id="@+id/TxtNameGroup"
+            android:id="@+id/add_group_input_nombre"
             android:layout_width="match_parent"
             android:layout_height="33dp"
             android:layout_marginHorizontal="29dp"
@@ -114,7 +115,7 @@
             android:textColor="@color/coffee"/>
 
         <EditText
-            android:id="@+id/TxtDescriptionGroup"
+            android:id="@+id/add_group_input_descripcion"
             android:layout_width="match_parent"
             android:layout_height="100dp"
             android:layout_marginHorizontal="29dp"
@@ -122,16 +123,48 @@
             android:gravity="start"
             android:paddingStart="13dp" />
 
-        <SearchView
-            android:layout_width="match_parent"
-            android:layout_height="36dp"
-            android:layout_marginHorizontal="29dp"
-            android:layout_marginTop="3dp"
-            android:background="@drawable/search_background"
-            android:iconifiedByDefault="false"
-            android:queryBackground="@android:color/transparent"
-            android:queryHint="Agregar miembro"
-            android:searchIcon="@drawable/ic_add_plus_brown" />
+
+        <RelativeLayout
+            android:layout_width="310dp"
+            android:layout_height="45dp"
+            android:layout_marginVertical="5dp">
+
+            <EditText
+                android:id="@+id/add_group_input_add_member"
+                android:layout_width="251dp"
+                android:layout_height="match_parent"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentBottom="true"
+                android:layout_marginStart="0dp"
+                android:layout_marginLeft="0dp"
+                android:layout_marginTop="3dp"
+                android:layout_marginEnd="0dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginBottom="0dp"
+                android:layout_toStartOf="@+id/add_group_btn_add_member"
+                android:background="@drawable/search_background"
+                android:iconifiedByDefault="false"
+                android:queryBackground="@android:color/transparent"
+                android:queryHint="Agregar miembro" />
+
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/add_group_btn_add_member"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentBottom="true"
+                android:layout_marginTop="0dp"
+                android:layout_marginEnd="1dp"
+                android:layout_marginBottom="0dp"
+                android:backgroundTint="@color/white"
+                android:clickable="true"
+                app:backgroundTint="@color/coffee"
+                app:borderWidth="2dp"
+                app:fabSize="mini"
+                app:srcCompat="@drawable/ic_add_plus_brown" />
+        </RelativeLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -148,16 +181,17 @@
                 android:layout_marginTop="4dp"
                 android:scrollbarThumbVertical="@drawable/scroll_thumb">
                 <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/add_group_scrollview_miembros"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    tools:listitem="@layout/item_members"/>
+                    tools:listitem="@layout/item_add_group_members"/>
             </ScrollView>
         </LinearLayout>
 
     </LinearLayout>
 
     <Button
-        android:id="@+id/btnconfirm"
+        android:id="@+id/add_group_btn_confirm"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="26dp"
