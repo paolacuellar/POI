@@ -61,7 +61,7 @@
             android:background="@drawable/post_frame">
 
             <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
-                android:id="@+id/imageView"
+                android:id="@+id/chatUserImage"
                 android:layout_width="38dp"
                 android:layout_height="38dp"
                 android:layout_marginStart="12dp"
@@ -80,7 +80,7 @@
                 android:textColor="@color/black"
                 android:textSize="16sp"
                 android:textStyle="bold"
-                app:layout_constraintStart_toEndOf="@+id/imageView"
+                app:layout_constraintStart_toEndOf="@+id/chatUserImage"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
@@ -95,7 +95,7 @@
                 android:textSize="12sp"
                 app:layout_constraintEnd_toEndOf="@+id/cover"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/imageView" />
+                app:layout_constraintTop_toBottomOf="@+id/chatUserImage" />
 <!--
 
             <ImageView

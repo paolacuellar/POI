@@ -23,27 +23,32 @@
             android:layout_height="36dp"
             android:background="@drawable/search_background"
             >
+
             <ImageView
+                android:id="@+id/chat_btn_regresar"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:src="@drawable/ic_arrow_back_brown"
-                android:padding="4dp"/>
+                android:padding="4dp"
+                android:src="@drawable/ic_arrow_back_brown" />
         </LinearLayout>
 
         <TextView
+            android:id="@+id/chat_txt_nombre_user"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Nombre del usuario"
             android:layout_gravity="center"
             android:gravity="center"
-            android:textStyle="bold"
+            android:text="Nombre del usuario"
             android:textColor="@color/coffee"
-            android:textSize="18dp"/>
+            android:textSize="18dp"
+            android:textStyle="bold"
+            tools:layout_editor_absoluteX="136dp"
+            tools:layout_editor_absoluteY="21dp" />
     </androidx.appcompat.widget.Toolbar>
 
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/messagesRecylerView"
+        android:id="@+id/messagesRecyclerView"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginStart="21dp"

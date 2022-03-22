@@ -42,7 +42,7 @@
     </androidx.appcompat.widget.Toolbar>
 
     <de.hdodenhof.circleimageview.CircleImageView
-        android:id="@+id/imageView"
+        android:id="@+id/chatUserImage"
         android:layout_width="46dp"
         android:layout_height="46dp"
         android:layout_marginStart="40dp"
@@ -63,9 +63,9 @@
         android:textSize="18sp"
         android:textStyle="bold"
 
-        app:layout_constraintBottom_toBottomOf="@+id/imageView"
-        app:layout_constraintStart_toEndOf="@+id/imageView"
-        app:layout_constraintTop_toTopOf="@+id/imageView" />
+        app:layout_constraintBottom_toBottomOf="@+id/chatUserImage"
+        app:layout_constraintStart_toEndOf="@+id/chatUserImage"
+        app:layout_constraintTop_toTopOf="@+id/chatUserImage" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/constraintLayout"
@@ -76,7 +76,7 @@
         android:background="@drawable/post_bubble"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView">
+        app:layout_constraintTop_toBottomOf="@+id/chatUserImage">
 
         <EditText
             android:id="@+id/messageTextField"

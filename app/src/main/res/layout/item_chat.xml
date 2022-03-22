@@ -21,7 +21,7 @@
 
         <de.hdodenhof.circleimageview.CircleImageView
             xmlns:app="http://schemas.android.com/apk/res-auto"
-            android:id="@+id/imageView"
+            android:id="@+id/chatUserImage"
             android:layout_marginTop="15dp"
             android:layout_marginLeft="14dp"
             android:layout_width="55dp"

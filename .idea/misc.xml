@@ -3,6 +3,16 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/AndroidStudioProjects/app/src/main/res/layout/activity_chat.xml" value="0.20416666666666666" />
+        <entry key="..\:/AndroidStudioProjects/app/src/main/res/layout/activity_group.xml" value="0.20416666666666666" />
+        <entry key="..\:/AndroidStudioProjects/app/src/main/res/layout/activity_main.xml" value="0.25" />
+        <entry key="..\:/AndroidStudioProjects/app/src/main/res/layout/activity_profile.xml" value="0.20416666666666666" />
+        <entry key="..\:/AndroidStudioProjects/app/src/main/res/layout/fragment_chats.xml" value="0.20416666666666666" />
+        <entry key="..\:/AndroidStudioProjects/app/src/main/res/layout/fragment_grupos.xml" value="0.20416666666666666" />
+        <entry key="..\:/AndroidStudioProjects/app/src/main/res/layout/item_chat.xml" value="0.20416666666666666" />
+        <entry key="..\:/AndroidStudioProjects/app/src/main/res/layout/item_group.xml" value="0.20416666666666666" />
+        <entry key="..\:/AndroidStudioProjects/app/src/main/res/layout/item_message.xml" value="0.20416666666666666" />
+        <entry key="..\:/AndroidStudioProjects/app/src/main/res/menu/menu_navigation.xml" value="0.20416666666666666" />
         <entry key="..\:/Documentos/FCFM/8 Semestre/7mo Progra Orientada a la internet/PIA/POI/app/src/main/res/drawable-v24/button_with_border.xml" value="0.30104166666666665" />
         <entry key="..\:/Documentos/FCFM/8 Semestre/7mo Progra Orientada a la internet/PIA/POI/app/src/main/res/drawable-v24/header_with_border.xml" value="0.30104166666666665" />
         <entry key="..\:/Documentos/FCFM/8 Semestre/7mo Progra Orientada a la internet/PIA/POI/app/src/main/res/drawable-v24/search_background_blocked.xml" value="0.1902027027027027" />

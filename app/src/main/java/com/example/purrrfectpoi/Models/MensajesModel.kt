@@ -1,7 +1,8 @@
 package com.example.purrrfectpoi.Models
 
+import com.google.firebase.Timestamp
 import com.google.firebase.firestore.DocumentReference
-import com.google.type.Date
+import java.util.*
 
 class MensajesModel {
     var id : String = ""
@@ -11,5 +12,7 @@ class MensajesModel {
     var NombreDocumento : String = ""
     var Latitud : String = ""
     var Longitud : String = ""
-    var FechaCreacion : Date? = null
+    var FechaCreacion : Timestamp? = null
+
+    var FotoPerfil : String = ""
 }
