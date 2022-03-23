@@ -18,6 +18,7 @@ import com.google.firebase.Timestamp
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.Query
 import com.google.firestore.v1.DocumentTransform
 import com.psm.hiring.Utils.DataManager
 import java.util.*
@@ -41,6 +42,7 @@ class ChatActivity : AppCompatActivity() {
     var myPhoto : String? = null;
 
     private lateinit var db : FirebaseFirestore
+    private lateinit var documentReferenceUserLogged : DocumentReference
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -69,6 +71,10 @@ class ChatActivity : AppCompatActivity() {
             enviarMensaje()
         }
 
+        documentReferenceUserLogged = FirebaseFirestore.getInstance().collection("Usuarios").document(
+            DataManager.emailUsuario!!)
+
+        setUpChat()
         updateChat()
 
     }
@@ -83,7 +89,41 @@ class ChatActivity : AppCompatActivity() {
                 }
 
                 if (snapshot != null) {
-                    setUpChat()
+                    db.collection("Conversacion").document(idChat!!).collection("Mensajes")
+                        .orderBy("FechaCreacion", Query.Direction.DESCENDING).limit(1)
+                        .get()
+                        .addOnSuccessListener { responseMsgs ->
+
+                            for (responseMsg in responseMsgs) {
+
+                                if (responseMsg.get("FechaCreacion") != null) {
+
+                                    var msgAux = MensajesModel()
+                                    msgAux.id = responseMsg.id
+                                    msgAux.Texto = if(responseMsg.get("Texto") != null)    responseMsg.get("Texto") as String else ""
+                                    msgAux.Autor = responseMsg.get("Autor") as DocumentReference
+                                    msgAux.Foto = if(responseMsg.get("Foto") != null)    responseMsg.get("Foto") as String else ""
+                                    msgAux.NombreDocumento = if(responseMsg.get("NombreDocumento") != null)    responseMsg.get("NombreDocumento") as String else ""
+                                    msgAux.Latitud = if(responseMsg.get("Latitud") != null)    responseMsg.get("Latitud") as String else ""
+                                    msgAux.Longitud = if(responseMsg.get("Longitud") != null)    responseMsg.get("Longitud") as String else ""
+                                    msgAux.FechaCreacion = responseMsg.get("FechaCreacion") as Timestamp
+                                    if (msgAux.Autor == documentReferenceUserLogged) {
+                                        msgAux.FotoPerfil = if(myPhoto != null)    myPhoto as String else ""
+                                    } else {
+                                        msgAux.FotoPerfil = if(otherPhoto != null)    otherPhoto as String else ""
+                                    }
+
+                                    chatAdapter.addItem(msgAux)
+
+                                }
+
+                            }
+
+                        }
+                        .addOnFailureListener { exception ->
+                            Log.w(ContentValues.TAG, "Error consiguiendo el último Mensaje", exception)
+                        }
+
                 }
 
             }
@@ -91,9 +131,6 @@ class ChatActivity : AppCompatActivity() {
     }
 
     private fun setUpChat() {
-        var documentReferenceUserLogged = FirebaseFirestore.getInstance().collection("Usuarios").document(
-            DataManager.emailUsuario!!)
-
         db = FirebaseFirestore.getInstance()
         db.collection("Usuarios").document(documentReferenceUserLogged.id).get()
             .addOnSuccessListener { responseUsuario ->
@@ -147,7 +184,6 @@ class ChatActivity : AppCompatActivity() {
                             msgParam.add(msgAux)
                             chatAdapter.addItem(msgAux)
 
-
                         }
                     }
                     .addOnFailureListener { exception ->
@@ -160,9 +196,6 @@ class ChatActivity : AppCompatActivity() {
     }
 
     private fun enviarMensaje() {
-        var documentReferenceUserLogged = FirebaseFirestore.getInstance().collection("Usuarios").document(
-            DataManager.emailUsuario!!)
-
         var mensaje : String = txtMsg?.text.toString()
         if (mensaje.isEmpty()) {
             txtMsg?.setError("Mensaje vacío")
