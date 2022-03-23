@@ -177,10 +177,10 @@ class ChatsFragment: Fragment() {
                                         hashMapOf(
                                             "Participantes" to arrayListOf(documentReferenceUserLogged, documentReferenceOtherUser)
                                         )
-                                    ).addOnCompleteListener { responseMsgCreation ->
+                                    ).addOnCompleteListener { responseChatCreation ->
 
-                                        if (responseMsgCreation.isSuccessful) {
-                                            arrayChats[position] = responseMsgCreation.result.id
+                                        if (responseChatCreation.isSuccessful) {
+                                            arrayChats[position] = responseChatCreation.result.id
 
                                             val intent = Intent(activity, ChatActivity::class.java)
                                             intent.putExtra("Email", userMail)
@@ -215,7 +215,7 @@ class ChatsFragment: Fragment() {
                                                 }*/
 
                                         } else {
-                                            Toast.makeText(activity, "Error: ${responseMsgCreation.exception!!.message}", Toast.LENGTH_SHORT).show()
+                                            Toast.makeText(activity, "Error: ${responseChatCreation.exception!!.message}", Toast.LENGTH_SHORT).show()
                                         }
 
                                     }

@@ -128,33 +128,26 @@ class ChatActivity : AppCompatActivity() {
                     .addOnSuccessListener { responseMsgs ->
 
                         for (responseMsg in responseMsgs) {
-                            var idMsgAux = ""
-                            idMsgAux = responseMsg.id
 
-                            db.collection("Conversacion").document(idChat!!)
-                                .collection("Mensajes").document(idMsgAux)
-                                .get()
-                                .addOnSuccessListener { responseContent ->
+                            var msgAux = MensajesModel()
+                            msgAux.id = responseMsg.id
+                            msgAux.Texto = if(responseMsg.get("Texto") != null)    responseMsg.get("Texto") as String else ""
+                            msgAux.Autor = responseMsg.get("Autor") as DocumentReference
+                            msgAux.Foto = if(responseMsg.get("Foto") != null)    responseMsg.get("Foto") as String else ""
+                            msgAux.NombreDocumento = if(responseMsg.get("NombreDocumento") != null)    responseMsg.get("NombreDocumento") as String else ""
+                            msgAux.Latitud = if(responseMsg.get("Latitud") != null)    responseMsg.get("Latitud") as String else ""
+                            msgAux.Longitud = if(responseMsg.get("Longitud") != null)    responseMsg.get("Longitud") as String else ""
+                            msgAux.FechaCreacion = responseMsg.get("FechaCreacion") as Timestamp
+                            if (msgAux.Autor == documentReferenceUserLogged) {
+                                msgAux.FotoPerfil = if(myPhoto != null)    myPhoto as String else ""
+                            } else {
+                                msgAux.FotoPerfil = if(otherPhoto != null)    otherPhoto as String else ""
+                            }
 
-                                    var msgAux = MensajesModel()
-                                    msgAux.id = responseContent.id
-                                    msgAux.Texto = if(responseContent.get("Texto") != null)    responseContent.get("Texto") as String else ""
-                                    msgAux.Autor = responseContent.get("Autor") as DocumentReference
-                                    msgAux.Foto = if(responseContent.get("Foto") != null)    responseContent.get("Foto") as String else ""
-                                    msgAux.NombreDocumento = if(responseContent.get("NombreDocumento") != null)    responseContent.get("NombreDocumento") as String else ""
-                                    msgAux.Latitud = if(responseContent.get("Latitud") != null)    responseContent.get("Latitud") as String else ""
-                                    msgAux.Longitud = if(responseContent.get("Longitud") != null)    responseContent.get("Longitud") as String else ""
-                                    msgAux.FechaCreacion = responseContent.get("FechaCreacion") as Timestamp
-                                    if (msgAux.Autor == documentReferenceUserLogged) {
-                                        msgAux.FotoPerfil = if(myPhoto != null)    myPhoto as String else ""
-                                    } else {
-                                        msgAux.FotoPerfil = if(otherPhoto != null)    otherPhoto as String else ""
-                                    }
+                            msgParam.add(msgAux)
+                            chatAdapter.addItem(msgAux)
 
-                                    msgParam.add(msgAux)
-                                    chatAdapter.addItem(msgAux)
 
-                                }
                         }
                     }
                     .addOnFailureListener { exception ->
@@ -185,6 +178,7 @@ class ChatActivity : AppCompatActivity() {
                         "FechaCreacion" to FieldValue.serverTimestamp()
                     )
                 )
+
         }
 
     }
