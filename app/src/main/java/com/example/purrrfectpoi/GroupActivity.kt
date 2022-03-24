@@ -1,8 +1,10 @@
 package com.example.purrrfectpoi
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.widget.ImageView
 import androidx.fragment.app.Fragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.example.purrrfectpoi.fragments.GroupChatFragment
@@ -12,12 +14,27 @@ class GroupActivity : AppCompatActivity() {
 
     val TAG="GroupActivity"
 
+    var btnRegresar : ImageView? =  null;
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_group)
 
+        val bundle : Bundle?= intent.extras
+
+        val bundleChat = Bundle().apply {
+            putString("groupId", bundle!!.getString("groupId"))
+        }
         val chatFragment= GroupChatFragment()
+        chatFragment.arguments = bundleChat
+
         val miembrosFragment= GroupMembersFragment()
+
+        this.btnRegresar = findViewById<ImageView>(R.id.btn_grupo_regresar)
+        this.btnRegresar?.setOnClickListener {
+            val vIntent = Intent(this, MainActivity::class.java)
+            startActivity(vIntent)
+        }
 
         setCurrentFragment(chatFragment)
 

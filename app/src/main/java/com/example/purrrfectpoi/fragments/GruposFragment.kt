@@ -68,6 +68,7 @@ class GruposFragment: Fragment() {
                     grupoAux.id = responseGrupo.id
                     grupoAux.Nombre = responseGrupo.data.get("Nombre") as String
                     grupoAux.Foto = responseGrupo.data.get("Foto") as String
+                    grupoAux.Conversacion =  if(responseGrupo.data.get("Conversacion") != null)    responseGrupo.data.get("Conversacion") as DocumentReference else null
                     gruposParam.add(grupoAux)
                 }
 

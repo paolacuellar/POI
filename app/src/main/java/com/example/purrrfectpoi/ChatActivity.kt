@@ -203,6 +203,7 @@ class ChatActivity : AppCompatActivity() {
         } else {
             txtMsg?.setText("")
 
+            db = FirebaseFirestore.getInstance()
             db.collection("Conversacion").document(idChat!!).collection("Mensajes")
                 .add(
                     hashMapOf(
