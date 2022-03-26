@@ -27,7 +27,10 @@ class RegisterActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener
     var editTextNombre : EditText? = null;
     var editTextApPaterno : EditText? = null;
     var editTextApMaterno : EditText? = null;
-    var spinnerCarrera : Spinner? = null;
+    private var spinnerCarrera : Spinner? = null;
+    private var carrerasFCFM: ArrayList<String>? = null
+    private var adapter: ArrayAdapter<String>? = null
+
 
     var usuarioRegister : UsuariosModel = UsuariosModel()
     var authRegister : AuthModel = AuthModel()
@@ -48,7 +51,12 @@ class RegisterActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener
         this.editTextApPaterno = findViewById<EditText>(R.id.register_input_ap_paterno)
         this.editTextApMaterno = findViewById<EditText>(R.id.register_input_ap_materno)
 
-        var carrerasFCFM : ArrayList<String> = arrayListOf()
+        spinnerCarrera = findViewById<View>(R.id.register_spinner_carreras) as Spinner
+
+        //val carreras = arrayOf("LMAD", "LA", "LCC", "LSTI", "LM", "LF")
+
+//SPINNER LUISITO
+        /*var carrerasFCFM : ArrayList<String> = arrayListOf()
         db = FirebaseFirestore.getInstance()
         db.collection("Carrera").get()
             .addOnSuccessListener { documents ->
@@ -70,7 +78,17 @@ class RegisterActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener
             spinnerCarrera!!.setAdapter(adapter)
         }
 
-        spinnerCarrera!!.onItemSelectedListener  = this
+        spinnerCarrera!!.onItemSelectedListener  = this*/
+
+        carrerasFCFM = ArrayList<String>()
+        adapter = ArrayAdapter(
+            this, android.R.layout.simple_spinner_dropdown_item,
+            carrerasFCFM!!
+        )
+        adapter!!.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        spinnerCarrera!!.setAdapter(adapter)
+
+        getData()
 
 
         this.btn_Register?.setOnClickListener {
@@ -103,6 +121,21 @@ class RegisterActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener
 
         //usuarioRegister.Carrera = "5jUhUWbOUD9Yii3keJQ4"
         var Carrera = "5jUhUWbOUD9Yii3keJQ4"
+        //Carrera = spinnerCarrera!!.onItemSelectedListener.toString() ("LMAD", "LA", "LCC", "LSTI", "LM", "LF")
+        var seleccionado= spinnerCarrera!!.selectedItem.toString()
+        if (seleccionado == "LMAD") {
+            Carrera="5jUhUWbOUD9Yii3keJQ4"
+        } else if (seleccionado == "LA") {
+            Carrera="78Lrt79mpebGg4piZbgJ"
+        } else if (seleccionado == "LCC") {
+            Carrera="KmMgbsFVxWCFuhNPkAIX"
+        } else if (seleccionado == "LSTI") {
+            Carrera="SPiOCQvpmRXIJixYnVxu"
+        } else if (seleccionado == "LM") {
+            Carrera="cY2mjZ9piYm9lrSjYNpM"
+        } else if (seleccionado == "LF") {
+            Carrera="rTADytJi5ihy8LgvLySj"
+        }
         usuarioRegister.Carrera =  db.document("Carrera/${Carrera}")
 
         val validate_pass = isValidPassword(authRegister.Password)
@@ -186,6 +219,21 @@ class RegisterActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener
 
     }
 
+    fun getData(){
+        db = FirebaseFirestore.getInstance()
+        db.collection("Carrera").get()
+            .addOnSuccessListener { documents ->
+                carrerasFCFM?.clear()
+                for (document in documents) {
+                    carrerasFCFM?.add(document.data.get("Nombre").toString())
+                }
+                adapter?.notifyDataSetChanged()
+            }
+            .addOnFailureListener { exception ->
+                Log.w(TAG, "Error consiguiendo Carreras", exception)
+                DataManager.showToast(this, "Error consiguiendo Carreras")
+            }
+    }
 
     override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
         Log.d(TAG, "ENTRO EN EL ITEM SELECTED")
