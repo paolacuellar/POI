@@ -30,7 +30,7 @@ class MainActivity : AppCompatActivity() {
         this.image_Foto = findViewById<ImageView>(R.id.main_image_profile)
         this.titulo_pantalla = findViewById<TextView>(R.id.main_text_title)
 
-        setUpImageUser()
+        //setUpImageUser()
 
         this.image_Foto!!.setOnClickListener{
             val vIntent = Intent(this, ProfileActivity::class.java)
@@ -72,7 +72,7 @@ class MainActivity : AppCompatActivity() {
         }
 
 
-
+/*
     private fun setUpImageUser() {
         var usuarioProfile : UsuariosModel = UsuariosModel()
 
@@ -97,6 +97,8 @@ class MainActivity : AppCompatActivity() {
                 Log.w(TAG, "Error al conseguir la información del Usuario", exception)
             }
     }
+
+    */
 }
 
 

@@ -25,7 +25,7 @@
             >
 
             <ImageView
-                android:id="@+id/chat_btn_regresar"
+                android:id="@+id/chat_header_back"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:padding="4dp"

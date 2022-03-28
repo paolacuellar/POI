@@ -58,7 +58,7 @@ class GroupChatFragment:Fragment() {
         documentReferenceUserLogged = FirebaseFirestore.getInstance().collection("Usuarios").document(
             DataManager.emailUsuario!!)
 
-        idGrupo = arguments?.getString("groupId")
+        idGrupo = arguments?.getString("grupoId")
         //myPhoto = DataManager.fotoUsuario
 
         setUpChat()

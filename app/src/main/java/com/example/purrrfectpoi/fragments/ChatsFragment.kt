@@ -8,11 +8,9 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
 import android.view.*
-import android.widget.Button
-import android.widget.EditText
-import android.widget.ImageButton
-import android.widget.Toast
+import android.widget.*
 import androidx.appcompat.widget.SearchView
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -22,6 +20,7 @@ import com.example.purrrfectpoi.Models.GruposModel
 import com.example.purrrfectpoi.Models.UsuariosModel
 import com.example.purrrfectpoi.R
 import com.example.purrrfectpoi.adapters.UsuariosChatsAdapter
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
@@ -34,9 +33,12 @@ class ChatsFragment: Fragment() {
 
     private lateinit var recyclerViewChats : RecyclerView
     private lateinit var chatsUsuariosAdapter : UsuariosChatsAdapter
+    private lateinit var buttonFlotanteMain : FloatingActionButton
 
+    var txtTituloPantalla : TextView? = null;
     var btnBuscarChat : ImageButton? = null;
     var txtBuscarChat : EditText? = null;
+
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -49,6 +51,13 @@ class ChatsFragment: Fragment() {
 
         this.btnBuscarChat = getView()?.findViewById<ImageButton>(R.id.newChatButton)
         this.txtBuscarChat = getView()?.findViewById<EditText>(R.id.newChatText)
+
+        this.txtTituloPantalla = requireActivity().findViewById<TextView>(R.id.main_text_title)
+        this.txtTituloPantalla!!.text = "Mis Chats";
+
+        this.buttonFlotanteMain = requireActivity().findViewById<FloatingActionButton>(R.id.menu_btn_floating)
+        this.buttonFlotanteMain.visibility = View.GONE
+
 
         this.btnBuscarChat?.setOnClickListener {
             buscarChats(txtBuscarChat?.text.toString())

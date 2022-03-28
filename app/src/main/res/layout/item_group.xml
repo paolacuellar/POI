@@ -16,6 +16,7 @@
         app:cardElevation="0dp">
 
         <LinearLayout
+            android:id="@+id/item_grupo_card_foto"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
@@ -43,6 +44,12 @@
                 android:textSize="18dp"/>
 
         </LinearLayout>
+
+        <ImageView
+            android:id="@+id/item_image_editar_grupo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:srcCompat="@drawable/ic_pencil_square_bw" />
 
     </androidx.cardview.widget.CardView>
 

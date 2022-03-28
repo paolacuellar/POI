@@ -8,6 +8,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.TextView
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -26,6 +28,8 @@ class GruposFragment: Fragment() {
 
     private lateinit var recyclerViewGrupos : RecyclerView
     private lateinit var gruposAdapter: GruposAdapter
+
+    var txtTituloPantalla : TextView? = null;
     private lateinit var buttonCrearGrupo : FloatingActionButton
 
     override fun onCreateView(
@@ -41,8 +45,13 @@ class GruposFragment: Fragment() {
 
         this.recyclerViewGrupos = view.findViewById<RecyclerView>(R.id.listGroupsRecyclerView)
 
+        this.txtTituloPantalla = requireActivity().findViewById<TextView>(R.id.main_text_title)
+        this.txtTituloPantalla!!.text = "Mis Grupos";
 
         this.buttonCrearGrupo = requireActivity().findViewById<FloatingActionButton>(R.id.menu_btn_floating)
+        this.buttonCrearGrupo.visibility = View.VISIBLE
+        //this.buttonCrearGrupo.setBackground(ContextCompat.getDrawable(requireActivity(), R.drawable.ic_group_add_brown));
+        this.buttonCrearGrupo.setImageResource(R.drawable.ic_group_add_brown);
 
         buttonCrearGrupo.setOnClickListener{
             val intent = Intent(activity, AddGroupActivity::class.java)
@@ -68,7 +77,8 @@ class GruposFragment: Fragment() {
                     grupoAux.id = responseGrupo.id
                     grupoAux.Nombre = responseGrupo.data.get("Nombre") as String
                     grupoAux.Foto = responseGrupo.data.get("Foto") as String
-                    grupoAux.Conversacion =  if(responseGrupo.data.get("Conversacion") != null)    responseGrupo.data.get("Conversacion") as DocumentReference else null
+                    grupoAux.Creador = if(responseGrupo.get("Creador") != null) responseGrupo.get("Creador") as DocumentReference else null
+                    //grupoAux.Conversacion =  if(responseGrupo.data.get("Conversacion") != null)    responseGrupo.data.get("Conversacion") as DocumentReference else null
                     gruposParam.add(grupoAux)
                 }
 

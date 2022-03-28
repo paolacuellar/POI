@@ -23,7 +23,7 @@ class GroupActivity : AppCompatActivity() {
         val bundle : Bundle?= intent.extras
 
         val bundleChat = Bundle().apply {
-            putString("groupId", bundle!!.getString("groupId"))
+            putString("grupoId", bundle!!.getString("grupoId"))
         }
         val chatFragment= GroupChatFragment()
         chatFragment.arguments = bundleChat
@@ -32,8 +32,7 @@ class GroupActivity : AppCompatActivity() {
 
         this.btnRegresar = findViewById<ImageView>(R.id.btn_grupo_regresar)
         this.btnRegresar?.setOnClickListener {
-            val vIntent = Intent(this, MainActivity::class.java)
-            startActivity(vIntent)
+            onBackPressed()
         }
 
         setCurrentFragment(chatFragment)
@@ -57,10 +56,6 @@ class GroupActivity : AppCompatActivity() {
             }
             true
         }
-
-        /*val groupId = intent.getStringExtra("groupId")
-
-        DataManager.showToast(this, "El id del grupo es ${groupId}")*/
     }
 
     private fun setCurrentFragment(fragment: Fragment)=

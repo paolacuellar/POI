@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.example.purrrfectpoi.AddGroupActivity
 import com.example.purrrfectpoi.Models.GruposModel
 
 
@@ -14,6 +15,7 @@ import com.google.firebase.storage.FirebaseStorage
 import kotlinx.android.synthetic.main.item_group.view.*
 
 import com.example.purrrfectpoi.GroupActivity
+import com.psm.hiring.Utils.DataManager
 
 
 class GruposAdapter(val grupos: MutableList<GruposModel>) : RecyclerView.Adapter<GruposAdapter.GruposViewHolder>(){
@@ -49,10 +51,23 @@ class GruposAdapter(val grupos: MutableList<GruposModel>) : RecyclerView.Adapter
                 }
 
 
-            view.item_grupo_card.setOnClickListener{
+            view.item_grupo_card_foto.setOnClickListener{
                 val intent = Intent(view.context, GroupActivity::class.java)
-                intent.putExtra("groupId",Grupo.id)
+                intent.putExtra("grupoId",Grupo.id)
                 view.context?.startActivity(intent)
+            }
+
+            if (Grupo.Creador!!.id == DataManager.emailUsuario) {
+                view.item_image_editar_grupo.visibility = View.VISIBLE
+
+                view.item_image_editar_grupo.setOnClickListener {
+                    val intent = Intent(view.context, AddGroupActivity::class.java)
+                    intent.putExtra("grupoId", Grupo.id)
+                    view.context?.startActivity(intent)
+                }
+            }
+            else{
+                view.item_image_editar_grupo.visibility = View.GONE
             }
         }
     }

@@ -5,13 +5,12 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
-import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.purrrfectpoi.Models.ConversacionesModel
 import com.example.purrrfectpoi.Models.MensajesModel
 import com.example.purrrfectpoi.adapters.ChatAdapter
 import com.google.firebase.Timestamp
@@ -19,15 +18,14 @@ import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
-import com.google.firestore.v1.DocumentTransform
 import com.psm.hiring.Utils.DataManager
 import java.util.*
-import kotlin.Comparator
 
 class ChatActivity : AppCompatActivity() {
 
     private lateinit var recyclerViewMsgs : RecyclerView
     private lateinit var chatAdapter : ChatAdapter
+    var header_back : View? = null;
 
     var btnRegresar : ImageView? =  null;
     var txtUsername : TextView? = null;
@@ -57,14 +55,13 @@ class ChatActivity : AppCompatActivity() {
 
         myPhoto = DataManager.fotoUsuario
 
-        this.btnRegresar = findViewById<ImageView>(R.id.chat_btn_regresar)
+        this.btnRegresar = findViewById<ImageView>(R.id.chat_header_back)
         this.txtUsername = findViewById<TextView>(R.id.chat_txt_nombre_user)
         this.btnEnviarMsg = findViewById<ImageView>(R.id.sendMessageButton)
         this.txtMsg = findViewById<EditText>(R.id.messageTextField)
 
         this.btnRegresar?.setOnClickListener {
-            val vIntent = Intent(this, MainActivity::class.java)
-            startActivity(vIntent)
+            onBackPressed()
         }
         txtUsername?.text = chatTo
         this.btnEnviarMsg?.setOnClickListener {

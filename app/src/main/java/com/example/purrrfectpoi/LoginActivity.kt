@@ -54,7 +54,7 @@ class LoginActivity : AppCompatActivity() {
             startActivity(vIntent)
         }
 
-        revisarUsuarioLoggeadoCache()
+        //revisarUsuarioLoggeadoCache()
     }
 
     fun logginUsuario(loginActivity: LoginActivity) {

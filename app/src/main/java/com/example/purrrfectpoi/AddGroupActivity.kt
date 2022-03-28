@@ -41,7 +41,7 @@ class AddGroupActivity : AppCompatActivity() {
     var grupoCreado : GruposModel = GruposModel()
 
     var filepath : Uri? = null
-    var editarPathFotoUsuario = false
+    var subirFotoGrupo = false
     
     private lateinit var recyclerViewUsuarios : RecyclerView
     private lateinit var usuariosAdapter: UsuariosGruposAdapter
@@ -70,16 +70,15 @@ class AddGroupActivity : AppCompatActivity() {
         }
 
         header_back!!.setOnClickListener{
-            val vIntent = Intent(this, MainActivity::class.java)
-            startActivity(vIntent)
+            onBackPressed()
         }
 
         btn_image_Foto!!.setOnClickListener{
-            editarFotoUsuario()
+            subirFotoGrupo()
         }
 
         btn_Crear_Grupo!!.setOnClickListener{
-            crearEditarGrupo()
+            ingresarInfoGrupo()
         }
 
         btn_add_member!!.setOnClickListener {
@@ -106,13 +105,12 @@ class AddGroupActivity : AppCompatActivity() {
             .addOnSuccessListener {
 
                 //TODO: NO ES TAN NECESARIO TRAERNOS LA INFO DE "CONVERSACION" Y "TAREAS", ESTA BIEN DE TODOS MODOS TRAERLA?
+                grupoCreado.id = grupoId
                 grupoCreado.Nombre = if(it.get("Nombre") != null) it.get("Nombre") as String else ""
                 grupoCreado.Descripcion = if(it.get("Descripcion") != null) it.get("Descripcion") as String else ""
                 grupoCreado.Foto = if(it.get("Foto") != null) it.get("Foto") as String else ""
                 grupoCreado.Creador = if(it.get("Creador") != null) it.get("Creador") as DocumentReference else null
                 grupoCreado.Miembros = if(it.get("Miembros") != null) it.get("Miembros") as ArrayList<DocumentReference> else arrayListOf()
-                grupoCreado.Conversacion = if(it.get("Conversacion") != null) it.get("Conversacion") as DocumentReference else null
-                grupoCreado.Tareas = if(it.get("Tareas") != null)  it.get("Tareas") as ArrayList<DocumentReference> else arrayListOf()
 
                 editTextNombre?.setText(grupoCreado.Nombre)
                 editTextDescripcion?.setText(grupoCreado.Descripcion)
@@ -148,7 +146,6 @@ class AddGroupActivity : AppCompatActivity() {
                 .whereIn(FieldPath.documentId(), grupoCreado.Miembros)
                 .get()
                 .addOnSuccessListener { responseUsuarios ->
-                    var listaUsuarios: MutableList<UsuariosModel> = mutableListOf()
 
                     for (responseUsuario in responseUsuarios) {
                         var usuarioAux = UsuariosModel()
@@ -159,16 +156,16 @@ class AddGroupActivity : AppCompatActivity() {
                             usuarioAux.Nombre = responseUsuario.data.get("Nombre") as String
                             usuarioAux.Foto = responseUsuario.data.get("Foto") as String
 
-                            listaUsuarios.add(usuarioAux)
+                            usuariosAdapter.addItem(usuarioAux)
 
-                            usuariosAdapter = UsuariosGruposAdapter(listaUsuarios)
-                            usuariosAdapter.notifyDataSetChanged()
                         }
                     }
 
+
+
                 }
                 .addOnFailureListener { exception ->
-                    Log.w(TAG, "Error al conseguir las medallas", exception)
+                    Log.w(TAG, "Error al conseguir los usuarios del grupo", exception)
                 }
         }
 
@@ -223,7 +220,7 @@ class AddGroupActivity : AppCompatActivity() {
 
     }
 
-    private fun crearEditarGrupo() {
+    private fun ingresarInfoGrupo() {
         grupoCreado.Nombre = editTextNombre?.text.toString()
         grupoCreado.Descripcion = editTextDescripcion?.text.toString()
 
@@ -232,11 +229,11 @@ class AddGroupActivity : AppCompatActivity() {
             listaMiembros = usuariosAdapter.listaUsuariosGrupo
 
 
-
+        //TODO: AGREGAR VALIDACION DE QUE LA LISTA DE USUARIOS DEBE SER MAYOR A 5
         if(     grupoCreado.Nombre.isEmpty()
             ||  grupoCreado.Descripcion.isEmpty()
             //||  listaMiembros!!.count() < 5
-            ||  filepath == null
+            ||  (grupoCreado.Foto.isEmpty() && filepath == null)
         ){
 
             if(grupoCreado.Nombre.isEmpty()){
@@ -252,13 +249,14 @@ class AddGroupActivity : AppCompatActivity() {
             }
 
 
-            if(filepath == null){
+            if(grupoCreado.Foto.isEmpty() && filepath == null){
                 DataManager.showToast(this, "Error, falta agregar una foto para el grupo")
             }
 
         }else{
             var documentReferenceUserLogged = FirebaseFirestore.getInstance().collection("Usuarios").document(DataManager.emailUsuario!!)
             grupoCreado.Creador = documentReferenceUserLogged
+            grupoCreado.Miembros = arrayListOf()
 
             grupoCreado.Miembros.add(grupoCreado.Creador!!)
 
@@ -267,67 +265,123 @@ class AddGroupActivity : AppCompatActivity() {
                 grupoCreado.Miembros.add(documentReferenceMiembro)
             }
 
-            DataManager.showProgressDialog("Creando usuario")
+            DataManager.showProgressDialog("Creando grupo")
 
-            if (grupoCreado.Foto.isEmpty()) {
-                grupoCreado.Foto = UUID.randomUUID().toString() + ".jpg"
-            }
-
-            var pathImage = "images/Grupos/${grupoCreado.Foto}"
-
-            grupoCreado.id = FirebaseFirestore.getInstance().collection("Grupos").document().id
-
-            FirebaseFirestore.getInstance().collection("Grupos").document(grupoCreado.id)
-                .set(
-                    hashMapOf(
-                        "Nombre" to grupoCreado.Nombre,
-                        "Descripcion" to grupoCreado.Descripcion,
-                        "Foto" to grupoCreado.Foto,
-                        "Creador" to grupoCreado.Creador,
-                        "Miembros" to grupoCreado.Miembros,
-                        "Conversacion" to grupoCreado.Conversacion,
-                        "Tareas" to grupoCreado.Tareas
-                    )
-                ).addOnCompleteListener{ responseUserCreation ->
-                    if (responseUserCreation.isSuccessful) {
-
-                        if (editarPathFotoUsuario) {
-                            var imageRef = FirebaseStorage.getInstance().reference.child(pathImage)
-
-                            imageRef.putFile(filepath!!)
-                                .addOnSuccessListener { responseImageUpload ->
-                                    val vIntent = Intent(this, MainActivity::class.java)
-                                    startActivity(vIntent)
-                                }
-                                .addOnFailureListener { responseImageUpload ->
-                                    DataManager.hideProgressDialog()
-                                    Toast.makeText(
-                                        applicationContext,
-                                        responseImageUpload.message,
-                                        Toast.LENGTH_LONG
-                                    ).show()
-                                }
-                                .addOnProgressListener { responseImageUpload ->
-                                    var progressPercent = (100.0 * responseImageUpload.bytesTransferred) / responseImageUpload.totalByteCount
-                                    DataManager.updateMessage("Uploaded ${progressPercent.toInt()}%")
-                                }
-                        }
-                        else {
-                            val vIntent = Intent(this, LoginActivity::class.java)
-                            startActivity(vIntent)
-                        }
-                    }
-                    else{
-                        DataManager.showToast(this,"Error: ${responseUserCreation.exception!!.message}")
-                    }
-                }
+            if (grupoCreado.id.isEmpty())
+                crearGrupo()
+            else
+                editarGrupo()
 
         }
 
     }
 
 
-    private fun editarFotoUsuario () {
+    private fun crearGrupo(){
+        //TODO: AGREGAR CODIGO PARA INCREMENTAR EL NUMERO DE GRUPOS CREADOS EN EL USUARIO
+
+        grupoCreado.Foto = UUID.randomUUID().toString() + ".jpg"
+        var pathImage = "images/Grupos/${grupoCreado.Foto}"
+
+        grupoCreado.id = FirebaseFirestore.getInstance().collection("Grupos").document().id
+
+        FirebaseFirestore.getInstance().collection("Conversacion")
+            .add(
+                hashMapOf(
+                    "Conversacion" to "Grupo"
+                )
+            ).addOnCompleteListener { responseChatCreation ->
+
+                if (responseChatCreation.isSuccessful) {
+                    grupoCreado.Conversacion =
+                        FirebaseFirestore.getInstance().collection("Conversacion")
+                            .document(responseChatCreation.result.id)
+
+                    FirebaseFirestore.getInstance().collection("Grupos").document(grupoCreado.id)
+                        .set(
+                            hashMapOf(
+                                "Nombre" to grupoCreado.Nombre,
+                                "Descripcion" to grupoCreado.Descripcion,
+                                "Foto" to grupoCreado.Foto,
+                                "Creador" to grupoCreado.Creador,
+                                "Miembros" to grupoCreado.Miembros,
+                                "Conversacion" to grupoCreado.Conversacion,
+                                "Tareas" to grupoCreado.Tareas
+                            )
+                        ).addOnCompleteListener { responseUserCreation ->
+                            if (responseUserCreation.isSuccessful) {
+                                subirFoto(pathImage)
+                            } else {
+                                DataManager.showToast(
+                                    this,
+                                    "Error: ${responseUserCreation.exception!!.message}"
+                                )
+                            }
+                        }
+
+
+                } else {
+                    DataManager.showAlert(this, "No se pudo crear la conversación del Grupo")
+                    Log.w(TAG, "Error al crear la conversación del Grupo", responseChatCreation.exception)
+                }
+
+            }
+    }
+
+    private fun editarGrupo() {
+
+        FirebaseFirestore.getInstance().collection("Grupos").document(grupoCreado.id)
+            .update(
+                mapOf(
+                    "Nombre" to grupoCreado.Nombre,
+                    "Descripcion" to grupoCreado.Descripcion,
+                    "Miembros" to grupoCreado.Miembros
+                )
+            ).addOnCompleteListener { responseUserCreation ->
+                if (responseUserCreation.isSuccessful) {
+
+                    if (subirFotoGrupo) {
+                        var pathImage = "images/Grupos/${grupoCreado.Foto}"
+                        subirFoto(pathImage)
+                    } else {
+                        salirAVentanaMain()
+                    }
+                } else {
+                    DataManager.showToast(
+                        this,
+                        "Error: ${responseUserCreation.exception!!.message}"
+                    )
+                }
+            }
+
+
+    }
+    
+
+    private fun subirFoto(pathImage : String){
+        var imageRef = FirebaseStorage.getInstance().reference.child(pathImage)
+
+        imageRef.putFile(filepath!!)
+            .addOnSuccessListener { responseImageUpload ->
+                salirAVentanaMain()
+            }
+            .addOnFailureListener { responseImageUpload ->
+                DataManager.hideProgressDialog()
+                Toast.makeText(
+                    applicationContext,
+                    responseImageUpload.message,
+                    Toast.LENGTH_LONG
+                ).show()
+            }
+            .addOnProgressListener { responseImageUpload ->
+                var progressPercent =
+                    (100.0 * responseImageUpload.bytesTransferred) / responseImageUpload.totalByteCount
+                DataManager.updateMessage("Uploaded ${progressPercent.toInt()}%")
+            }
+    }
+    
+    
+    private fun subirFotoGrupo () {
         var i = Intent ()
         i.setType ("image/*")
         i.setAction (Intent.ACTION_GET_CONTENT)
@@ -344,8 +398,15 @@ class AddGroupActivity : AppCompatActivity() {
             var bitmap = MediaStore.Images.Media.getBitmap(contentResolver, filepath)
             image_Foto!!.setImageBitmap(bitmap)
 
-            editarPathFotoUsuario = true
+            subirFotoGrupo = true
         }
+    }
+
+    private fun salirAVentanaMain(){
+        DataManager.showToast(this, "Información subida correctamente")
+
+        val vIntent = Intent(this, MainActivity::class.java)
+        startActivity(vIntent)
     }
 
 }
