@@ -38,7 +38,7 @@ class ChatsFragment: Fragment() {
     var txtTituloPantalla : TextView? = null;
     var btnBuscarChat : ImageButton? = null;
     var txtBuscarChat : EditText? = null;
-
+    var buscarChat = false
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -61,7 +61,9 @@ class ChatsFragment: Fragment() {
 
         this.btnBuscarChat?.setOnClickListener {
             buscarChats(txtBuscarChat?.text.toString())
+            buscarChat = true
         }
+
 
         this.txtBuscarChat?.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(p0: Editable?) {
@@ -74,8 +76,10 @@ class ChatsFragment: Fragment() {
 
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
                 //buscarChats(p0.toString())
-                if (p0.isNullOrEmpty()) {
+                if (p0.isNullOrEmpty() && buscarChat == true) {
                     setUpRecyclerView()
+
+                    buscarChat = false
                 }
             }
 

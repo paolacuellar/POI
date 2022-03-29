@@ -80,6 +80,8 @@ class RegisterActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener
 
         spinnerCarrera!!.onItemSelectedListener  = this*/
 
+        spinnerCarrera!!.onItemSelectedListener  = this
+
         carrerasFCFM = ArrayList<String>()
         adapter = ArrayAdapter(
             this, android.R.layout.simple_spinner_dropdown_item,
@@ -119,24 +121,23 @@ class RegisterActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener
         usuarioRegister.ApPaterno = editTextApPaterno?.text.toString()
         usuarioRegister.ApMaterno = editTextApMaterno?.text.toString()
 
-        //usuarioRegister.Carrera = "5jUhUWbOUD9Yii3keJQ4"
-        var Carrera = "5jUhUWbOUD9Yii3keJQ4"
-        //Carrera = spinnerCarrera!!.onItemSelectedListener.toString() ("LMAD", "LA", "LCC", "LSTI", "LM", "LF")
-        var seleccionado= spinnerCarrera!!.selectedItem.toString()
-        if (seleccionado == "LMAD") {
-            Carrera="5jUhUWbOUD9Yii3keJQ4"
-        } else if (seleccionado == "LA") {
-            Carrera="78Lrt79mpebGg4piZbgJ"
-        } else if (seleccionado == "LCC") {
-            Carrera="KmMgbsFVxWCFuhNPkAIX"
-        } else if (seleccionado == "LSTI") {
-            Carrera="SPiOCQvpmRXIJixYnVxu"
-        } else if (seleccionado == "LM") {
-            Carrera="cY2mjZ9piYm9lrSjYNpM"
-        } else if (seleccionado == "LF") {
-            Carrera="rTADytJi5ihy8LgvLySj"
-        }
-        usuarioRegister.Carrera =  db.document("Carrera/${Carrera}")
+        /*
+        var carreaSeleccionada= spinnerCarrera!!.selectedItem.toString()
+        db.collection("Carrera").whereEqualTo("Nombre", carreaSeleccionada).get()
+            .addOnSuccessListener { documents ->
+                for (document in documents) {
+                    for (document in documents) {
+                        Log.d(TAG, "${document.id} => ${document.data}")
+                    }
+                }
+            }
+            .addOnFailureListener { exception ->
+                Log.w(TAG, "Error getting documents: ", exception)
+            }
+        */
+
+
+        var CarreraSeleccionada = spinnerCarrera!!.selectedItem.toString()
 
         val validate_pass = isValidPassword(authRegister.Password)
 
@@ -145,7 +146,7 @@ class RegisterActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener
             ||  usuarioRegister.Nombre.isEmpty()
             ||  usuarioRegister.ApPaterno.isEmpty()
             ||  usuarioRegister.ApMaterno.isEmpty()
-            ||  Carrera.isEmpty()
+            ||  CarreraSeleccionada.isEmpty()
         ){
 
             if(authRegister.Email.isEmpty()){
@@ -169,7 +170,7 @@ class RegisterActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener
             if(usuarioRegister.ApMaterno.isEmpty()){
                 editTextApMaterno?.setError("Campo vacio")
             }
-            if(Carrera.isEmpty()){
+            if(CarreraSeleccionada.isEmpty()){
                 DataManager.showToast(this, "Error: \"Carrera\" no seleccionada")
             }
 
@@ -240,11 +241,10 @@ class RegisterActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener
         var CarreraUsuario = parent?.getItemAtPosition(position).toString()
 
         db.collection("Carrera").whereEqualTo("Nombre", CarreraUsuario).get()
-            .addOnSuccessListener { documents ->
-                for (document in documents) {
-                    for (document in documents) {
-                        Log.d(TAG, "${document.id} => ${document.data}")
-                    }
+            .addOnSuccessListener { documentsCarreras ->
+                for (documentsCarrera in documentsCarreras) {
+                    Log.d(TAG, "${documentsCarrera.id} => ${documentsCarrera.data}")
+                    usuarioRegister.Carrera = db.document("Carrera/${documentsCarrera.id}")
                 }
             }
             .addOnFailureListener { exception ->

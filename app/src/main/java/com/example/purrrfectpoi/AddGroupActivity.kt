@@ -42,7 +42,8 @@ class AddGroupActivity : AppCompatActivity() {
 
     var filepath : Uri? = null
     var subirFotoGrupo = false
-    
+    var carreraUsuario : DocumentReference? = null
+
     private lateinit var recyclerViewUsuarios : RecyclerView
     private lateinit var usuariosAdapter: UsuariosGruposAdapter
 
@@ -68,6 +69,8 @@ class AddGroupActivity : AppCompatActivity() {
             adapter = usuariosAdapter
             layoutManager = LinearLayoutManager(context)
         }
+
+        setCarreraUsuario()
 
         header_back!!.setOnClickListener{
             onBackPressed()
@@ -96,6 +99,16 @@ class AddGroupActivity : AppCompatActivity() {
         else{
             image_Foto!!.setImageResource(R.drawable.foto_default_perfil)
         }
+    }
+
+    private fun setCarreraUsuario() {
+        FirebaseFirestore.getInstance().collection("Usuarios").document(DataManager.emailUsuario!!).get()
+            .addOnSuccessListener { responseUsuario ->
+                carreraUsuario =     if(responseUsuario.get("Carrera") != null)    responseUsuario.get("Carrera") as DocumentReference else null
+            }
+            .addOnFailureListener { exception ->
+                Log.w(TAG, "Error al conseguir la información del Usuario", exception)
+            }
     }
 
     private fun setUpInfoCurso(grupoId : String) {
@@ -192,17 +205,32 @@ class AddGroupActivity : AppCompatActivity() {
                         if (responseUsuario.data != null) {
                             var usuarioAux = UsuariosModel()
 
-                            if (responseUsuario.id != DataManager.emailUsuario) {
-                                usuarioAux.Email = responseUsuario.id
-                                usuarioAux.Nombre = responseUsuario.data!!.get("Nombre") as String
-                                usuarioAux.Foto = responseUsuario.data!!.get("Foto") as String
-
-                                usuariosAdapter.addItem(usuarioAux)
-
-                                this.editTextAddMember!!.setText("")
+                            if (responseUsuario.id == DataManager.emailUsuario) {
+                                DataManager.showToast(this, "El usuario creador ya es parte de los miembros")
                             }
-                            else
-                                DataManager.showToast(this, "El usuario ya fue agregado")
+                            else if (responseUsuario.data!!.get("Carrera") != null) {
+                                var responseUsuarioCarrera = responseUsuario.data!!.get("Carrera") as DocumentReference
+                                if (responseUsuarioCarrera.id != carreraUsuario!!.id) {
+                                    DataManager.showToast(this,"El usuario pertenece a otra carrera"
+                                    )
+                                } else {
+                                    usuarioAux.Email = responseUsuario.id
+                                    usuarioAux.Nombre =
+                                        responseUsuario.data!!.get("Nombre") as String
+                                    usuarioAux.Foto = responseUsuario.data!!.get("Foto") as String
+
+                                    usuariosAdapter.addItem(usuarioAux)
+
+                                    this.editTextAddMember!!.setText("")
+                                }
+
+                            }
+                            else{
+                                DataManager.showToast(this, "Error al agregar usuario")
+                            }
+
+
+
                         }
                         else
                             DataManager.showToast(this, "No se encontro al usuario \"${userEmail}\"")
@@ -232,7 +260,7 @@ class AddGroupActivity : AppCompatActivity() {
         //TODO: AGREGAR VALIDACION DE QUE LA LISTA DE USUARIOS DEBE SER MAYOR A 5
         if(     grupoCreado.Nombre.isEmpty()
             ||  grupoCreado.Descripcion.isEmpty()
-            //||  listaMiembros!!.count() < 5
+            ||  listaMiembros!!.count() < 5
             ||  (grupoCreado.Foto.isEmpty() && filepath == null)
         ){
 

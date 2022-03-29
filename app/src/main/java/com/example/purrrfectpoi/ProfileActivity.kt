@@ -15,6 +15,7 @@ import com.bumptech.glide.Glide
 import com.example.purrrfectpoi.Models.MedallasModel
 import com.example.purrrfectpoi.Models.UsuariosModel
 import com.example.purrrfectpoi.adapters.MedallasAdapter
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
@@ -29,7 +30,7 @@ class ProfileActivity : AppCompatActivity() {
 
     var btn_Editar : Button? = null;
     var btn_Editar_Foto : ImageView? = null;
-    var header_back : View? = null;
+    var button_log_out : View? = null;
     var navbar_back : ImageView? = null;
 
     var image_Foto : ImageView? = null;
@@ -55,7 +56,7 @@ class ProfileActivity : AppCompatActivity() {
         this.btn_Editar = findViewById<Button>(R.id.profile_btn_editar)
         this.btn_Editar_Foto = findViewById<ImageView>(R.id.profile_image_btn_editar_foto)
         this.navbar_back = findViewById<ImageView>(R.id.profile_image_btn_back)
-        this.header_back = findViewById<View>(R.id.profile_header_back)
+        this.button_log_out = findViewById<View>(R.id.profile_button_log_out)
 
         this.image_Foto = findViewById<ImageView>(R.id.profile_image_foto)
         this.textCorreo = findViewById<TextView>(R.id.profile_lbl_correo)
@@ -82,8 +83,11 @@ class ProfileActivity : AppCompatActivity() {
             startActivity(vIntent)
         }
 
-        this.header_back?.setOnClickListener {
-            val vIntent = Intent(this, MainActivity::class.java)
+        this.button_log_out?.setOnClickListener {
+            FirebaseAuth.getInstance().signOut()
+            DataManager.emailUsuario = ""
+            DataManager.fotoUsuario = ""
+            val vIntent = Intent(this, LoginActivity::class.java)
             startActivity(vIntent)
         }
 
