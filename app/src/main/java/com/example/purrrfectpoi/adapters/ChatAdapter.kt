@@ -6,15 +6,11 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.purrrfectpoi.Models.MensajesModel
-import com.example.purrrfectpoi.Models.UsuariosModel
 import com.example.purrrfectpoi.R
 import com.google.firebase.storage.FirebaseStorage
 import com.psm.hiring.Utils.DataManager
-import kotlinx.android.synthetic.main.item_chat.view.*
 import kotlinx.android.synthetic.main.item_message.view.*
 import kotlinx.android.synthetic.main.item_message.view.chatUserImage
-import java.text.SimpleDateFormat
-import java.util.*
 
 class ChatAdapter(val chatMsgs: MutableList<MensajesModel>) : RecyclerView.Adapter<ChatAdapter.ChatViewHolder>() {
 
@@ -36,9 +32,9 @@ class ChatAdapter(val chatMsgs: MutableList<MensajesModel>) : RecyclerView.Adapt
     fun addItem(mensajesModel: MensajesModel){
         if (!this.isItemAdded(mensajesModel.id))
             chatMsgs.add(mensajesModel)
-            chatMsgs.sortBy {
-                it.FechaCreacion
-            }
+        chatMsgs.sortBy {
+            it.FechaCreacion
+        }
         this.notifyDataSetChanged()
     }
 
