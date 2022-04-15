@@ -32,6 +32,8 @@ class MuroFragment: Fragment() {
     private lateinit var muroGeneralAdapter : MuroGeneralAdapter
     private lateinit var buttonCrearPost : FloatingActionButton
 
+    var idCarrera : String = ""
+
     var txtTituloPantalla : TextView? = null;
 
     override fun onCreateView(
@@ -54,6 +56,7 @@ class MuroFragment: Fragment() {
 
         buttonCrearPost.setOnClickListener{
             val intent = Intent(activity, NewPostActivity::class.java)
+            intent.putExtra("IdCarrera", idCarrera)
             startActivity(intent)
         }
 
@@ -75,12 +78,12 @@ class MuroFragment: Fragment() {
                 muroGeneralAdapter.setOnItemClickListener(object : MuroGeneralAdapter.onItemClickListener{
                     override fun onItemClick(position: Int) {
 
-                        //val intent = Intent(activity, PostActivity::class.java)
-                        //intent.putExtra("IdPost", postsParam[position].id)
-                        //startActivity(intent)
+                        val intent = Intent(activity, PostActivity::class.java)
+                        intent.putExtra("IdPost", postsParam[position].id)
+                        startActivity(intent)
 
-                        var idPost : String = postsParam[position].id
-                        Toast.makeText(activity, "You clicked on post: $idPost", Toast.LENGTH_SHORT).show()
+                        //var idPost : String = postsParam[position].id
+                        //Toast.makeText(activity, "You clicked on post: $idPost", Toast.LENGTH_SHORT).show()
 
                     }
                 })
@@ -91,6 +94,7 @@ class MuroFragment: Fragment() {
                     .get()
                     .addOnSuccessListener { responseCarrera ->
 
+                        idCarrera = responseCarrera.id
                         var posts = responseCarrera.get("Publicaciones") as ArrayList<DocumentReference>
 
                         for (post in posts) {

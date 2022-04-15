@@ -68,7 +68,7 @@ class MuroGeneralAdapter(val posts: MutableList<PublicacionesModel>) : RecyclerV
 
                     Post.FotoCreador = responseUser.get("Foto") as String
                     if (Post.FotoCreador.isNotEmpty()) {
-                        FirebaseStorage.getInstance().getReference("images/Publicaciones/${Post.FotoCreador}").downloadUrl
+                        FirebaseStorage.getInstance().getReference("images/Usuarios/${Post.FotoCreador}").downloadUrl
                             .addOnSuccessListener {
                                 Glide.with(view.context)
                                     .load(it.toString())
