@@ -1,6 +1,5 @@
 package com.example.purrrfectpoi
 
-import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -22,13 +21,14 @@ class GroupActivity : AppCompatActivity() {
 
         val bundle : Bundle?= intent.extras
 
-        val bundleChat = Bundle().apply {
+        val bundleGroupInfo = Bundle().apply {
             putString("grupoId", bundle!!.getString("grupoId"))
         }
         val chatFragment= GroupChatFragment()
-        chatFragment.arguments = bundleChat
+        chatFragment.arguments = bundleGroupInfo
 
         val miembrosFragment= GroupMembersFragment()
+        miembrosFragment.arguments = bundleGroupInfo
 
         this.btnRegresar = findViewById<ImageView>(R.id.btn_grupo_regresar)
         this.btnRegresar?.setOnClickListener {

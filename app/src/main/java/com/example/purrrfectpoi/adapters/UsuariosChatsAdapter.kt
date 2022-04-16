@@ -14,7 +14,7 @@ import com.google.firebase.storage.FirebaseStorage
 import kotlinx.android.synthetic.main.item_chat.view.*
 import kotlinx.android.synthetic.main.item_group.view.*
 
-class UsuariosChatsAdapter(val userChats: MutableList<UsuariosModel>) : RecyclerView.Adapter<UsuariosChatsAdapter.UsuariosChatsViewHolder>(){
+class UsuariosChatsAdapter(val userChats: MutableList<UsuariosModel>, val buttonVisible: Boolean = true) : RecyclerView.Adapter<UsuariosChatsAdapter.UsuariosChatsViewHolder>(){
 
     private lateinit var mListener : onItemClickListener
 
@@ -38,6 +38,12 @@ class UsuariosChatsAdapter(val userChats: MutableList<UsuariosModel>) : Recycler
 
         holder.render(UserChat, position)
 
+        if(buttonVisible){
+            holder.view.newChatButton.visibility = View.VISIBLE
+        }
+        else{
+            holder.view.newChatButton.visibility = View.GONE
+        }
 
     }
 
