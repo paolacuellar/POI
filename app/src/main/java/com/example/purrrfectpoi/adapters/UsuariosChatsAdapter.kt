@@ -3,16 +3,12 @@ package com.example.purrrfectpoi.adapters
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Filter
-import android.widget.Filterable
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.example.purrrfectpoi.Models.GruposModel
 import com.example.purrrfectpoi.Models.UsuariosModel
 import com.example.purrrfectpoi.R
 import com.google.firebase.storage.FirebaseStorage
 import kotlinx.android.synthetic.main.item_chat.view.*
-import kotlinx.android.synthetic.main.item_group.view.*
 
 class UsuariosChatsAdapter(val userChats: MutableList<UsuariosModel>, val buttonVisible: Boolean = true) : RecyclerView.Adapter<UsuariosChatsAdapter.UsuariosChatsViewHolder>(){
 
