@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    >
+
+    <item
+        android:id="@+id/edit_task"
+        android:title="editar"
+        />
+
+    <item
+        android:id="@+id/delete_task"
+        android:title="eliminar"
+        />
+
+    <!--<item
+        android:id="@+id/download_task"
+        android:icon="@drawable/ic_download"
+        android:iconTint="@color/coffee"
+        android:title="descargar"
+        app:showAsAction="ifRoom" />-->
+</menu>

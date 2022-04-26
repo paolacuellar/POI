@@ -10,6 +10,13 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.PurrrfectPOI">
         <activity
+            android:name=".activity_new_task"
+            android:exported="true" >
+        </activity>
+        <activity
+            android:name=".activity_task_details"
+            android:exported="true" />
+        <activity
             android:name=".NewPostActivity"
             android:exported="true" />
         <activity
@@ -24,34 +31,20 @@
         <activity
             android:name=".ChatActivity"
             android:exported="true" />
-        <activity
-            android:name=".MainActivity"
-            >
-
-        </activity>
-
+        <activity android:name=".MainActivity" />
         <activity
             android:name=".LoginActivity"
-            android:exported="true"
-            >
+            android:exported="true">
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".RegisterActivity">
-
-        </activity>
-
-
-        <activity   android:name=".ProfileActivity">
-
-        </activity>
-        <activity   android:name=".AddGroupActivity">
-
-        </activity>
+        <activity android:name=".RegisterActivity" />
+        <activity android:name=".ProfileActivity" />
+        <activity android:name=".AddGroupActivity" />
     </application>
 
 </manifest>

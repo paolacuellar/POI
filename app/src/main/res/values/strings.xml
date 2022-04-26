@@ -22,6 +22,11 @@
     <string name="profile_lbl_medallas">Medallas ganadas:</string>
     <string name="profile_btn_editar">Editar</string>
 
+    <string name="tasks_lbl_tareas">TAREAS</string>
+    <string name="tasks_name_tarea">NOMBRE DE LA TAREA</string>
+    <string name="tasks_date_tarea">FECHA DE VENCIMIENTO</string>
+    <string name="tasks_archive_tarea"><u>Nombre_del_Archivo.doc</u></string>
+
     <string-array name="Carreras">
         <item>LMAD</item>
         <item>LCC</item>

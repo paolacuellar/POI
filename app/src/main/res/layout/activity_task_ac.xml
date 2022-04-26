@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activity_new_task"
+    android:background="@drawable/cuadricula">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="66dp"
+        android:layout_marginStart="-10dp"
+        android:layout_marginTop="-10dp"
+        android:layout_marginEnd="-10dp"
+        android:background="@drawable/search_background"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <LinearLayout
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:background="@drawable/search_background">
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:padding="4dp"
+                android:src="@drawable/ic_arrow_back_brown" />
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="15dp"
+            android:text="TAREA"
+            android:textColor="@color/coffee"
+            android:textSize="18dp"
+            android:textStyle="bold" />
+    </androidx.appcompat.widget.Toolbar>
+
+    <LinearLayout
+        android:id="@+id/linearLayouTask"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="26dp"
+        android:layout_marginTop="154dp"
+        android:layout_marginEnd="26dp"
+        android:layout_marginBottom="154dp"
+        android:background="@drawable/search_background"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="TITULO"
+            android:textStyle="bold"
+            android:layout_marginHorizontal="39dp"
+            android:layout_marginTop="32dp"
+            android:textColor="@color/coffee"/>
+
+        <EditText
+            android:id="@+id/add_task_input_nombre"
+            android:layout_width="match_parent"
+            android:layout_height="33dp"
+            android:layout_marginHorizontal="29dp"
+            android:layout_marginTop="0dp"
+            android:background="@drawable/search_background"
+            android:minHeight="33dp"
+            android:paddingStart="13dp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="DESCRIPCIÓN"
+            android:textStyle="bold"
+            android:layout_marginTop="6dp"
+            android:layout_marginHorizontal="39dp"
+            android:textColor="@color/coffee"/>
+
+        <EditText
+            android:id="@+id/add_task_input_descripcion"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:layout_marginHorizontal="29dp"
+            android:background="@drawable/search_background"
+            android:gravity="start"
+            android:paddingStart="13dp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="fecha de vencimiento"
+            android:textStyle="bold"
+            android:layout_marginTop="6dp"
+            android:layout_marginHorizontal="39dp"
+            android:textColor="@color/coffee"/>
+        <EditText
+            android:id="@+id/add_task_date"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/shape_with_shadow"
+            android:backgroundTint="@color/coffee"
+            android:layout_marginTop="0dp"
+            android:layout_marginHorizontal="29dp"
+            android:drawableRight="@drawable/ic_calendar_white"
+            android:drawablePadding="10dp"
+            android:hint="MM/DD/YYYY"
+            android:inputType="text|number"
+            android:editable="false"
+            android:focusable="false"
+            android:focusableInTouchMode="false"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
+            android:paddingHorizontal="10dp"
+            android:textColorHint="@color/white"
+            android:textColor="@color/white"/>
+
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/add_task_btn_confirm"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="26dp"
+        android:backgroundTint="@color/coffee"
+        android:text="Confirmar"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayouTask" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

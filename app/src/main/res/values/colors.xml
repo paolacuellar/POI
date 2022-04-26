@@ -11,7 +11,15 @@
     <color name="coffee">#4D250E</color>
     <color name="purrrpule">#B2A7D1</color>
     <color name="mint">#B4E290</color>
+    <color name="grass">#AB77C281</color>
+    <color name="storm_cloud">#28555555</color>
+    <color name="marker">#99FFEA7D</color>
     <color name="light_gray">#FFEEEEEE</color>
     <color name="gray">#FF555555</color>
+
+    <style name="datePickerTheme" parent="android:Theme.Material.Light.Dialog">
+        <item name="android:colorAccent">#4D250E</item>
+    </style>
+
 
 </resources>

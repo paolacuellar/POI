@@ -3,8 +3,10 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    >
 
+    <!-- GLOBO MI MENSAJE TEXTO -->
     <RelativeLayout
         android:id="@+id/myMessageContent"
         android:layout_width="match_parent"
@@ -22,7 +24,8 @@
             app:civ_border_width="2dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@+id/myMessageLayout"
-            tools:src="@tools:sample/avatars" />
+            tools:src="@tools:sample/avatars"
+            />
 
         <LinearLayout
             android:id="@+id/myMessageLayout"
@@ -64,7 +67,7 @@
         </LinearLayout>
     </RelativeLayout>
 
-
+    <!-- GLOBO OTRO MENSAJE TEXTO -->
     <RelativeLayout
         android:id="@+id/otherMessageContent"
         android:layout_width="match_parent"
@@ -145,5 +148,348 @@
         </LinearLayout>
     </RelativeLayout>
 
+    <!-- GLOBO MI IMAGEN -->
+    <RelativeLayout
+        android:id="@+id/myMessageContentImage"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@+id/otherMessageContent">
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/myMessageContentImage_chatUserImage"
+            android:layout_width="46dp"
+            android:layout_height="46dp"
+            android:layout_alignTop="@+id/myMessageContentImage_myMessageLayout"
+            android:layout_alignParentEnd="true"
+            android:layout_marginTop="0dp"
+            app:civ_border_color="@color/white"
+            app:civ_border_width="2dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/myMessageContentImage_myMessageLayout"
+
+            tools:src="@tools:sample/avatars" />
+
+        <LinearLayout
+            android:id="@+id/myMessageContentImage_myMessageLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="84dp"
+            android:layout_marginTop="8dp"
+            android:layout_toStartOf="@+id/myMessageContentImage_chatUserImage"
+            android:background="@drawable/my_msg"
+            android:orientation="vertical"
+            app:layout_constraintEnd_toStartOf="@+id/myMessageContentImage_chatUserImage"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            >
+
+            <ImageView
+                android:id="@+id/myMessageImage"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                android:layout_marginLeft="16dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginRight="34dp"
+                android:adjustViewBounds="true"
+                android:src="@mipmap/ic_launcher" />
+
+            <TextView
+                android:id="@+id/myMessageContentImage_tv_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                android:layout_marginTop="2dp"
+                android:layout_marginRight="30dp"
+                android:layout_marginBottom="8dp"
+                android:textColor="@android:color/black"
+                android:textSize="12dp"
+                android:textStyle="italic"
+                tools:text="03/03/2022 10:00 PM" />
+        </LinearLayout>
+    </RelativeLayout>
+
+    <!-- GLOBO OTRO IMAGEN -->
+    <RelativeLayout
+        android:id="@+id/otherMessageContentImage"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/myMessageContentImage"
+        >
+
+        <TextView
+            android:id="@+id/otherMessageContentImage_tv_nameUserMessage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignStart="@+id/otherMessageContentImage_otherMessageLayout"
+            android:layout_alignParentTop="true"
+            android:layout_marginStart="28dp"
+            android:layout_marginTop="0dp"
+            android:textColor="@android:color/black"
+            android:textSize="16dp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toTopOf="@+id/otherMessageContentImage_otherMessageLayout"
+            app:layout_constraintStart_toStartOf="@+id/otherMessageContentImage_otherMessageLayout"
+            tools:text="Nombre del usuario" />
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/otherMessageContentImage_otherImageView"
+            android:layout_width="46dp"
+            android:layout_height="46dp"
+            android:layout_below="@+id/otherMessageContentImage_tv_nameUserMessage"
+            android:layout_marginTop="0dp"
+            app:civ_border_color="@color/white"
+            app:civ_border_width="2dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/otherMessageContentImage_otherMessageLayout"
+            tools:src="@tools:sample/avatars" />
+
+        <LinearLayout
+            android:id="@+id/otherMessageContentImage_otherMessageLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="0dp"
+            android:layout_marginTop="24dp"
+            android:layout_marginEnd="84dp"
+            android:layout_toEndOf="@+id/otherMessageContentImage_otherImageView"
+            android:background="@drawable/other_msg"
+            android:orientation="vertical"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toEndOf="@+id/otherMessageContentImage_otherImageView"
+            app:layout_constraintVertical_bias="1.0">
+
+            <ImageView
+                android:id="@+id/otherMessageImage"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="27dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginRight="16dp"
+                android:adjustViewBounds="true"
+                android:src="@mipmap/ic_launcher" />
+
+            <TextView
+                android:id="@+id/otherMessageContentImage_tv_otherdate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                android:layout_marginTop="2dp"
+                android:layout_marginRight="16dp"
+                android:layout_marginBottom="8dp"
+                android:textColor="@android:color/black"
+                android:textSize="12dp"
+                android:textStyle="italic"
+                tools:text="03/03/2022 10:00 PM" />
+
+        </LinearLayout>
+    </RelativeLayout>
+
+    <!-- GLOBO MI ARCHIVO -->
+    <RelativeLayout
+        android:id="@+id/myMessageContentDocument"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@+id/otherMessageContentImage">
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/myMessageContentDocument_chatUserImage"
+            android:layout_width="46dp"
+            android:layout_height="46dp"
+            android:layout_alignTop="@+id/myMessageContentDocument_myMessageLayout"
+            android:layout_alignParentEnd="true"
+            android:layout_marginTop="0dp"
+            app:civ_border_color="@color/white"
+            app:civ_border_width="2dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/myMessageContentDocument_myMessageLayout"
+            tools:src="@tools:sample/avatars"
+           />
+
+        <LinearLayout
+            android:id="@+id/myMessageContentDocument_myMessageLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="84dp"
+            android:layout_marginTop="8dp"
+            android:layout_toStartOf="@+id/myMessageContentDocument_chatUserImage"
+            android:background="@drawable/my_msg"
+            android:orientation="vertical"
+            app:layout_constraintEnd_toStartOf="@+id/myMessageContentDocument_chatUserImage"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            >
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/myArchive"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:cardBackgroundColor="@color/grass"
+                app:cardCornerRadius="4dp"
+                android:layout_gravity="end"
+                android:layout_marginLeft="16dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginRight="34dp"
+                app:cardElevation="0dp"
+                app:contentPadding="10dp">
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="start"
+                    android:src="@drawable/ic_design_file_white"
+                    />
+                <TextView
+                    android:id="@+id/myArchiveName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="start"
+                    android:layout_marginLeft="40dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginRight="20dp"
+                    android:textColor="@android:color/white"
+                    android:textSize="16dp"
+                    android:textStyle="bold"
+                    tools:text="NombreDelArchivo.doc"
+                    android:maxLines="1"/>
+                <ImageView
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_marginTop="12dp"
+                    android:layout_gravity="end"
+                    android:src="@drawable/ic_download"
+                    />
+            </androidx.cardview.widget.CardView>
+
+            <TextView
+                android:id="@+id/myMessageContentDocument_tv_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                android:layout_marginTop="2dp"
+                android:layout_marginRight="30dp"
+                android:layout_marginBottom="8dp"
+                android:textColor="@android:color/black"
+                android:textSize="12dp"
+                android:textStyle="italic"
+                tools:text="03/03/2022 10:00 PM" />
+        </LinearLayout>
+    </RelativeLayout>
+
+    <!-- GLOBO OTRO ARCHIVO -->
+    <RelativeLayout
+        android:id="@+id/otherMessageContentDocument"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/myMessageContentDocument"
+        >
+
+        <TextView
+            android:id="@+id/otherMessageContentDocument_tv_nameUserMessage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignStart="@+id/otherMessageContentDocument_otherMessageLayout"
+            android:layout_alignParentTop="true"
+            android:layout_marginStart="28dp"
+            android:layout_marginTop="0dp"
+            android:textColor="@android:color/black"
+            android:textSize="16dp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toTopOf="@+id/otherMessageContentDocument_otherMessageLayout"
+            app:layout_constraintStart_toStartOf="@+id/otherMessageContentDocument_otherMessageLayout"
+            tools:text="Nombre del usuario" />
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/otherMessageContentDocument_otherImageView"
+            android:layout_width="46dp"
+            android:layout_height="46dp"
+            android:layout_below="@+id/otherMessageContentDocument_tv_nameUserMessage"
+            android:layout_marginTop="0dp"
+            app:civ_border_color="@color/white"
+            app:civ_border_width="2dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/otherMessageContentDocument_otherMessageLayout"
+            tools:src="@tools:sample/avatars" />
+
+        <LinearLayout
+            android:id="@+id/otherMessageContentDocument_otherMessageLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="0dp"
+            android:layout_marginTop="24dp"
+            android:layout_marginEnd="84dp"
+            android:layout_toEndOf="@+id/otherMessageContentDocument_otherImageView"
+            android:background="@drawable/other_msg"
+            android:orientation="vertical"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toEndOf="@+id/otherMessageContentDocument_otherImageView"
+            app:layout_constraintVertical_bias="1.0">
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/otherArchive"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="end"
+                android:layout_marginLeft="34dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginRight="16dp"
+                app:cardBackgroundColor="@color/coffee"
+                app:cardCornerRadius="4dp"
+                app:cardElevation="0dp"
+                app:contentPadding="10dp">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="start"
+                    android:src="@drawable/ic_design_file_white" />
+
+                <TextView
+                    android:id="@+id/otherArchiveName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="start"
+                    android:layout_marginLeft="40dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginRight="20dp"
+                    android:maxLines="1"
+                    android:textColor="@android:color/white"
+                    android:textSize="16dp"
+                    android:textStyle="bold"
+                    tools:text="NombreDelArchivo.doc" />
+
+                <ImageView
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_gravity="end"
+                    android:layout_marginTop="12dp"
+                    android:src="@drawable/ic_download" />
+            </androidx.cardview.widget.CardView>
+
+            <!---->
+
+            <TextView
+                android:id="@+id/otherMessageContentDocument_tv_otherdate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                android:layout_marginTop="2dp"
+                android:layout_marginRight="16dp"
+                android:layout_marginBottom="8dp"
+                android:textColor="@android:color/black"
+                android:textSize="12dp"
+                android:textStyle="italic"
+                tools:text="03/03/2022 10:00 PM" />
+
+        </LinearLayout>
+    </RelativeLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

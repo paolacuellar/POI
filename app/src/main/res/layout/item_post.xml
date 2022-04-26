@@ -57,14 +57,18 @@
                 android:layout_marginStart="12dp"
                 android:layout_marginTop="7dp"
                 android:layout_marginEnd="12dp"
+                android:layout_marginBottom="22dp"
                 android:text="Fygönat. Sojån. Tirar. Tespebelt. Hevyr. "
                 android:textColor="@color/black"
                 android:textSize="12sp"
-                app:layout_constraintEnd_toEndOf="@+id/cover"
                 app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/chatUserImage" />
+                <!--app:layout_constraintEnd_toEndOf="@+id/cover"-->
 
-            <ImageView
+
+            <!--<ImageView
                 android:id="@+id/cover"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -73,13 +77,13 @@
                 android:layout_marginEnd="12dp"
                 android:layout_marginBottom="42dp"
                 android:adjustViewBounds="true"
-                android:src="@mipmap/ic_launcher"
+                android:src=""
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView" />
+                app:layout_constraintTop_toBottomOf="@+id/textView" />-->
 
-            <TextView
+            <!--<TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="8dp"
@@ -90,7 +94,7 @@
                 android:textStyle="bold"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent" />
+                app:layout_constraintStart_toStartOf="parent" />-->
         </androidx.constraintlayout.widget.ConstraintLayout>
 
 
