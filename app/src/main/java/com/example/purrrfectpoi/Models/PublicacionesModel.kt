@@ -1,7 +1,7 @@
 package com.example.purrrfectpoi.Models
 
+import com.google.firebase.Timestamp
 import com.google.firebase.firestore.DocumentReference
-import com.google.type.Date
 
 class PublicacionesModel {
     var id : String = ""
@@ -9,10 +9,13 @@ class PublicacionesModel {
     var Foto : String = ""
 
     var Creador : DocumentReference? = null
-    var FechaCreacion : Date? = null
+    var FechaCreacion : Timestamp? = null
     var Editado : Boolean = false
     var Latitud : String = ""
     var Longitud : String = ""
 
     var Comentarios : ArrayList<DocumentReference> = arrayListOf()
+
+    var NombreCreador : String = ""
+    var FotoCreador : String = ""
 }

@@ -23,11 +23,13 @@
             android:layout_height="36dp"
             android:background="@drawable/search_background"
             >
+
             <ImageView
+                android:id="@+id/btnRegresarPost"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:src="@drawable/ic_arrow_back_brown"
-                android:padding="4dp"/>
+                android:padding="4dp"
+                android:src="@drawable/ic_arrow_back_brown" />
         </LinearLayout>
 
         <TextView
@@ -133,6 +135,7 @@
     </androidx.cardview.widget.CardView>
 
     <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/listComRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="-10dp"
@@ -140,8 +143,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/cardView"
         tools:itemCount="2"
-        tools:listitem="@layout/item_comment"
-        />
+        tools:listitem="@layout/item_comment" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/constraintLayout2"
@@ -165,7 +167,7 @@
             android:backgroundTint="@color/purrrpule"
             android:backgroundTintMode="multiply"
             android:ems="10"
-            android:hint="Escribe Mensaje"
+            android:hint="Escribe Comentario"
             android:inputType="textPersonName"
             android:minHeight="41dp"
             android:padding="13dp"
