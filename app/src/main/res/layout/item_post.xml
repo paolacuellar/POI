@@ -50,40 +50,43 @@
                 app:layout_constraintStart_toEndOf="@+id/chatUserImage"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <TextView
-                android:id="@+id/textView"
+            <LinearLayout
+                android:id="@+id/content_post"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="12dp"
+                android:orientation="vertical"
                 android:layout_marginTop="7dp"
-                android:layout_marginEnd="12dp"
-                android:layout_marginBottom="22dp"
-                android:text="Fygönat. Sojån. Tirar. Tespebelt. Hevyr. "
-                android:textColor="@color/black"
-                android:textSize="12sp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/chatUserImage" />
-                <!--app:layout_constraintEnd_toEndOf="@+id/cover"-->
-
-
-            <!--<ImageView
-                android:id="@+id/cover"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="12dp"
-                android:layout_marginTop="7dp"
-                android:layout_marginEnd="12dp"
                 android:layout_marginBottom="42dp"
-                android:adjustViewBounds="true"
-                android:src=""
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView" />-->
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/chatUserImage">
+                <TextView
+                    android:id="@+id/textView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="12dp"
+                    android:layout_marginEnd="12dp"
+                    android:layout_marginBottom="7dp"
+                    android:text="Fygönat. Sojån. Tirar. Tespebelt. Hevyr. "
+                    android:textColor="@color/black"
+                    android:textSize="12sp" />
 
-            <!--<TextView
+                <ImageView
+                    android:id="@+id/cover"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="12dp"
+                    android:layout_marginTop="7dp"
+                    android:layout_marginEnd="12dp"
+                    android:adjustViewBounds="true"
+                    android:src="@mipmap/ic_launcher" />
+
+            </LinearLayout>
+
+            <!-- Es que se ve bonito con esta parte ;;
+            se supone que ya esta arreglado asi que no me la quiten -->
+            <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="8dp"
@@ -94,7 +97,7 @@
                 android:textStyle="bold"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent" />-->
+                app:layout_constraintStart_toStartOf="parent" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
 

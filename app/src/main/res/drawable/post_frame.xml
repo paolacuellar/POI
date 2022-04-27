@@ -21,7 +21,7 @@
                 />
         </shape>
     </item>
-    <!--<item
+    <item
         android:bottom="0dp"
         android:top="0dp"
         android:gravity="bottom">
@@ -36,6 +36,6 @@
                 android:topRightRadius="0dp" />
             <solid android:color="@color/purrrpule" />
         </shape>
-    </item>-->
+    </item>
 
 </layer-list>
