@@ -80,17 +80,18 @@
             >
 
             <Button
+                android:id="@+id/sendImageButton"
                 android:layout_width="118dp"
                 android:layout_height="32dp"
                 android:background="@android:color/transparent"
                 android:gravity="left"
-                android:paddingLeft="10dp"
 
+                android:paddingLeft="10dp"
                 android:text="Galeria"
                 android:textColor="@color/coffee"
                 android:textSize="11dp"
-                android:textStyle="bold"
 
+                android:textStyle="bold"
                 app:icon="@drawable/ic_image_brown"
                 app:iconPadding="4dp"
                 app:iconTint="@color/coffee"
@@ -105,17 +106,18 @@
            >
 
             <Button
+                android:id="@+id/sendDocumentButton"
                 android:layout_width="118dp"
                 android:layout_height="32dp"
                 android:background="@android:color/transparent"
                 android:gravity="left"
-                android:paddingLeft="10dp"
 
+                android:paddingLeft="10dp"
                 android:text="Archivo"
                 android:textColor="@color/coffee"
                 android:textSize="11dp"
-                android:textStyle="bold"
 
+                android:textStyle="bold"
                 app:icon="@drawable/ic_paper_clip_brown"
                 app:iconPadding="4dp"
                 app:iconTint="@color/coffee"
@@ -129,17 +131,18 @@
             >
 
             <Button
+                android:id="@+id/sendLocationButton"
                 android:layout_width="118dp"
                 android:layout_height="32dp"
                 android:background="@android:color/transparent"
                 android:gravity="left"
-                android:paddingLeft="10dp"
 
+                android:paddingLeft="10dp"
                 android:text="Ubicar"
                 android:textColor="@color/coffee"
                 android:textSize="11dp"
-                android:textStyle="bold"
 
+                android:textStyle="bold"
                 app:icon="@drawable/ic_map_pin_brown"
                 app:iconPadding="4dp"
                 app:iconTint="@color/coffee"

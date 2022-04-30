@@ -82,9 +82,6 @@ class MuroFragment: Fragment() {
                         intent.putExtra("IdPost", postsParam[position].id)
                         startActivity(intent)
 
-                        //var idPost : String = postsParam[position].id
-                        //Toast.makeText(activity, "You clicked on post: $idPost", Toast.LENGTH_SHORT).show()
-
                     }
                 })
 

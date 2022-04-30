@@ -1,11 +1,15 @@
 package com.example.purrrfectpoi
 
+import android.app.Activity
 import android.content.ContentValues
 import android.content.Intent
+import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.provider.MediaStore
 import android.util.Log
 import android.view.View
+import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
@@ -18,6 +22,7 @@ import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
+import com.google.firebase.storage.FirebaseStorage
 import com.psm.hiring.Utils.DataManager
 import java.util.*
 
@@ -25,11 +30,13 @@ class ChatActivity : AppCompatActivity() {
 
     private lateinit var recyclerViewMsgs : RecyclerView
     private lateinit var chatAdapter : ChatAdapter
-    var header_back : View? = null;
 
     var btnRegresar : ImageView? =  null;
     var txtUsername : TextView? = null;
     var btnEnviarMsg : ImageView? = null;
+    var btnEnviarImg : Button? = null;
+    var btnEnviarDoc : Button? = null;
+    var btnEnviarLoc : Button? = null;
     var txtMsg : EditText? = null;
 
     var idChat : String? = null;
@@ -58,6 +65,9 @@ class ChatActivity : AppCompatActivity() {
         this.btnRegresar = findViewById<ImageView>(R.id.chat_header_back)
         this.txtUsername = findViewById<TextView>(R.id.chat_txt_nombre_user)
         this.btnEnviarMsg = findViewById<ImageView>(R.id.sendMessageButton)
+        this.btnEnviarImg = findViewById<Button>(R.id.sendImageButton)
+        this.btnEnviarDoc = findViewById<Button>(R.id.sendDocumentButton)
+        this.btnEnviarLoc = findViewById<Button>(R.id.sendLocationButton)
         this.txtMsg = findViewById<EditText>(R.id.messageTextField)
 
         this.btnRegresar?.setOnClickListener {
@@ -66,6 +76,15 @@ class ChatActivity : AppCompatActivity() {
         txtUsername?.text = chatTo
         this.btnEnviarMsg?.setOnClickListener {
             enviarMensaje()
+        }
+        this.btnEnviarImg?.setOnClickListener {
+            enviarImagen()
+        }
+        this.btnEnviarDoc?.setOnClickListener {
+            enviarDocumento()
+        }
+        this.btnEnviarLoc?.setOnClickListener {
+            enviarUbicacion()
         }
 
         documentReferenceUserLogged = FirebaseFirestore.getInstance().collection("Usuarios").document(
@@ -128,6 +147,13 @@ class ChatActivity : AppCompatActivity() {
     }
 
     private fun setUpChat() {
+        var msgParam : MutableList<MensajesModel> = mutableListOf()
+        chatAdapter = ChatAdapter(msgParam)
+        recyclerViewMsgs.apply {
+            adapter = chatAdapter
+            layoutManager = LinearLayoutManager(context)
+        }
+
         db = FirebaseFirestore.getInstance()
         db.collection("Usuarios").document(documentReferenceUserLogged.id).get()
             .addOnSuccessListener { responseUsuario ->
@@ -139,13 +165,6 @@ class ChatActivity : AppCompatActivity() {
 
         db.collection("Usuarios").document(chatTo!!).get()
             .addOnSuccessListener { responseUsuario ->
-
-                var msgParam : MutableList<MensajesModel> = mutableListOf()
-                chatAdapter = ChatAdapter(msgParam)
-                recyclerViewMsgs.apply {
-                    adapter = chatAdapter
-                    layoutManager = LinearLayoutManager(context)
-                }
 
                 var username : String = ""
                 if(responseUsuario.get("Nombre") != null) {
@@ -178,7 +197,7 @@ class ChatActivity : AppCompatActivity() {
                                 msgAux.FotoPerfil = if(otherPhoto != null)    otherPhoto as String else ""
                             }
 
-                            msgParam.add(msgAux)
+                            //msgParam.add(msgAux)
                             chatAdapter.addItem(msgAux)
 
                         }
@@ -211,6 +230,46 @@ class ChatActivity : AppCompatActivity() {
                 )
 
         }
+
+    }
+
+    private fun enviarImagen() {
+        var i = Intent ()
+        i.setType("image/*")
+        i.setAction(Intent.ACTION_GET_CONTENT)
+        startActivityForResult(Intent.createChooser(i, "Choose Picture"), 111)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if (requestCode == 111 && resultCode == Activity.RESULT_OK && data != null) {
+            var filepath = data!!.data!!
+            var strImage = UUID.randomUUID().toString() + ".jpg"
+            var pathImage = "images/Mensajes/${strImage}"
+            var imageRef = FirebaseStorage.getInstance().reference.child(pathImage)
+            imageRef.putFile(filepath)
+                .addOnSuccessListener { responseImageUpload ->
+
+                    db = FirebaseFirestore.getInstance()
+                    db.collection("Conversacion").document(idChat!!).collection("Mensajes")
+                        .add(
+                            hashMapOf(
+                                "Foto" to strImage,
+                                "Autor" to documentReferenceUserLogged,
+                                "FechaCreacion" to FieldValue.serverTimestamp()
+                            )
+                        )
+
+                }
+        }
+    }
+
+    private fun enviarDocumento() {
+
+    }
+
+    private fun enviarUbicacion() {
 
     }
 

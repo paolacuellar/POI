@@ -66,16 +66,9 @@ class ChatsFragment: Fragment() {
 
 
         this.txtBuscarChat?.addTextChangedListener(object : TextWatcher {
-            override fun afterTextChanged(p0: Editable?) {
-
-            }
-
-            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-
-            }
-
+            override fun afterTextChanged(p0: Editable?) { }
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) { }
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                //buscarChats(p0.toString())
                 if (p0.isNullOrEmpty() && buscarChat == true) {
                     setUpRecyclerView()
 
@@ -199,33 +192,6 @@ class ChatsFragment: Fragment() {
                                             intent.putExtra("Email", userMail)
                                             intent.putExtra("IdChat", arrayChats[position])
                                             startActivity(intent)
-
-                                            /*FirebaseFirestore.getInstance().collection("Conversacion")
-                                                .document(arrayChats[position]).collection("Mensajes")
-                                                .add(
-                                                    hashMapOf(
-                                                        "Texto" to "Hola",
-                                                        "Autor" to documentReferenceUserLogged,
-                                                        "FechaCreacion" to FieldValue.serverTimestamp()
-                                                    )
-                                                ).addOnCompleteListener { responseMsgToDel ->
-
-                                                    var idMsgDel = responseMsgToDel.result.id
-
-                                                    FirebaseFirestore.getInstance().collection("Conversacion")
-                                                        .document(arrayChats[position]).collection("Mensajes")
-                                                        .document(idMsgDel)
-                                                        .delete()
-                                                        .addOnSuccessListener {
-
-                                                            val intent = Intent(activity, ChatActivity::class.java)
-                                                            intent.putExtra("Email", userMail)
-                                                            intent.putExtra("IdChat", arrayChats[position])
-                                                            startActivity(intent)
-
-                                                        }
-
-                                                }*/
 
                                         } else {
                                             Toast.makeText(activity, "Error: ${responseChatCreation.exception!!.message}", Toast.LENGTH_SHORT).show()

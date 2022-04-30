@@ -55,37 +55,113 @@ class ChatAdapter(val chatMsgs: MutableList<MensajesModel>) : RecyclerView.Adapt
 
             if (Msg.Autor?.id == DataManager.emailUsuario) {
 
-                view.myMessageTextView.setText(if (!Msg.Texto.isEmpty()) Msg.Texto else "Mensaje vacío")
-                view.tv_date.setText((Msg.FechaCreacion?.toDate()).toString())
-                if (Msg.FotoPerfil.isNotEmpty()) {
-                    FirebaseStorage.getInstance().getReference("images/Usuarios/${Msg.FotoPerfil}").downloadUrl
+                if (Msg.Texto.isNotEmpty()) {
+
+                    view.myMessageTextView.setText(if (!Msg.Texto.isEmpty()) Msg.Texto else "Mensaje vacío")
+                    view.tv_date.setText(Msg.FechaCreacion?.toDate().toString())
+                    if (Msg.FotoPerfil.isNotEmpty()) {
+                        FirebaseStorage.getInstance().getReference("images/Usuarios/${Msg.FotoPerfil}").downloadUrl
+                            .addOnSuccessListener {
+                                Glide.with(view.context)
+                                    .load(it.toString())
+                                    .into(view.chatUserImage)
+                            }
+                    }
+                    else {
+                        view.chatUserImage!!.setImageResource(R.drawable.foto_default_perfil)
+                    }
+                    view.otherMessageContent.visibility = View.GONE
+                    view.myMessageContentImage.visibility = View.GONE
+                    view.otherMessageContentImage.visibility = View.GONE
+                    view.myMessageContentDocument.visibility = View.GONE
+                    view.otherMessageContentDocument.visibility = View.GONE
+
+                }
+                else if (Msg.Foto.isNotEmpty()) {
+
+                    view.myMessageContentImage_tv_date.setText(Msg.FechaCreacion?.toDate().toString())
+                    FirebaseStorage.getInstance().getReference("images/Mensajes/${Msg.Foto}").downloadUrl
                         .addOnSuccessListener {
                             Glide.with(view.context)
                                 .load(it.toString())
-                                .into(view.chatUserImage)
+                                .into(view.myMessageImage)
                         }
+                    if (Msg.FotoPerfil.isNotEmpty()) {
+                        FirebaseStorage.getInstance().getReference("images/Usuarios/${Msg.FotoPerfil}").downloadUrl
+                            .addOnSuccessListener {
+                                Glide.with(view.context)
+                                    .load(it.toString())
+                                    .into(view.myMessageContentImage_chatUserImage)
+                            }
+                    }
+                    else {
+                        view.myMessageContentImage_chatUserImage!!.setImageResource(R.drawable.foto_default_perfil)
+                    }
+                    view.myMessageContent.visibility = View.GONE
+                    view.otherMessageContent.visibility = View.GONE
+                    view.otherMessageContentImage.visibility = View.GONE
+                    view.myMessageContentDocument.visibility = View.GONE
+                    view.otherMessageContentDocument.visibility = View.GONE
+
                 }
-                else {
-                    view.chatUserImage!!.setImageResource(R.drawable.foto_default_perfil)
+                else if (Msg.NombreDocumento.isNotEmpty()) {
+
                 }
-                view.otherMessageContent.visibility = View.GONE
 
             } else {
 
-                view.othersMessageTextView.setText(if (!Msg.Texto.isEmpty()) Msg.Texto else "Mensaje vacío")
-                view.tv_otherdate.setText((Msg.FechaCreacion?.toDate()).toString())
-                if (Msg.FotoPerfil.isNotEmpty()) {
-                    FirebaseStorage.getInstance().getReference("images/Usuarios/${Msg.FotoPerfil}").downloadUrl
+                if (Msg.Texto.isNotEmpty()) {
+
+                    view.othersMessageTextView.setText(if (!Msg.Texto.isEmpty()) Msg.Texto else "Mensaje vacío")
+                    view.tv_otherdate.setText(Msg.FechaCreacion?.toDate().toString())
+                    if (Msg.FotoPerfil.isNotEmpty()) {
+                        FirebaseStorage.getInstance().getReference("images/Usuarios/${Msg.FotoPerfil}").downloadUrl
+                            .addOnSuccessListener {
+                                Glide.with(view.context)
+                                    .load(it.toString())
+                                    .into(view.otherImageView)
+                            }
+                    }
+                    else {
+                        view.otherImageView!!.setImageResource(R.drawable.foto_default_perfil)
+                    }
+                    view.myMessageContent.visibility = View.GONE
+                    view.myMessageContentImage.visibility = View.GONE
+                    view.otherMessageContentImage.visibility = View.GONE
+                    view.myMessageContentDocument.visibility = View.GONE
+                    view.otherMessageContentDocument.visibility = View.GONE
+
+                }
+                else if (Msg.Foto.isNotEmpty()) {
+
+                    view.otherMessageContentImage_tv_otherdate.setText(Msg.FechaCreacion?.toDate().toString())
+                    FirebaseStorage.getInstance().getReference("images/Mensajes/${Msg.Foto}").downloadUrl
                         .addOnSuccessListener {
                             Glide.with(view.context)
                                 .load(it.toString())
-                                .into(view.otherImageView)
+                                .into(view.otherMessageImage)
                         }
+                    if (Msg.FotoPerfil.isNotEmpty()) {
+                        FirebaseStorage.getInstance().getReference("images/Usuarios/${Msg.FotoPerfil}").downloadUrl
+                            .addOnSuccessListener {
+                                Glide.with(view.context)
+                                    .load(it.toString())
+                                    .into(view.otherMessageContentImage_otherImageView)
+                            }
+                    }
+                    else {
+                        view.otherMessageContentImage_otherImageView.setImageResource(R.drawable.foto_default_perfil)
+                    }
+                    view.myMessageContent.visibility = View.GONE
+                    view.otherMessageContent.visibility = View.GONE
+                    view.myMessageContentImage.visibility = View.GONE
+                    view.myMessageContentDocument.visibility = View.GONE
+                    view.otherMessageContentDocument.visibility = View.GONE
+
                 }
-                else {
-                    view.otherImageView!!.setImageResource(R.drawable.foto_default_perfil)
+                else if (Msg.NombreDocumento.isNotEmpty()) {
+
                 }
-                view.myMessageContent.visibility = View.GONE
 
             }
 

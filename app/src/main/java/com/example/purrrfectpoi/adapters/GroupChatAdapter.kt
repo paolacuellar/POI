@@ -1,6 +1,7 @@
 package com.example.purrrfectpoi.adapters
 
 import android.view.LayoutInflater
+import android.view.VerifiedInputEvent
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -60,20 +61,58 @@ class GroupChatAdapter(val chatMsgs: MutableList<MensajesModel>) : RecyclerView.
 
                         Msg.FotoPerfil = it.get("Foto") as String
 
-                        view.myMessageTextView.setText(if (!Msg.Texto.isEmpty()) Msg.Texto else "Mensaje vacío")
-                        view.tv_date.setText((Msg.FechaCreacion?.toDate()).toString())
-                        if (Msg.FotoPerfil.isNotEmpty()) {
-                            FirebaseStorage.getInstance().getReference("images/Usuarios/${Msg.FotoPerfil}").downloadUrl
+                        if (Msg.Texto.isNotEmpty()) {
+
+                            view.myMessageTextView.setText(if (!Msg.Texto.isEmpty()) Msg.Texto else "Mensaje vacío")
+                            view.tv_date.setText(Msg.FechaCreacion?.toDate().toString())
+                            if (Msg.FotoPerfil.isNotEmpty()) {
+                                FirebaseStorage.getInstance().getReference("images/Usuarios/${Msg.FotoPerfil}").downloadUrl
+                                    .addOnSuccessListener {
+                                        Glide.with(view.context)
+                                            .load(it.toString())
+                                            .into(view.chatUserImage)
+                                    }
+                            }
+                            else {
+                                view.chatUserImage!!.setImageResource(R.drawable.foto_default_perfil)
+                            }
+                            view.otherMessageContent.visibility = View.GONE
+                            view.myMessageContentImage.visibility = View.GONE
+                            view.otherMessageContentImage.visibility = View.GONE
+                            view.myMessageContentDocument.visibility = View.GONE
+                            view.otherMessageContentDocument.visibility = View.GONE
+
+                        }
+                        else if (Msg.Foto.isNotEmpty()) {
+
+                            view.myMessageContentImage_tv_date.setText(Msg.FechaCreacion?.toDate().toString())
+                            FirebaseStorage.getInstance().getReference("images/Mensajes/${Msg.Foto}").downloadUrl
                                 .addOnSuccessListener {
                                     Glide.with(view.context)
                                         .load(it.toString())
-                                        .into(view.chatUserImage)
+                                        .into(view.myMessageImage)
                                 }
+                            if (Msg.FotoPerfil.isNotEmpty()) {
+                                FirebaseStorage.getInstance().getReference("images/Usuarios/${Msg.FotoPerfil}").downloadUrl
+                                    .addOnSuccessListener {
+                                        Glide.with(view.context)
+                                            .load(it.toString())
+                                            .into(view.myMessageContentImage_chatUserImage)
+                                    }
+                            }
+                            else {
+                                view.myMessageContentImage_chatUserImage!!.setImageResource(R.drawable.foto_default_perfil)
+                            }
+                            view.myMessageContent.visibility = View.GONE
+                            view.otherMessageContent.visibility = View.GONE
+                            view.otherMessageContentImage.visibility = View.GONE
+                            view.myMessageContentDocument.visibility = View.GONE
+                            view.otherMessageContentDocument.visibility = View.GONE
+
                         }
-                        else {
-                            view.chatUserImage!!.setImageResource(R.drawable.foto_default_perfil)
+                        else if (Msg.NombreDocumento.isNotEmpty()) {
+
                         }
-                        view.otherMessageContent.visibility = View.GONE
 
                     }
 
@@ -82,32 +121,66 @@ class GroupChatAdapter(val chatMsgs: MutableList<MensajesModel>) : RecyclerView.
                 FirebaseFirestore.getInstance().collection("Usuarios").document(Msg.Autor!!.id)
                     .get()
                     .addOnSuccessListener {
+
                         var username = ""
-
-                        if (it.get("Nombre") != null) {
-                            username = it.get("Nombre") as String
-                        }
-                        if (it.get("ApPaterno") != null) {
-                            username += " " + it.get("ApPaterno") as String
-                        }
-                        view.tv_nameUserMessage.setText(username)
-
+                        if (it.get("Nombre") != null) { username = it.get("Nombre") as String }
+                        if (it.get("ApPaterno") != null) { username += " " + it.get("ApPaterno") as String }
                         Msg.FotoPerfil = it.get("Foto") as String
 
-                        view.othersMessageTextView.setText(if (!Msg.Texto.isEmpty()) Msg.Texto else "Mensaje vacío")
-                        view.tv_otherdate.setText((Msg.FechaCreacion?.toDate()).toString())
-                        if (Msg.FotoPerfil.isNotEmpty()) {
-                            FirebaseStorage.getInstance().getReference("images/Usuarios/${Msg.FotoPerfil}").downloadUrl
+                        if (Msg.Texto.isNotEmpty()) {
+
+                            view.tv_nameUserMessage.setText(username)
+                            view.othersMessageTextView.setText(if (!Msg.Texto.isEmpty()) Msg.Texto else "Mensaje vacío")
+                            view.tv_otherdate.setText(Msg.FechaCreacion?.toDate().toString())
+                            if (Msg.FotoPerfil.isNotEmpty()) {
+                                FirebaseStorage.getInstance().getReference("images/Usuarios/${Msg.FotoPerfil}").downloadUrl
+                                    .addOnSuccessListener {
+                                        Glide.with(view.context)
+                                            .load(it.toString())
+                                            .into(view.otherImageView)
+                                    }
+                            }
+                            else {
+                                view.otherImageView!!.setImageResource(R.drawable.foto_default_perfil)
+                            }
+                            view.myMessageContent.visibility = View.GONE
+                            view.myMessageContentImage.visibility = View.GONE
+                            view.otherMessageContentImage.visibility = View.GONE
+                            view.myMessageContentDocument.visibility = View.GONE
+                            view.otherMessageContentDocument.visibility = View.GONE
+
+                        }
+                        else if (Msg.Foto.isNotEmpty()) {
+
+                            view.otherMessageContentImage_tv_nameUserMessage.setText(username)
+                            view.otherMessageContentImage_tv_otherdate.setText(Msg.FechaCreacion?.toDate().toString())
+                            FirebaseStorage.getInstance().getReference("images/Mensajes/${Msg.Foto}").downloadUrl
                                 .addOnSuccessListener {
                                     Glide.with(view.context)
                                         .load(it.toString())
-                                        .into(view.otherImageView)
+                                        .into(view.otherMessageImage)
                                 }
+                            if (Msg.FotoPerfil.isNotEmpty()) {
+                                FirebaseStorage.getInstance().getReference("images/Usuarios/${Msg.FotoPerfil}").downloadUrl
+                                    .addOnSuccessListener {
+                                        Glide.with(view.context)
+                                            .load(it.toString())
+                                            .into(view.otherMessageContentImage_otherImageView)
+                                    }
+                            }
+                            else {
+                                view.otherMessageContentImage_otherImageView!!.setImageResource(R.drawable.foto_default_perfil)
+                            }
+                            view.myMessageContent.visibility = View.GONE
+                            view.otherMessageContent.visibility = View.GONE
+                            view.myMessageContentImage.visibility = View.GONE
+                            view.myMessageContentDocument.visibility = View.GONE
+                            view.otherMessageContentDocument.visibility = View.GONE
+
                         }
-                        else {
-                            view.otherImageView!!.setImageResource(R.drawable.foto_default_perfil)
+                        else if (Msg.NombreDocumento.isNotEmpty()) {
+
                         }
-                        view.myMessageContent.visibility = View.GONE
 
                     }
 

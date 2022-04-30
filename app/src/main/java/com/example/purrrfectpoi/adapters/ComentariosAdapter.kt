@@ -14,9 +14,20 @@ import kotlinx.android.synthetic.main.item_comment.view.*
 
 class ComentariosAdapter(val coms: MutableList<ComentariosModel>) : RecyclerView.Adapter<ComentariosAdapter.ComentariosViewHolder>() {
 
+    private lateinit var mListener : onItemClickListener
+
+    interface onItemClickListener {
+        fun onItemClick(view: View, position: Int)
+    }
+
+    fun setOnItemClickListener(listener : onItemClickListener) {
+        mListener = listener
+    }
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ComentariosViewHolder {
         return ComentariosViewHolder(
-            LayoutInflater.from(parent.context).inflate(R.layout.item_comment, parent, false)
+            LayoutInflater.from(parent.context).inflate(R.layout.item_comment, parent, false),
+            mListener
         );
     }
 
@@ -50,7 +61,17 @@ class ComentariosAdapter(val coms: MutableList<ComentariosModel>) : RecyclerView
         return itemAdded
     }
 
-    class ComentariosViewHolder(val view: View): RecyclerView.ViewHolder(view) {
+    fun deleteItem(idCom: String) {
+        for (index in 0..coms.count() - 1) {
+            if (coms.get(index).id == idCom) {
+                coms.removeAt(index)
+                break
+            }
+        }
+        this.notifyDataSetChanged()
+    }
+
+    class ComentariosViewHolder(val view: View, listener: onItemClickListener): RecyclerView.ViewHolder(view) {
         fun render(Com: ComentariosModel, position: Int) {
             FirebaseFirestore.getInstance().collection("Usuarios").document(Com.Creador!!.id)
                 .get()
@@ -85,6 +106,12 @@ class ComentariosAdapter(val coms: MutableList<ComentariosModel>) : RecyclerView
                     }
 
                 }
+        }
+
+        init {
+            view.deleteCom.setOnClickListener {
+                listener.onItemClick(it, adapterPosition)
+            }
         }
     }
 

@@ -4,9 +4,11 @@ import android.content.ContentValues
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
@@ -25,6 +27,7 @@ class PostActivity : AppCompatActivity() {
 
     private lateinit var recyclerViewCom : RecyclerView
     private lateinit var comentariosAdapter: ComentariosAdapter
+    private lateinit var builder : AlertDialog.Builder
 
     var btnRegresar : ImageView? = null;
     var fotoPerfil : ImageView? = null;
@@ -50,7 +53,7 @@ class PostActivity : AppCompatActivity() {
         this.fotoPerfil = findViewById<ImageView>(R.id.chatUserImage)
         this.nombreUsuario = findViewById<TextView>(R.id.chatNameText)
         this.postText = findViewById<TextView>(R.id.textView)
-        // FALTA ASIGNAR postImage PORQUE NO ESTÁ EL IMAGEVIEW EN EL XML
+        this.postImage = findViewById<ImageView>(R.id.cover)
         this.comText = findViewById<EditText>(R.id.messageTextField)
         this.comSend = findViewById<ImageView>(R.id.sendMessageButton)
 
@@ -78,7 +81,19 @@ class PostActivity : AppCompatActivity() {
             .addOnSuccessListener { responsePost ->
 
                 postText?.text = if(responsePost.get("Texto") != null)    responsePost.get("Texto") as String else ""
-                // AQUI SE PONDRÁ LA IMAGEN SI ES QUE HAY UNA IMAGEN EN EL POST
+                var fotoPost : String = ""
+                fotoPost = responsePost.get("Foto") as String
+                if (fotoPost.isNotEmpty()) {
+                    FirebaseStorage.getInstance().getReference("images/Publicaciones/${fotoPost}").downloadUrl
+                        .addOnSuccessListener {
+                            Glide.with(this)
+                                .load(it.toString())
+                                .into(postImage!!)
+                        }
+                }
+                else {
+                    postImage!!.visibility = View.GONE
+                }
 
                 var documentReferenceCreator = responsePost.get("Creador") as DocumentReference
 
@@ -131,6 +146,23 @@ class PostActivity : AppCompatActivity() {
                     adapter = comentariosAdapter
                     layoutManager = LinearLayoutManager(context)
                 }
+                comentariosAdapter.setOnItemClickListener(object : ComentariosAdapter.onItemClickListener{
+                    override fun onItemClick(view: View, position: Int) {
+                        builder = AlertDialog.Builder(this@PostActivity)
+                        builder.setTitle("Eliminar comentario")
+                        builder.setMessage("Esta acción no se puede deshacer")
+                        builder.setPositiveButton("Confirmar") { dialogInterface, which ->
+                            val docRefCom = db.collection("Comentarios").document(comParam[position].id)
+                            db.collection("Publicaciones").document(idPost!!)
+                                .update("Comentarios", FieldValue.arrayRemove(docRefCom))
+                            db.collection("Comentarios").document(comParam[position].id).delete()
+                            comentariosAdapter.deleteItem(comParam[position].id)
+                        }
+                        builder.setNegativeButton("Cancelar") { dialogInterface, which -> }
+                        val alertDialog: AlertDialog = builder.create()
+                        alertDialog.show()
+                    }
+                })
 
                 var coms = responsePost.get("Comentarios") as ArrayList<DocumentReference>
                 for (com in coms) {
@@ -146,7 +178,6 @@ class PostActivity : AppCompatActivity() {
                             comAux.FechaCreacion = responseCom.get("FechaCreacion") as Timestamp
                             comAux.Editado = responseCom.get("Editado") as Boolean
 
-                            comParam.add(comAux)
                             comentariosAdapter.addItem(comAux)
 
                         }
