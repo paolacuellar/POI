@@ -14,9 +14,20 @@ import kotlinx.android.synthetic.main.item_message.view.chatUserImage
 
 class ChatAdapter(val chatMsgs: MutableList<MensajesModel>) : RecyclerView.Adapter<ChatAdapter.ChatViewHolder>() {
 
+    private lateinit var mListener : onItemClickListener
+
+    interface onItemClickListener{
+        fun onItemClick(view: View, position: Int)
+    }
+
+    fun setOnItemClickListener(listener : onItemClickListener) {
+        mListener = listener
+    }
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ChatViewHolder {
         return ChatViewHolder(
-            LayoutInflater.from(parent.context).inflate(R.layout.item_message, parent, false)
+            LayoutInflater.from(parent.context).inflate(R.layout.item_message, parent, false),
+            mListener
         );
     }
 
@@ -24,7 +35,6 @@ class ChatAdapter(val chatMsgs: MutableList<MensajesModel>) : RecyclerView.Adapt
         val ChatMsg : MensajesModel = chatMsgs.get(position)
 
         holder.render(ChatMsg, position)
-
     }
 
     override fun getItemCount()= chatMsgs.size
@@ -50,7 +60,7 @@ class ChatAdapter(val chatMsgs: MutableList<MensajesModel>) : RecyclerView.Adapt
         return itemAdded
     }
 
-    class ChatViewHolder(val view: View): RecyclerView.ViewHolder(view) {
+    class ChatViewHolder(val view: View, listener: onItemClickListener): RecyclerView.ViewHolder(view) {
         fun render(Msg: MensajesModel, position: Int) {
 
             if (Msg.Autor?.id == DataManager.emailUsuario) {
@@ -105,6 +115,28 @@ class ChatAdapter(val chatMsgs: MutableList<MensajesModel>) : RecyclerView.Adapt
 
                 }
                 else if (Msg.NombreDocumento.isNotEmpty()) {
+
+                }
+                else if (Msg.Latitud.isNotEmpty() && Msg.Longitud.isNotEmpty()) {
+
+                    view.myMessageContentImage_tv_date.setText(Msg.FechaCreacion?.toDate().toString())
+                    view.myMessageImage.setImageResource(R.mipmap.ic_launcher)
+                    if (Msg.FotoPerfil.isNotEmpty()) {
+                        FirebaseStorage.getInstance().getReference("images/Usuarios/${Msg.FotoPerfil}").downloadUrl
+                            .addOnSuccessListener {
+                                Glide.with(view.context)
+                                    .load(it.toString())
+                                    .into(view.myMessageContentImage_chatUserImage)
+                            }
+                    }
+                    else {
+                        view.myMessageContentImage_chatUserImage!!.setImageResource(R.drawable.foto_default_perfil)
+                    }
+                    view.myMessageContent.visibility = View.GONE
+                    view.otherMessageContent.visibility = View.GONE
+                    view.otherMessageContentImage.visibility = View.GONE
+                    view.myMessageContentDocument.visibility = View.GONE
+                    view.otherMessageContentDocument.visibility = View.GONE
 
                 }
 
@@ -162,10 +194,20 @@ class ChatAdapter(val chatMsgs: MutableList<MensajesModel>) : RecyclerView.Adapt
                 else if (Msg.NombreDocumento.isNotEmpty()) {
 
                 }
+                else if (Msg.Latitud.isNotEmpty() && Msg.Longitud.isNotEmpty()) {
+
+                }
 
             }
 
         }
+
+        init {
+            view.myMessageImage.setOnClickListener {
+                listener.onItemClick(it, adapterPosition)
+            }
+        }
+
     }
 
 }

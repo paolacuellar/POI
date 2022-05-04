@@ -3,10 +3,20 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/AndroidStudioProjects/app/src/main/res/drawable/chat_icon.xml" value="0.111" />
+        <entry key="..\:/AndroidStudioProjects/app/src/main/res/drawable/group_icon.xml" value="0.111" />
+        <entry key="..\:/AndroidStudioProjects/app/src/main/res/drawable/ic_add_plus_brown.xml" value="0.111" />
+        <entry key="..\:/AndroidStudioProjects/app/src/main/res/drawable/ic_arrow_back_brown.xml" value="0.111" />
+        <entry key="..\:/AndroidStudioProjects/app/src/main/res/drawable/ic_baseline_map_24.xml" value="0.111" />
+        <entry key="..\:/AndroidStudioProjects/app/src/main/res/drawable/ic_box_arrow_left_white.xml" value="0.111" />
+        <entry key="..\:/AndroidStudioProjects/app/src/main/res/drawable/ic_posts_brown.xml" value="0.111" />
+        <entry key="..\:/AndroidStudioProjects/app/src/main/res/drawable/other_msg.xml" value="0.111" />
+        <entry key="..\:/AndroidStudioProjects/app/src/main/res/drawable/post_icon.xml" value="0.111" />
         <entry key="..\:/AndroidStudioProjects/app/src/main/res/layout/activity_chat.xml" value="0.20416666666666666" />
         <entry key="..\:/AndroidStudioProjects/app/src/main/res/layout/activity_group.xml" value="0.20416666666666666" />
         <entry key="..\:/AndroidStudioProjects/app/src/main/res/layout/activity_group_ac.xml" value="0.20416666666666666" />
         <entry key="..\:/AndroidStudioProjects/app/src/main/res/layout/activity_main.xml" value="0.25" />
+        <entry key="..\:/AndroidStudioProjects/app/src/main/res/layout/activity_maps.xml" value="0.20416666666666666" />
         <entry key="..\:/AndroidStudioProjects/app/src/main/res/layout/activity_new_post.xml" value="0.22" />
         <entry key="..\:/AndroidStudioProjects/app/src/main/res/layout/activity_post.xml" value="0.20416666666666666" />
         <entry key="..\:/AndroidStudioProjects/app/src/main/res/layout/activity_profile.xml" value="0.20416666666666666" />

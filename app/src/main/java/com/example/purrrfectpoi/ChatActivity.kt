@@ -1,18 +1,18 @@
 package com.example.purrrfectpoi
 
+import android.Manifest
 import android.app.Activity
 import android.content.ContentValues
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Log
 import android.view.View
-import android.widget.Button
-import android.widget.EditText
-import android.widget.ImageView
-import android.widget.TextView
+import android.widget.*
+import androidx.core.app.ActivityCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.purrrfectpoi.Models.MensajesModel
@@ -153,6 +153,14 @@ class ChatActivity : AppCompatActivity() {
             adapter = chatAdapter
             layoutManager = LinearLayoutManager(context)
         }
+        chatAdapter.setOnItemClickListener(object : ChatAdapter.onItemClickListener{
+            override fun onItemClick(view: View, position: Int) {
+                val intent = Intent(this@ChatActivity, MapsActivity::class.java)
+                intent.putExtra("Latitud", msgParam[position].Latitud)
+                intent.putExtra("Longitud", msgParam[position].Longitud)
+                startActivity(intent)
+            }
+        })
 
         db = FirebaseFirestore.getInstance()
         db.collection("Usuarios").document(documentReferenceUserLogged.id).get()
@@ -240,11 +248,51 @@ class ChatActivity : AppCompatActivity() {
         startActivityForResult(Intent.createChooser(i, "Choose Picture"), 111)
     }
 
+    private fun enviarDocumento() {
+
+    }
+
+    private fun enviarUbicacion() {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
+                ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(
+                this,
+                arrayOf(
+                    Manifest.permission.ACCESS_FINE_LOCATION,
+                    Manifest.permission.ACCESS_COARSE_LOCATION
+                ),
+                1
+            )
+        }
+        else {
+            abrirMapa()
+        }
+    }
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+
+        if (grantResults.isNotEmpty()) {
+            if (grantResults[0] != PackageManager.PERMISSION_GRANTED) {
+                Toast.makeText(this, "Se requiere aceptar el permiso", Toast.LENGTH_SHORT).show()
+                enviarUbicacion()
+            }
+            else {
+                Toast.makeText(this, "Permiso concedido", Toast.LENGTH_SHORT).show()
+                abrirMapa()
+            }
+        }
+    }
+
+    private fun abrirMapa() {
+        startActivityForResult(Intent(this, MapsActivity::class.java), 222)
+    }
+
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
         if (requestCode == 111 && resultCode == Activity.RESULT_OK && data != null) {
-            var filepath = data!!.data!!
+            var filepath = data.data!!
             var strImage = UUID.randomUUID().toString() + ".jpg"
             var pathImage = "images/Mensajes/${strImage}"
             var imageRef = FirebaseStorage.getInstance().reference.child(pathImage)
@@ -263,13 +311,22 @@ class ChatActivity : AppCompatActivity() {
 
                 }
         }
-    }
+        else if (requestCode == 222 && resultCode == Activity.RESULT_OK && data != null) {
+            var lat = data.getStringExtra("Latitud")
+            var lon = data.getStringExtra("Longitud")
 
-    private fun enviarDocumento() {
-
-    }
-
-    private fun enviarUbicacion() {
+            db = FirebaseFirestore.getInstance()
+            db.collection("Conversacion").document(idChat!!).collection("Mensajes")
+                .add(
+                    hashMapOf(
+                        "Latitud" to lat,
+                        "Longitud" to lon,
+                        "Autor" to documentReferenceUserLogged,
+                        "FechaCreacion" to FieldValue.serverTimestamp()
+                    )
+                )
+            //Toast.makeText(this, "Latitud: " + lat + ", Longitud: " + lon, Toast.LENGTH_SHORT).show()
+        }
 
     }
 
