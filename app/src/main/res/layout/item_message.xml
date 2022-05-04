@@ -449,5 +449,152 @@
         </LinearLayout>
     </RelativeLayout>
 
+    <!-- GLOBO MI LOCALIZACION -->
+    <RelativeLayout
+        android:id="@+id/myMessageContentMap"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@+id/otherMessageContentDocument"
+        >
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/myMessageContentMap_chatUserImage"
+            android:layout_width="46dp"
+            android:layout_height="46dp"
+            android:layout_alignTop="@+id/myMessageContentMap_myMessageLayout"
+            android:layout_alignParentEnd="true"
+            android:layout_marginTop="0dp"
+            app:civ_border_color="@color/white"
+            app:civ_border_width="2dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/myMessageContentMap_myMessageLayout"
+            tools:src="@tools:sample/avatars" />
+
+        <LinearLayout
+            android:id="@+id/myMessageContentMap_myMessageLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="84dp"
+            android:layout_marginTop="8dp"
+            android:layout_toStartOf="@+id/myMessageContentMap_chatUserImage"
+            android:background="@drawable/my_msg"
+            android:orientation="vertical"
+            app:layout_constraintEnd_toStartOf="@+id/myMessageContentMap_chatUserImage"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                android:layout_marginLeft="16dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginRight="34dp"
+                android:textColor="@color/black"
+                android:textStyle="bold"
+                android:textSize="16dp"
+                tools:text="¡Compartiendo ubicación!" />
+
+            <ImageView
+                android:id="@+id/myMap"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                android:layout_marginTop="1dp"
+                android:layout_marginRight="19dp"
+                android:adjustViewBounds="true"
+                android:src="@drawable/my_map" />
+
+            <TextView
+                android:id="@+id/myMessageContentMap_tv_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                android:layout_marginTop="2dp"
+                android:layout_marginRight="30dp"
+                android:layout_marginBottom="8dp"
+                android:textColor="@android:color/black"
+                android:textSize="12dp"
+                android:textStyle="italic"
+                tools:text="03/03/2022 10:00 PM" />
+        </LinearLayout>
+    </RelativeLayout>
+
+    <!-- GLOBO OTRA LOCALIZACION -->
+    <RelativeLayout
+        android:id="@+id/otherMessageContentMap"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/myMessageContentMap"
+        >
+
+        <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/otherMessageContentMap_otherImageView"
+            android:layout_width="46dp"
+            android:layout_height="46dp"
+            app:civ_border_color="@color/white"
+            app:civ_border_width="2dp"
+            android:layout_alignTop="@+id/otherMessageContentMap_otherMessageLayout"
+            android:layout_alignParentStart="true"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/otherMessageContentMap_otherMessageLayout"
+            tools:src="@tools:sample/avatars"
+            />
+
+        <LinearLayout
+            android:id="@+id/otherMessageContentMap_otherMessageLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="0dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="84dp"
+            android:layout_toEndOf="@+id/otherMessageContentMap_otherImageView"
+            android:background="@drawable/other_msg"
+            android:orientation="vertical"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toEndOf="@+id/otherMessageContentMap_otherImageView"
+            app:layout_constraintVertical_bias="1.0"
+            >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="27dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginRight="16dp"
+                android:textColor="@color/black"
+                android:textStyle="bold"
+                android:textSize="16dp"
+                tools:text="¡Compartiendo ubicación!" />
+
+            <ImageView
+                android:id="@+id/otherMap"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="14dp"
+                android:layout_marginTop="1dp"
+                android:adjustViewBounds="true"
+                android:src="@drawable/other_map" />
+
+            <TextView
+                android:id="@+id/otherMessageContentMap_tv_otherdate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                android:layout_marginTop="2dp"
+                android:layout_marginRight="16dp"
+                android:layout_marginBottom="8dp"
+                android:textColor="@android:color/black"
+                android:textSize="12dp"
+                android:textStyle="italic"
+                tools:text="03/03/2022 10:00 PM" />
+
+        </LinearLayout>
+    </RelativeLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
