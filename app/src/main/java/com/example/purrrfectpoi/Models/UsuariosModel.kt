@@ -12,7 +12,7 @@ class UsuariosModel {
     var Carrera : DocumentReference? = null
     var Conversaciones : ArrayList<DocumentReference> = arrayListOf()
 
-    var Conectado : Boolean = true
+    var Conectado : Boolean = false
 
     var CantidadTareas : Long = 0
     var CantidadGrupos : Long = 0

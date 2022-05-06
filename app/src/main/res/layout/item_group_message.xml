@@ -534,9 +534,10 @@
                 android:layout_marginLeft="16dp"
                 android:layout_marginTop="8dp"
                 android:layout_marginRight="34dp"
+                android:text="¡Compartiendo ubicación!"
                 android:textColor="@color/black"
-                android:textStyle="bold"
                 android:textSize="16dp"
+                android:textStyle="bold"
                 tools:text="¡Compartiendo ubicación!" />
 
             <ImageView
@@ -624,9 +625,10 @@
                 android:layout_marginLeft="27dp"
                 android:layout_marginTop="8dp"
                 android:layout_marginRight="16dp"
+                android:text="¡Compartiendo ubicación!"
                 android:textColor="@color/black"
-                android:textStyle="bold"
                 android:textSize="16dp"
+                android:textStyle="bold"
                 tools:text="¡Compartiendo ubicación!" />
 
             <ImageView

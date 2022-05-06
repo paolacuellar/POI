@@ -296,6 +296,7 @@
             >
 
             <androidx.cardview.widget.CardView
+                android:id="@+id/myArchive_cardView"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_gravity="end"
@@ -365,14 +366,13 @@
             android:id="@+id/otherMessageContentDocument_otherImageView"
             android:layout_width="46dp"
             android:layout_height="46dp"
-            app:civ_border_color="@color/white"
-            app:civ_border_width="2dp"
             android:layout_alignTop="@+id/otherMessageContentDocument_otherMessageLayout"
             android:layout_alignParentStart="true"
+            app:civ_border_color="@color/white"
+            app:civ_border_width="2dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@+id/otherMessageContentDocument_otherMessageLayout"
-            tools:src="@tools:sample/avatars"
-            />
+            tools:src="@tools:sample/avatars" />
 
         <LinearLayout
             android:id="@+id/otherMessageContentDocument_otherMessageLayout"
@@ -392,6 +392,7 @@
             >
 
             <androidx.cardview.widget.CardView
+                android:id="@+id/otherArchive_cardView"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_gravity="end"
@@ -490,9 +491,10 @@
                 android:layout_marginLeft="16dp"
                 android:layout_marginTop="8dp"
                 android:layout_marginRight="34dp"
+                android:text="¡Compartiendo ubicación!"
                 android:textColor="@color/black"
-                android:textStyle="bold"
                 android:textSize="16dp"
+                android:textStyle="bold"
                 tools:text="¡Compartiendo ubicación!" />
 
             <ImageView
@@ -535,14 +537,13 @@
             android:id="@+id/otherMessageContentMap_otherImageView"
             android:layout_width="46dp"
             android:layout_height="46dp"
-            app:civ_border_color="@color/white"
-            app:civ_border_width="2dp"
             android:layout_alignTop="@+id/otherMessageContentMap_otherMessageLayout"
             android:layout_alignParentStart="true"
+            app:civ_border_color="@color/white"
+            app:civ_border_width="2dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@+id/otherMessageContentMap_otherMessageLayout"
-            tools:src="@tools:sample/avatars"
-            />
+            tools:src="@tools:sample/avatars" />
 
         <LinearLayout
             android:id="@+id/otherMessageContentMap_otherMessageLayout"
@@ -567,9 +568,10 @@
                 android:layout_marginLeft="27dp"
                 android:layout_marginTop="8dp"
                 android:layout_marginRight="16dp"
+                android:text="¡Compartiendo ubicación!"
                 android:textColor="@color/black"
-                android:textStyle="bold"
                 android:textSize="16dp"
+                android:textStyle="bold"
                 tools:text="¡Compartiendo ubicación!" />
 
             <ImageView

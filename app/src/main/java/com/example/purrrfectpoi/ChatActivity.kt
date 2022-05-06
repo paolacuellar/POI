@@ -2,17 +2,22 @@ package com.example.purrrfectpoi
 
 import android.Manifest
 import android.app.Activity
+import android.app.DownloadManager
+import android.content.ContentResolver
 import android.content.ContentValues
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.Environment
 import android.provider.MediaStore
 import android.util.Log
 import android.view.View
 import android.widget.*
 import androidx.core.app.ActivityCompat
+import androidx.core.content.getSystemService
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.purrrfectpoi.Models.MensajesModel
@@ -154,11 +159,22 @@ class ChatActivity : AppCompatActivity() {
             layoutManager = LinearLayoutManager(context)
         }
         chatAdapter.setOnItemClickListener(object : ChatAdapter.onItemClickListener{
-            override fun onItemClick(view: View, position: Int) {
+            override fun onMapClick(view: View, position: Int) {
                 val intent = Intent(this@ChatActivity, MapsActivity::class.java)
                 intent.putExtra("Latitud", msgParam[position].Latitud)
                 intent.putExtra("Longitud", msgParam[position].Longitud)
                 startActivity(intent)
+            }
+            override fun onDocumentClick(view: View, position: Int) {
+                val manager = applicationContext.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
+                FirebaseStorage.getInstance().getReference("files/Mensajes/${msgParam[position].NombreDocumento}").downloadUrl
+                    .addOnSuccessListener {
+                        val request = DownloadManager.Request(it)
+                        request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
+                        request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, msgParam[position].NombreDocumento)
+                        manager.enqueue(request)
+                        Toast.makeText(this@ChatActivity, "Archivo descargado", Toast.LENGTH_SHORT).show()
+                    }
             }
         })
 
@@ -209,6 +225,7 @@ class ChatActivity : AppCompatActivity() {
                             chatAdapter.addItem(msgAux)
 
                         }
+
                     }
                     .addOnFailureListener { exception ->
                         Log.w(ContentValues.TAG, "Error consiguiendo los Mensajes", exception)
@@ -249,7 +266,10 @@ class ChatActivity : AppCompatActivity() {
     }
 
     private fun enviarDocumento() {
-
+        var i = Intent ()
+        i.setType("*/*")
+        i.setAction(Intent.ACTION_GET_CONTENT)
+        startActivityForResult(Intent.createChooser(i, "Choose File"), 333)
     }
 
     private fun enviarUbicacion() {
@@ -325,7 +345,28 @@ class ChatActivity : AppCompatActivity() {
                         "FechaCreacion" to FieldValue.serverTimestamp()
                     )
                 )
-            //Toast.makeText(this, "Latitud: " + lat + ", Longitud: " + lon, Toast.LENGTH_SHORT).show()
+        }
+        else if (requestCode == 333 && resultCode == Activity.RESULT_OK && data != null) {
+            var filepath = data.data!!
+            var index = data.resolveType(contentResolver)?.indexOf("/")
+            var ext = data.resolveType(contentResolver)?.drop(index!! + 1)
+            var strFile = UUID.randomUUID().toString() + "." + ext
+            var pathFile = "files/Mensajes/${strFile}"
+            var fileRef = FirebaseStorage.getInstance().reference.child(pathFile)
+            fileRef.putFile(filepath)
+                .addOnSuccessListener { responseFileUpload ->
+
+                    db = FirebaseFirestore.getInstance()
+                    db.collection("Conversacion").document(idChat!!).collection("Mensajes")
+                        .add(
+                            hashMapOf(
+                                "NombreDocumento" to strFile,
+                                "Autor" to documentReferenceUserLogged,
+                                "FechaCreacion" to FieldValue.serverTimestamp()
+                            )
+                        )
+
+                }
         }
 
     }

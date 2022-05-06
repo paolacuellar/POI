@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.purrrfectpoi.Models.UsuariosModel
 import com.example.purrrfectpoi.R
+import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import kotlinx.android.synthetic.main.item_chat.view.*
 
@@ -66,6 +67,7 @@ class UsuariosChatsAdapter(val userChats: MutableList<UsuariosModel>, val button
     class UsuariosChatsViewHolder(val view: View, listener: onItemClickListener): RecyclerView.ViewHolder(view){
         fun render(UserChat: UsuariosModel, position: Int){
 
+            view.statusTextView.setText(if (UserChat.Conectado) "Conectado" else "Desconectado")
             view.chatNameText.setText(if (!UserChat.Nombre.isEmpty()) UserChat.Nombre + " " + UserChat.ApPaterno else "Error")
             if (UserChat.Foto.isNotEmpty()) {
                 FirebaseStorage.getInstance().getReference("images/Usuarios/${UserChat.Foto}").downloadUrl

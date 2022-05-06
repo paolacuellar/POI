@@ -1,10 +1,15 @@
 package com.example.purrrfectpoi.fragments
 
+import android.Manifest
 import android.app.Activity
+import android.app.DownloadManager
 import android.content.ContentValues
+import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.media.Image
 import android.os.Bundle
+import android.os.Environment
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -12,9 +17,12 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
+import android.widget.Toast
+import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.purrrfectpoi.MapsActivity
 import com.example.purrrfectpoi.Models.MensajesModel
 import com.example.purrrfectpoi.R
 import com.example.purrrfectpoi.adapters.ChatAdapter
@@ -153,6 +161,26 @@ class GroupChatFragment:Fragment() {
             adapter = groupChatAdapter
             layoutManager = LinearLayoutManager(context)
         }
+        groupChatAdapter.setOnItemClickListener(object : GroupChatAdapter.onItemClickListener{
+            override fun onMapClick(view: View, position: Int) {
+                val intent = Intent(activity, MapsActivity::class.java)
+                intent.putExtra("Latitud", msgParam[position].Latitud)
+                intent.putExtra("Longitud", msgParam[position].Longitud)
+                startActivity(intent)
+            }
+
+            override fun onDocumentClick(view: View, position: Int) {
+                val manager = activity?.applicationContext?.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
+                FirebaseStorage.getInstance().getReference("files/Mensajes/${msgParam[position].NombreDocumento}").downloadUrl
+                    .addOnSuccessListener {
+                        val request = DownloadManager.Request(it)
+                        request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
+                        request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, msgParam[position].NombreDocumento)
+                        manager.enqueue(request)
+                        Toast.makeText(activity, "Archivo descargado", Toast.LENGTH_SHORT).show()
+                    }
+            }
+        })
 
         db = FirebaseFirestore.getInstance()
         db.collection("Grupos").document(idGrupo!!)
@@ -239,11 +267,53 @@ class GroupChatFragment:Fragment() {
         startActivityForResult(Intent.createChooser(i, "Choose Picture"), 111)
     }
 
+    private fun enviarDocumento() {
+        var i = Intent ()
+        i.setType("*/*")
+        i.setAction(Intent.ACTION_GET_CONTENT)
+        startActivityForResult(Intent.createChooser(i, "Choose File"), 333)
+    }
+
+    private fun enviarUbicacion() {
+        if (ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
+                ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            requestPermissions(
+                arrayOf(
+                    Manifest.permission.ACCESS_FINE_LOCATION,
+                    Manifest.permission.ACCESS_COARSE_LOCATION
+                ),
+                1
+            )
+        }
+        else {
+            abrirMapa()
+        }
+    }
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+
+        if (grantResults.isNotEmpty()) {
+            if (grantResults[0] != PackageManager.PERMISSION_GRANTED) {
+                Toast.makeText(activity, "Se requiere aceptar el permiso", Toast.LENGTH_SHORT).show()
+                enviarUbicacion()
+            }
+            else {
+                Toast.makeText(activity, "Permiso concedido", Toast.LENGTH_SHORT).show()
+                abrirMapa()
+            }
+        }
+    }
+
+    private fun abrirMapa() {
+        startActivityForResult(Intent(activity, MapsActivity::class.java), 222)
+    }
+
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
         if (requestCode == 111 && resultCode == Activity.RESULT_OK && data != null) {
-            var filepath = data!!.data!!
+            var filepath = data.data!!
             var strImage = UUID.randomUUID().toString() + ".jpg"
             var pathImage = "images/Mensajes/${strImage}"
             var imageRef = FirebaseStorage.getInstance().reference.child(pathImage)
@@ -262,13 +332,43 @@ class GroupChatFragment:Fragment() {
 
                 }
         }
-    }
+        else if (requestCode == 222 && resultCode == Activity.RESULT_OK && data != null) {
+            var lat = data.getStringExtra("Latitud")
+            var lon = data.getStringExtra("Longitud")
 
-    private fun enviarDocumento() {
+            db = FirebaseFirestore.getInstance()
+            db.collection("Conversacion").document(idGroupChat!!).collection("Mensajes")
+                .add(
+                    hashMapOf(
+                        "Latitud" to lat,
+                        "Longitud" to lon,
+                        "Autor" to documentReferenceUserLogged,
+                        "FechaCreacion" to FieldValue.serverTimestamp()
+                    )
+                )
+        }
+        else if (requestCode == 333 && resultCode == Activity.RESULT_OK && data != null) {
+            var filepath = data.data!!
+            var index = data.resolveType(requireActivity().contentResolver)?.indexOf("/")
+            var ext = data.resolveType(requireActivity().contentResolver)?.drop(index!! + 1)
+            var strFile = UUID.randomUUID().toString() + "." + ext
+            var pathFile = "files/Mensajes/${strFile}"
+            var fileRef = FirebaseStorage.getInstance().reference.child(pathFile)
+            fileRef.putFile(filepath)
+                .addOnSuccessListener { responseFileUpload ->
 
-    }
+                    db = FirebaseFirestore.getInstance()
+                    db.collection("Conversacion").document(idGroupChat!!).collection("Mensajes")
+                        .add(
+                            hashMapOf(
+                                "NombreDocumento" to strFile,
+                                "Autor" to documentReferenceUserLogged,
+                                "FechaCreacion" to FieldValue.serverTimestamp()
+                            )
+                        )
 
-    private fun enviarUbicacion() {
+                }
+        }
 
     }
 
