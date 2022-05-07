@@ -66,6 +66,15 @@ class ChatAdapter(val chatMsgs: MutableList<MensajesModel>) : RecyclerView.Adapt
     class ChatViewHolder(val view: View, listener: onItemClickListener): RecyclerView.ViewHolder(view) {
         fun render(Msg: MensajesModel, position: Int) {
 
+            view.myMessageContent.visibility = View.GONE
+            view.otherMessageContent.visibility = View.GONE
+            view.myMessageContentImage.visibility = View.GONE
+            view.otherMessageContentImage.visibility = View.GONE
+            view.myMessageContentDocument.visibility = View.GONE
+            view.otherMessageContentDocument.visibility = View.GONE
+            view.myMessageContentMap.visibility = View.GONE
+            view.otherMessageContentMap.visibility = View.GONE
+
             if (Msg.Autor?.id == DataManager.emailUsuario) {
 
                 FirebaseFirestore.getInstance().collection("Usuarios").document(Msg.Autor!!.id)
@@ -76,6 +85,7 @@ class ChatAdapter(val chatMsgs: MutableList<MensajesModel>) : RecyclerView.Adapt
 
                         if (Msg.Texto.isNotEmpty()) {
 
+                            view.myMessageContent.visibility = View.VISIBLE
                             view.myMessageTextView.setText(if (!Msg.Texto.isEmpty()) Msg.Texto else "Mensaje vacío")
                             view.tv_date.setText(Msg.FechaCreacion?.toDate().toString())
                             if (Msg.FotoPerfil.isNotEmpty()) {
@@ -89,17 +99,11 @@ class ChatAdapter(val chatMsgs: MutableList<MensajesModel>) : RecyclerView.Adapt
                             else {
                                 view.chatUserImage!!.setImageResource(R.drawable.foto_default_perfil)
                             }
-                            view.otherMessageContent.visibility = View.GONE
-                            view.myMessageContentImage.visibility = View.GONE
-                            view.otherMessageContentImage.visibility = View.GONE
-                            view.myMessageContentDocument.visibility = View.GONE
-                            view.otherMessageContentDocument.visibility = View.GONE
-                            view.myMessageContentMap.visibility = View.GONE
-                            view.otherMessageContentMap.visibility = View.GONE
 
                         }
                         else if (Msg.Foto.isNotEmpty()) {
 
+                            view.myMessageContentImage.visibility = View.VISIBLE
                             view.myMessageContentImage_tv_date.setText(Msg.FechaCreacion?.toDate().toString())
                             FirebaseStorage.getInstance().getReference("images/Mensajes/${Msg.Foto}").downloadUrl
                                 .addOnSuccessListener {
@@ -118,17 +122,11 @@ class ChatAdapter(val chatMsgs: MutableList<MensajesModel>) : RecyclerView.Adapt
                             else {
                                 view.myMessageContentImage_chatUserImage!!.setImageResource(R.drawable.foto_default_perfil)
                             }
-                            view.myMessageContent.visibility = View.GONE
-                            view.otherMessageContent.visibility = View.GONE
-                            view.otherMessageContentImage.visibility = View.GONE
-                            view.myMessageContentDocument.visibility = View.GONE
-                            view.otherMessageContentDocument.visibility = View.GONE
-                            view.myMessageContentMap.visibility = View.GONE
-                            view.otherMessageContentMap.visibility = View.GONE
 
                         }
                         else if (Msg.NombreDocumento.isNotEmpty()) {
 
+                            view.myMessageContentDocument.visibility = View.VISIBLE
                             view.myArchiveName.setText(Msg.NombreDocumento)
                             view.myMessageContentDocument_tv_date.setText(Msg.FechaCreacion?.toDate().toString())
                             if (Msg.FotoPerfil.isNotEmpty()) {
@@ -142,17 +140,11 @@ class ChatAdapter(val chatMsgs: MutableList<MensajesModel>) : RecyclerView.Adapt
                             else {
                                 view.myMessageContentDocument_chatUserImage!!.setImageResource(R.drawable.foto_default_perfil)
                             }
-                            view.myMessageContent.visibility = View.GONE
-                            view.otherMessageContent.visibility = View.GONE
-                            view.myMessageContentImage.visibility = View.GONE
-                            view.otherMessageContentImage.visibility = View.GONE
-                            view.otherMessageContentDocument.visibility = View.GONE
-                            view.myMessageContentMap.visibility = View.GONE
-                            view.otherMessageContentMap.visibility = View.GONE
 
                         }
                         else if (Msg.Latitud.isNotEmpty() && Msg.Longitud.isNotEmpty()) {
 
+                            view.myMessageContentMap.visibility = View.VISIBLE
                             view.myMessageContentMap_tv_date.setText(Msg.FechaCreacion?.toDate().toString())
                             if (Msg.FotoPerfil.isNotEmpty()) {
                                 FirebaseStorage.getInstance().getReference("images/Usuarios/${Msg.FotoPerfil}").downloadUrl
@@ -165,13 +157,6 @@ class ChatAdapter(val chatMsgs: MutableList<MensajesModel>) : RecyclerView.Adapt
                             else {
                                 view.myMessageContentMap_chatUserImage!!.setImageResource(R.drawable.foto_default_perfil)
                             }
-                            view.myMessageContent.visibility = View.GONE
-                            view.otherMessageContent.visibility = View.GONE
-                            view.myMessageContentImage.visibility = View.GONE
-                            view.otherMessageContentImage.visibility = View.GONE
-                            view.myMessageContentDocument.visibility = View.GONE
-                            view.otherMessageContentDocument.visibility = View.GONE
-                            view.otherMessageContentMap.visibility = View.GONE
 
                         }
 
@@ -187,6 +172,7 @@ class ChatAdapter(val chatMsgs: MutableList<MensajesModel>) : RecyclerView.Adapt
 
                         if (Msg.Texto.isNotEmpty()) {
 
+                            view.otherMessageContent.visibility = View.VISIBLE
                             view.othersMessageTextView.setText(if (!Msg.Texto.isEmpty()) Msg.Texto else "Mensaje vacío")
                             view.tv_otherdate.setText(Msg.FechaCreacion?.toDate().toString())
                             if (Msg.FotoPerfil.isNotEmpty()) {
@@ -200,17 +186,11 @@ class ChatAdapter(val chatMsgs: MutableList<MensajesModel>) : RecyclerView.Adapt
                             else {
                                 view.otherImageView!!.setImageResource(R.drawable.foto_default_perfil)
                             }
-                            view.myMessageContent.visibility = View.GONE
-                            view.myMessageContentImage.visibility = View.GONE
-                            view.otherMessageContentImage.visibility = View.GONE
-                            view.myMessageContentDocument.visibility = View.GONE
-                            view.otherMessageContentDocument.visibility = View.GONE
-                            view.myMessageContentMap.visibility = View.GONE
-                            view.otherMessageContentMap.visibility = View.GONE
 
                         }
                         else if (Msg.Foto.isNotEmpty()) {
 
+                            view.otherMessageContentImage.visibility = View.VISIBLE
                             view.otherMessageContentImage_tv_otherdate.setText(Msg.FechaCreacion?.toDate().toString())
                             FirebaseStorage.getInstance().getReference("images/Mensajes/${Msg.Foto}").downloadUrl
                                 .addOnSuccessListener {
@@ -229,17 +209,11 @@ class ChatAdapter(val chatMsgs: MutableList<MensajesModel>) : RecyclerView.Adapt
                             else {
                                 view.otherMessageContentImage_otherImageView.setImageResource(R.drawable.foto_default_perfil)
                             }
-                            view.myMessageContent.visibility = View.GONE
-                            view.otherMessageContent.visibility = View.GONE
-                            view.myMessageContentImage.visibility = View.GONE
-                            view.myMessageContentDocument.visibility = View.GONE
-                            view.otherMessageContentDocument.visibility = View.GONE
-                            view.myMessageContentMap.visibility = View.GONE
-                            view.otherMessageContentMap.visibility = View.GONE
 
                         }
                         else if (Msg.NombreDocumento.isNotEmpty()) {
 
+                            view.otherMessageContentDocument.visibility = View.VISIBLE
                             view.otherArchiveName.setText(Msg.NombreDocumento)
                             view.otherMessageContentDocument_tv_otherdate.setText(Msg.FechaCreacion?.toDate().toString())
                             if (Msg.FotoPerfil.isNotEmpty()) {
@@ -253,17 +227,11 @@ class ChatAdapter(val chatMsgs: MutableList<MensajesModel>) : RecyclerView.Adapt
                             else {
                                 view.otherMessageContentDocument_otherImageView!!.setImageResource(R.drawable.foto_default_perfil)
                             }
-                            view.myMessageContent.visibility = View.GONE
-                            view.otherMessageContent.visibility = View.GONE
-                            view.myMessageContentImage.visibility = View.GONE
-                            view.otherMessageContentImage.visibility = View.GONE
-                            view.myMessageContentDocument.visibility = View.GONE
-                            view.myMessageContentMap.visibility = View.GONE
-                            view.otherMessageContentMap.visibility = View.GONE
 
                         }
                         else if (Msg.Latitud.isNotEmpty() && Msg.Longitud.isNotEmpty()) {
 
+                            view.otherMessageContentMap.visibility = View.VISIBLE
                             view.otherMessageContentMap_tv_otherdate.setText(Msg.FechaCreacion?.toDate().toString())
                             if (Msg.FotoPerfil.isNotEmpty()) {
                                 FirebaseStorage.getInstance().getReference("images/Usuarios/${Msg.FotoPerfil}").downloadUrl
@@ -276,13 +244,6 @@ class ChatAdapter(val chatMsgs: MutableList<MensajesModel>) : RecyclerView.Adapt
                             else {
                                 view.otherMessageContentMap_otherImageView!!.setImageResource(R.drawable.foto_default_perfil)
                             }
-                            view.myMessageContent.visibility = View.GONE
-                            view.otherMessageContent.visibility = View.GONE
-                            view.myMessageContentImage.visibility = View.GONE
-                            view.otherMessageContentImage.visibility = View.GONE
-                            view.myMessageContentDocument.visibility = View.GONE
-                            view.otherMessageContentDocument.visibility = View.GONE
-                            view.myMessageContentMap.visibility = View.GONE
 
                         }
 
