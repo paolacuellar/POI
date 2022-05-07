@@ -25,7 +25,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.purrrfectpoi.MapsActivity
 import com.example.purrrfectpoi.Models.MensajesModel
 import com.example.purrrfectpoi.R
-import com.example.purrrfectpoi.adapters.ChatAdapter
 import com.example.purrrfectpoi.adapters.GroupChatAdapter
 import com.google.firebase.Timestamp
 import com.google.firebase.firestore.DocumentReference
@@ -87,7 +86,6 @@ class GroupChatFragment:Fragment() {
             DataManager.emailUsuario!!)
 
         idGrupo = arguments?.getString("grupoId")
-        //myPhoto = DataManager.fotoUsuario
 
         setUpChat()
         updateChat()
@@ -111,36 +109,21 @@ class GroupChatFragment:Fragment() {
                             }
 
                             if (snapshot != null) {
-                                db.collection("Conversacion").document(idChatGrupo.id).collection("Mensajes")
-                                    .orderBy("FechaCreacion", Query.Direction.DESCENDING).limit(1)
-                                    .get()
-                                    .addOnSuccessListener { responseMsgs ->
+                                for (doc in snapshot) {
+                                    if (doc.get("FechaCreacion") != null) {
+                                        var msgAux = MensajesModel()
+                                        msgAux.id = doc.id
+                                        msgAux.Texto = if (doc.get("Texto") != null)    doc.get("Texto") as String else ""
+                                        msgAux.Autor = doc.get("Autor") as DocumentReference
+                                        msgAux.Foto = if(doc.get("Foto") != null)    doc.get("Foto") as String else ""
+                                        msgAux.NombreDocumento = if(doc.get("NombreDocumento") != null)    doc.get("NombreDocumento") as String else ""
+                                        msgAux.Latitud = if(doc.get("Latitud") != null)    doc.get("Latitud") as String else ""
+                                        msgAux.Longitud = if(doc.get("Longitud") != null)    doc.get("Longitud") as String else ""
+                                        msgAux.FechaCreacion = doc.get("FechaCreacion") as Timestamp
 
-                                        for (responseMsg in responseMsgs) {
-
-                                            if (responseMsg.get("FechaCreacion") != null) {
-
-                                                var msgAux = MensajesModel()
-                                                msgAux.id = responseMsg.id
-                                                msgAux.Texto = if(responseMsg.get("Texto") != null)    responseMsg.get("Texto") as String else ""
-                                                msgAux.Autor = responseMsg.get("Autor") as DocumentReference
-                                                msgAux.Foto = if(responseMsg.get("Foto") != null)    responseMsg.get("Foto") as String else ""
-                                                msgAux.NombreDocumento = if(responseMsg.get("NombreDocumento") != null)    responseMsg.get("NombreDocumento") as String else ""
-                                                msgAux.Latitud = if(responseMsg.get("Latitud") != null)    responseMsg.get("Latitud") as String else ""
-                                                msgAux.Longitud = if(responseMsg.get("Longitud") != null)    responseMsg.get("Longitud") as String else ""
-                                                msgAux.FechaCreacion = responseMsg.get("FechaCreacion") as Timestamp
-
-                                                groupChatAdapter.addItem(msgAux)
-
-                                            }
-
-                                        }
-
+                                        groupChatAdapter.addItem(msgAux)
                                     }
-                                    .addOnFailureListener { exception ->
-                                        Log.w(ContentValues.TAG, "Error consiguiendo el último Mensaje", exception)
-                                    }
-
+                                }
                             }
 
                         }
@@ -188,39 +171,10 @@ class GroupChatFragment:Fragment() {
             .addOnSuccessListener { responseGrupo ->
 
                 if (responseGrupo.get("Conversacion") != null) {
-
                     var idChatGrupo = responseGrupo.get("Conversacion") as DocumentReference
                     idGroupChat = idChatGrupo.id
-                    db.collection("Conversacion").document(idChatGrupo.id).collection("Mensajes")
-                        .get()
-                        .addOnSuccessListener { responseMsgs ->
-
-                            for (responseMsg in responseMsgs) {
-
-                                var msgAux = MensajesModel()
-                                msgAux.id = responseMsg.id
-                                msgAux.Texto = if(responseMsg.get("Texto") != null)    responseMsg.get("Texto") as String else ""
-                                msgAux.Autor = responseMsg.get("Autor") as DocumentReference
-                                msgAux.Foto = if(responseMsg.get("Foto") != null)    responseMsg.get("Foto") as String else ""
-                                msgAux.NombreDocumento = if(responseMsg.get("NombreDocumento") != null)    responseMsg.get("NombreDocumento") as String else ""
-                                msgAux.Latitud = if(responseMsg.get("Latitud") != null)    responseMsg.get("Latitud") as String else ""
-                                msgAux.Longitud = if(responseMsg.get("Longitud") != null)    responseMsg.get("Longitud") as String else ""
-                                msgAux.FechaCreacion = responseMsg.get("FechaCreacion") as Timestamp
-
-                                //msgParam.add(msgAux)
-                                groupChatAdapter.addItem(msgAux)
-
-                            }
-
-                        }
-                        .addOnFailureListener { exception ->
-                            Log.w(ContentValues.TAG, "Error consiguiendo los Mensajes", exception)
-                        }
                 }
 
-            }
-            .addOnFailureListener { exception ->
-                Log.w(ContentValues.TAG, "Error consiguiendo el Grupo", exception)
             }
 
     }
@@ -349,8 +303,8 @@ class GroupChatFragment:Fragment() {
         }
         else if (requestCode == 333 && resultCode == Activity.RESULT_OK && data != null) {
             var filepath = data.data!!
-            var index = data.resolveType(requireActivity().contentResolver)?.indexOf("/")
-            var ext = data.resolveType(requireActivity().contentResolver)?.drop(index!! + 1)
+            var index = data.resolveType(requireActivity().applicationContext)?.indexOf("/")
+            var ext = data.resolveType(requireActivity().applicationContext)?.drop(index!! + 1)
             var strFile = UUID.randomUUID().toString() + "." + ext
             var pathFile = "files/Mensajes/${strFile}"
             var fileRef = FirebaseStorage.getInstance().reference.child(pathFile)

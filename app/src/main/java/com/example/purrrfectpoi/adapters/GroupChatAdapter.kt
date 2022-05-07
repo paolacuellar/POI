@@ -12,35 +12,6 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import com.psm.hiring.Utils.DataManager
 import kotlinx.android.synthetic.main.item_group_message.view.*
-import kotlinx.android.synthetic.main.item_group_message.view.chatUserImage
-import kotlinx.android.synthetic.main.item_group_message.view.myArchiveName
-import kotlinx.android.synthetic.main.item_group_message.view.myMap
-import kotlinx.android.synthetic.main.item_group_message.view.myMessageContent
-import kotlinx.android.synthetic.main.item_group_message.view.myMessageContentDocument
-import kotlinx.android.synthetic.main.item_group_message.view.myMessageContentDocument_chatUserImage
-import kotlinx.android.synthetic.main.item_group_message.view.myMessageContentDocument_tv_date
-import kotlinx.android.synthetic.main.item_group_message.view.myMessageContentImage
-import kotlinx.android.synthetic.main.item_group_message.view.myMessageContentImage_chatUserImage
-import kotlinx.android.synthetic.main.item_group_message.view.myMessageContentImage_tv_date
-import kotlinx.android.synthetic.main.item_group_message.view.myMessageContentMap
-import kotlinx.android.synthetic.main.item_group_message.view.myMessageContentMap_chatUserImage
-import kotlinx.android.synthetic.main.item_group_message.view.myMessageContentMap_tv_date
-import kotlinx.android.synthetic.main.item_group_message.view.myMessageImage
-import kotlinx.android.synthetic.main.item_group_message.view.myMessageTextView
-import kotlinx.android.synthetic.main.item_group_message.view.otherImageView
-import kotlinx.android.synthetic.main.item_group_message.view.otherMap
-import kotlinx.android.synthetic.main.item_group_message.view.otherMessageContent
-import kotlinx.android.synthetic.main.item_group_message.view.otherMessageContentDocument
-import kotlinx.android.synthetic.main.item_group_message.view.otherMessageContentImage
-import kotlinx.android.synthetic.main.item_group_message.view.otherMessageContentImage_otherImageView
-import kotlinx.android.synthetic.main.item_group_message.view.otherMessageContentImage_tv_otherdate
-import kotlinx.android.synthetic.main.item_group_message.view.otherMessageContentMap
-import kotlinx.android.synthetic.main.item_group_message.view.otherMessageContentMap_otherImageView
-import kotlinx.android.synthetic.main.item_group_message.view.otherMessageContentMap_tv_otherdate
-import kotlinx.android.synthetic.main.item_group_message.view.otherMessageImage
-import kotlinx.android.synthetic.main.item_group_message.view.othersMessageTextView
-import kotlinx.android.synthetic.main.item_group_message.view.tv_date
-import kotlinx.android.synthetic.main.item_group_message.view.tv_otherdate
 
 class GroupChatAdapter(val chatMsgs: MutableList<MensajesModel>) : RecyclerView.Adapter<GroupChatAdapter.ChatViewHolder>() {
 
@@ -71,12 +42,13 @@ class GroupChatAdapter(val chatMsgs: MutableList<MensajesModel>) : RecyclerView.
     override fun getItemCount()= chatMsgs.size
 
     fun addItem(mensajesModel: MensajesModel){
-        if (!this.isItemAdded(mensajesModel.id))
+        if (!this.isItemAdded(mensajesModel.id)) {
             chatMsgs.add(mensajesModel)
-        chatMsgs.sortBy {
-            it.FechaCreacion
+            chatMsgs.sortBy {
+                it.FechaCreacion
+            }
+            this.notifyDataSetChanged()
         }
-        this.notifyDataSetChanged()
     }
 
     fun isItemAdded(idMsg : String) : Boolean{

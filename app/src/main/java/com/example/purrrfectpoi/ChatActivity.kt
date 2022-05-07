@@ -65,8 +65,6 @@ class ChatActivity : AppCompatActivity() {
         chatTo = bundle!!.getString("Email")
         chatFrom = DataManager.emailUsuario
 
-        myPhoto = DataManager.fotoUsuario
-
         this.btnRegresar = findViewById<ImageView>(R.id.chat_header_back)
         this.txtUsername = findViewById<TextView>(R.id.chat_txt_nombre_user)
         this.btnEnviarMsg = findViewById<ImageView>(R.id.sendMessageButton)
@@ -110,41 +108,21 @@ class ChatActivity : AppCompatActivity() {
                 }
 
                 if (snapshot != null) {
-                    db.collection("Conversacion").document(idChat!!).collection("Mensajes")
-                        .orderBy("FechaCreacion", Query.Direction.DESCENDING).limit(1)
-                        .get()
-                        .addOnSuccessListener { responseMsgs ->
+                    for (doc in snapshot) {
+                        if (doc.get("FechaCreacion") != null) {
+                            var msgAux = MensajesModel()
+                            msgAux.id = doc.id
+                            msgAux.Texto = if (doc.get("Texto") != null)    doc.get("Texto") as String else ""
+                            msgAux.Autor = doc.get("Autor") as DocumentReference
+                            msgAux.Foto = if(doc.get("Foto") != null)    doc.get("Foto") as String else ""
+                            msgAux.NombreDocumento = if(doc.get("NombreDocumento") != null)    doc.get("NombreDocumento") as String else ""
+                            msgAux.Latitud = if(doc.get("Latitud") != null)    doc.get("Latitud") as String else ""
+                            msgAux.Longitud = if(doc.get("Longitud") != null)    doc.get("Longitud") as String else ""
+                            msgAux.FechaCreacion = doc.get("FechaCreacion") as Timestamp
 
-                            for (responseMsg in responseMsgs) {
-
-                                if (responseMsg.get("FechaCreacion") != null) {
-
-                                    var msgAux = MensajesModel()
-                                    msgAux.id = responseMsg.id
-                                    msgAux.Texto = if(responseMsg.get("Texto") != null)    responseMsg.get("Texto") as String else ""
-                                    msgAux.Autor = responseMsg.get("Autor") as DocumentReference
-                                    msgAux.Foto = if(responseMsg.get("Foto") != null)    responseMsg.get("Foto") as String else ""
-                                    msgAux.NombreDocumento = if(responseMsg.get("NombreDocumento") != null)    responseMsg.get("NombreDocumento") as String else ""
-                                    msgAux.Latitud = if(responseMsg.get("Latitud") != null)    responseMsg.get("Latitud") as String else ""
-                                    msgAux.Longitud = if(responseMsg.get("Longitud") != null)    responseMsg.get("Longitud") as String else ""
-                                    msgAux.FechaCreacion = responseMsg.get("FechaCreacion") as Timestamp
-                                    if (msgAux.Autor == documentReferenceUserLogged) {
-                                        msgAux.FotoPerfil = if(myPhoto != null)    myPhoto as String else ""
-                                    } else {
-                                        msgAux.FotoPerfil = if(otherPhoto != null)    otherPhoto as String else ""
-                                    }
-
-                                    chatAdapter.addItem(msgAux)
-
-                                }
-
-                            }
-
+                            chatAdapter.addItem(msgAux)
                         }
-                        .addOnFailureListener { exception ->
-                            Log.w(ContentValues.TAG, "Error consiguiendo el último Mensaje", exception)
-                        }
-
+                    }
                 }
 
             }
@@ -179,61 +157,20 @@ class ChatActivity : AppCompatActivity() {
         })
 
         db = FirebaseFirestore.getInstance()
-        db.collection("Usuarios").document(documentReferenceUserLogged.id).get()
-            .addOnSuccessListener { responseUsuario ->
-                myPhoto = if(responseUsuario.get("Foto") != null)      responseUsuario.get("Foto") as String else ""
-            }
-            .addOnFailureListener { exception ->
-                Log.w(ContentValues.TAG, "Error consiguiendo el Usuario", exception)
-            }
-
         db.collection("Usuarios").document(chatTo!!).get()
             .addOnSuccessListener { responseUsuario ->
 
                 var username : String = ""
-                if(responseUsuario.get("Nombre") != null) {
-                    username = responseUsuario.get("Nombre") as String
+                if (responseUsuario.get("Nombre") != null) {
+                    username = responseUsuario.get("Nombre") as String + " "
                 }
-                if(responseUsuario.get("ApPaterno") != null) {
-                    username += " " + responseUsuario.get("ApPaterno") as String
+                if (responseUsuario.get("ApPaterno") != null) {
+                    username += responseUsuario.get("ApPaterno") as String
                 }
                 txtUsername?.text = username
-                otherPhoto = if(responseUsuario.get("Foto") != null)      responseUsuario.get("Foto") as String else ""
 
-                db.collection("Conversacion").document(idChat!!).collection("Mensajes")
-                    .get()
-                    .addOnSuccessListener { responseMsgs ->
-
-                        for (responseMsg in responseMsgs) {
-
-                            var msgAux = MensajesModel()
-                            msgAux.id = responseMsg.id
-                            msgAux.Texto = if(responseMsg.get("Texto") != null)    responseMsg.get("Texto") as String else ""
-                            msgAux.Autor = responseMsg.get("Autor") as DocumentReference
-                            msgAux.Foto = if(responseMsg.get("Foto") != null)    responseMsg.get("Foto") as String else ""
-                            msgAux.NombreDocumento = if(responseMsg.get("NombreDocumento") != null)    responseMsg.get("NombreDocumento") as String else ""
-                            msgAux.Latitud = if(responseMsg.get("Latitud") != null)    responseMsg.get("Latitud") as String else ""
-                            msgAux.Longitud = if(responseMsg.get("Longitud") != null)    responseMsg.get("Longitud") as String else ""
-                            msgAux.FechaCreacion = responseMsg.get("FechaCreacion") as Timestamp
-                            if (msgAux.Autor == documentReferenceUserLogged) {
-                                msgAux.FotoPerfil = if(myPhoto != null)    myPhoto as String else ""
-                            } else {
-                                msgAux.FotoPerfil = if(otherPhoto != null)    otherPhoto as String else ""
-                            }
-
-                            //msgParam.add(msgAux)
-                            chatAdapter.addItem(msgAux)
-
-                        }
-
-                    }
-                    .addOnFailureListener { exception ->
-                        Log.w(ContentValues.TAG, "Error consiguiendo los Mensajes", exception)
-                    }
             }
-            .addOnFailureListener { exception ->
-                Log.w(ContentValues.TAG, "Error consiguiendo la información del Usuario", exception)
-            }
+
     }
 
     private fun enviarMensaje() {
@@ -348,8 +285,8 @@ class ChatActivity : AppCompatActivity() {
         }
         else if (requestCode == 333 && resultCode == Activity.RESULT_OK && data != null) {
             var filepath = data.data!!
-            var index = data.resolveType(contentResolver)?.indexOf("/")
-            var ext = data.resolveType(contentResolver)?.drop(index!! + 1)
+            var index = data.resolveType(applicationContext)?.indexOf("/")
+            var ext = data.resolveType(applicationContext)?.drop(index!! + 1)
             var strFile = UUID.randomUUID().toString() + "." + ext
             var pathFile = "files/Mensajes/${strFile}"
             var fileRef = FirebaseStorage.getInstance().reference.child(pathFile)
