@@ -125,6 +125,7 @@ class ChatsFragment: Fragment() {
                                     userAux.ApPaterno =  if(responseUsuario.get("ApPaterno") != null) responseUsuario.get("ApPaterno") as String else ""
                                     userAux.ApMaterno =  if(responseUsuario.get("ApMaterno") != null) responseUsuario.get("ApMaterno") as String else ""
                                     userAux.Foto = if(responseUsuario.get("Foto") != null)      responseUsuario.get("Foto") as String else ""
+                                    userAux.Conectado = responseUsuario.get("Conectado") as Boolean
 
                                     usersParam.add(userAux)
                                     arrayChats.add(chatAux.id)
