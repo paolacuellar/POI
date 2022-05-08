@@ -1,6 +1,5 @@
 package com.example.purrrfectpoi
 
-import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.ContentValues.TAG
 import android.content.Intent
@@ -9,7 +8,6 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Log
-import android.view.Menu
 import android.view.View
 import android.widget.*
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -124,6 +122,8 @@ class AddGroupActivity : AppCompatActivity() {
                 grupoCreado.Foto = if(it.get("Foto") != null) it.get("Foto") as String else ""
                 grupoCreado.Creador = if(it.get("Creador") != null) it.get("Creador") as DocumentReference else null
                 grupoCreado.Miembros = if(it.get("Miembros") != null) it.get("Miembros") as ArrayList<DocumentReference> else arrayListOf()
+
+                var arraymiembro = grupoCreado.Miembros
 
                 editTextNombre?.setText(grupoCreado.Nombre)
                 editTextDescripcion?.setText(grupoCreado.Descripcion)

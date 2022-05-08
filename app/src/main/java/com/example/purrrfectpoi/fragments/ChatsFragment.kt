@@ -3,30 +3,23 @@ package com.example.purrrfectpoi.fragments
 import android.content.ContentValues
 import android.content.Intent
 import android.os.Bundle
-import android.os.Handler
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
 import android.view.*
 import android.widget.*
-import androidx.appcompat.widget.SearchView
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.purrrfectpoi.ChatActivity
 import com.example.purrrfectpoi.Models.ConversacionesModel
-import com.example.purrrfectpoi.Models.GruposModel
 import com.example.purrrfectpoi.Models.UsuariosModel
 import com.example.purrrfectpoi.R
 import com.example.purrrfectpoi.adapters.UsuariosChatsAdapter
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.firebase.firestore.DocumentReference
-import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.FirestoreRegistrar
 import com.psm.hiring.Utils.DataManager
-import java.util.*
 import kotlin.collections.ArrayList
 
 class ChatsFragment: Fragment() {

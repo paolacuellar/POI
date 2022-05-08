@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.example.purrrfectpoi.fragments.GroupChatFragment
 import com.example.purrrfectpoi.fragments.GroupMembersFragment
+import com.example.purrrfectpoi.fragments.GroupTasksFragment
 
 class GroupActivity : AppCompatActivity() {
 
@@ -30,6 +31,9 @@ class GroupActivity : AppCompatActivity() {
         val miembrosFragment= GroupMembersFragment()
         miembrosFragment.arguments = bundleGroupInfo
 
+        val tareasFragment= GroupTasksFragment()
+        tareasFragment.arguments = bundleGroupInfo
+
         this.btnRegresar = findViewById<ImageView>(R.id.btn_grupo_regresar)
         this.btnRegresar?.setOnClickListener {
             onBackPressed()
@@ -37,7 +41,7 @@ class GroupActivity : AppCompatActivity() {
 
         setCurrentFragment(chatFragment)
 
-        val bottom_navigation=findViewById<BottomNavigationView>(R.id.bottom_navigation)
+        val bottom_navigation=findViewById<BottomNavigationView>(R.id.bottom_navigation_group)
 
         bottom_navigation.setOnItemSelectedListener {
             when(it.itemId){
@@ -49,10 +53,10 @@ class GroupActivity : AppCompatActivity() {
                     setCurrentFragment(miembrosFragment)
                     Log.i(TAG, "Members Selected")
                 }
-                /*R.id.nav_grupos ->{
-                    setCurrentFragment(gruposFragment)
-                    Log.i(TAG, "Grupos Selected")
-                }*/
+                R.id.nav_tasks ->{
+                    setCurrentFragment(tareasFragment)
+                    Log.i(TAG, "Tareas Selected")
+                }
             }
             true
         }

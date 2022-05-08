@@ -7,15 +7,10 @@ import android.util.Log
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.fragment.app.Fragment
-import com.bumptech.glide.Glide
-import com.example.purrrfectpoi.Models.UsuariosModel
 import com.example.purrrfectpoi.fragments.ChatsFragment
 import com.example.purrrfectpoi.fragments.GruposFragment
 import com.example.purrrfectpoi.fragments.MuroFragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.storage.FirebaseStorage
-import com.psm.hiring.Utils.DataManager
 
 class MainActivity : AppCompatActivity() {
 

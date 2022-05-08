@@ -2,7 +2,6 @@ package com.example.purrrfectpoi.fragments
 
 import android.content.ContentValues
 import android.content.ContentValues.TAG
-import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -11,17 +10,13 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.purrrfectpoi.ChatActivity
-import com.example.purrrfectpoi.Models.ConversacionesModel
-import com.example.purrrfectpoi.Models.GruposModel
+import com.example.purrrfectpoi.Models.TareasModel
 import com.example.purrrfectpoi.Models.UsuariosModel
 import com.example.purrrfectpoi.R
-import com.example.purrrfectpoi.adapters.GruposAdapter
 import com.example.purrrfectpoi.adapters.UsuariosChatsAdapter
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FieldPath
 import com.google.firebase.firestore.FirebaseFirestore
-import com.psm.hiring.Utils.DataManager
 
 class GroupMembersFragment:Fragment() {
 

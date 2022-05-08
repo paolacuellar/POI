@@ -29,33 +29,35 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/listTasksRecyclerView"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:layout_marginStart="0dp"
-            android:layout_marginEnd="0dp"
             android:layout_marginTop="11dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/lbl_tareas"
-            tools:listitem="@layout/item_task"
-            tools:itemCount="5"/>
+            app:layout_constraintVertical_bias="1.0"
+            tools:itemCount="5"
+            tools:listitem="@layout/item_task" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/menu_btn_floating"
+        android:id="@+id/tasks_btn_floating_add_task"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:backgroundTint="@color/coffee"
         android:clickable="true"
+        android:visibility="gone"
         app:backgroundTint="@color/white"
         app:borderWidth="2dp"
         app:fabSize="normal"
-        app:maxImageSize="32dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:maxImageSize="32dp"
         app:srcCompat="@drawable/ic_task_add_white"
-        app:useCompatPadding="true"
-        app:tint="@android:color/white"/>
+        app:tint="@android:color/white"
+        app:useCompatPadding="true" />
 </androidx.constraintlayout.widget.ConstraintLayout>

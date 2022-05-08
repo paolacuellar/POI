@@ -31,71 +31,59 @@
 
         </androidx.appcompat.widget.Toolbar>
 
-        <RelativeLayout
-            android:id="@+id/button_tarea_revisada"
-            android:layout_width="32dp"
-            android:layout_height="32dp"
-            android:layout_marginLeft="15dp"
-            android:layout_marginTop="11dp"
-            android:background="@drawable/search_background"
-            android:visibility="visible">
-
-            <!--<ImageView
-                android:id="@+id/status"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:src="@drawable/ic_done_green" />
-
-            <ImageView
-                android:id="@+id/statusError"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:src="@drawable/ic_close_red" />-->
-        </RelativeLayout>
-
         <TextView
-            android:id="@+id/nameTask"
+            android:id="@+id/nameTaskGroup"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="start"
-            android:layout_marginStart="61dp"
-            android:layout_marginEnd="80dp"
+            android:layout_marginStart="30dp"
             android:layout_marginTop="11dp"
-            tools:text="NOMBRE DE TAREA/ALUMNO"
+            android:layout_marginEnd="80dp"
+            android:maxLines="1"
             android:textColor="@color/coffee"
             android:textSize="16sp"
             android:textStyle="bold"
-            android:maxLines="1"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="NOMBRE DE TAREA" />
 
         <TextView
-            android:id="@+id/dateTask"
+            android:id="@+id/dateTaskGroup"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="start"
-            android:layout_marginStart="61dp"
-            android:layout_marginEnd="80dp"
+            android:layout_marginStart="30dp"
             android:layout_marginTop="33dp"
-            android:paddingHorizontal="14dp"
+            android:layout_marginEnd="80dp"
+            android:background="@drawable/marker"
             android:maxLines="1"
-            tools:text="fecha de vencimiento/documentoo"
+            android:paddingHorizontal="14dp"
             android:textColor="@color/coffee"
             android:textSize="12sp"
             android:textStyle="normal"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            android:background="@drawable/marker"/>
+            tools:text="fecha de vencimiento" />
 
         <ImageView
-            android:id="@+id/btn_tarea_download"
+            android:id="@+id/btnTaskGroupEdit"
             android:layout_width="32dp"
             android:layout_height="32dp"
             android:layout_gravity="end"
             android:layout_marginTop="13dp"
-            android:layout_marginEnd="30dp"
-            android:src="@drawable/ic_download"
+            android:layout_marginEnd="50dp"
+            android:src="@drawable/ic_write_brown"
             app:tint="@color/coffee"/>
+
+        <ImageView
+            android:id="@+id/btnTaskGroupDelete"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_gravity="end"
+            android:layout_marginTop="13dp"
+            android:layout_marginEnd="10dp"
+            android:src="@drawable/ic_trash_white"
+            app:tint="@color/coffee" />
 
     </androidx.cardview.widget.CardView>
 
