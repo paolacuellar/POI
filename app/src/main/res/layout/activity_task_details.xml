@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activity_task_details"
+    tools:context=".TaskActivity"
     android:background="@drawable/libreta">
 
     <androidx.appcompat.widget.Toolbar
@@ -43,55 +43,46 @@
     </androidx.appcompat.widget.Toolbar>
 
     <TextView
-        android:id="@+id/lbl_tareas"
+        android:id="@+id/lbl_tarea_nombre"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="30dp"
-        android:layout_marginEnd="30dp"
         android:layout_marginTop="30dp"
-        android:text="@string/tasks_name_tarea"
         android:textColor="@color/coffee"
         android:textSize="20sp"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/toolbar"/>
+        app:layout_constraintTop_toBottomOf="@id/toolbar" />
 
     <TextView
-        android:id="@+id/date_tareas"
+        android:id="@+id/lbl_tarea_date"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="18dp"
         android:layout_marginEnd="30dp"
-        android:paddingHorizontal="14dp"
+        android:background="@drawable/marker"
         android:gravity="end"
-        android:text="@string/tasks_date_tarea"
+        android:paddingHorizontal="14dp"
         android:textColor="@color/coffee"
         android:textSize="12sp"
         android:textStyle="normal"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/lbl_tareas"
-        android:background="@drawable/marker"/>
+        app:layout_constraintTop_toBottomOf="@id/lbl_tarea_nombre" />
 
     <TextView
-        android:id="@+id/details_tarea"
+        android:id="@+id/lbl_tarea_details"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="30dp"
-        android:layout_marginEnd="30dp"
         android:layout_marginTop="20dp"
-        android:text="Lörem ipsum heminat pobelt. Vavis dihöss stenonas.
-Kopor juv till trihudiskap. Hingen kronde agnostipol inklusive beliga susk.
-Kvasimirar hålig i planat, i transsiv. Vunade yheten till demistat kalingar ofast jobb.
-Krogt behov i biheten är bek. Oling vuböras.
-Tred hypergam nyhogt ont. Faning tegist. "
         android:textColor="@color/coffee"
         android:textSize="16sp"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/date_tareas"/>
+        app:layout_constraintTop_toBottomOf="@id/lbl_tarea_date" />
 
     <Button
-        android:id="@+id/btnNewArchive"
+        android:id="@+id/btnNewArchiveTask"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
@@ -100,7 +91,7 @@ Tred hypergam nyhogt ont. Faning tegist. "
         app:icon="@drawable/ic_add_plus_brown"
         android:text="AGREGAR ARCHIVO"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/details_tarea" />
+        app:layout_constraintTop_toBottomOf="@id/lbl_tarea_details" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/list_Archive_tasks"
@@ -109,7 +100,7 @@ Tred hypergam nyhogt ont. Faning tegist. "
         android:layout_marginTop="10dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/btnNewArchive"
+        app:layout_constraintTop_toBottomOf="@id/btnNewArchiveTask"
         tools:itemCount="1"
         tools:listitem="@layout/item_new_task"
         />

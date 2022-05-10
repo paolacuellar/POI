@@ -8,6 +8,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.purrrfectpoi.AddTaskGroupActivity
 import com.example.purrrfectpoi.Models.TareasModel
 import com.example.purrrfectpoi.R
+import com.example.purrrfectpoi.TaskActivity
+import com.example.purrrfectpoi.TasksStudentsActivity
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.psm.hiring.Utils.DataManager
@@ -61,13 +63,29 @@ class GroupTasksAdapter(val tasksGroup: MutableList<TareasModel>, val groupId: S
         fun render(taskGroup: TareasModel, position: Int, groupId:String, isAuthor: Boolean){
 
             view.nameTaskGroup.setText(taskGroup.Nombre)
-            view.dateTaskGroup.setText("Fecha de entrega: " + DataManager.TimeStampToDayHourYear(taskGroup.FechaProgramada!!))
+            val dateString : String = "Fecha de entrega: " + DataManager.TimeStampToDayHourYear(taskGroup.FechaProgramada!!)
+            view.dateTaskGroup.setText(dateString)
 
             if(!isAuthor) {
                 view.btnTaskGroupEdit.visibility = View.GONE
                 view.btnTaskGroupDelete.visibility = View.GONE
+
+                view.nameTaskGroup.setOnClickListener{
+                    val intent = Intent(view.context, TaskActivity::class.java)
+                    intent.putExtra("isAuthor", isAuthor)
+                    intent.putExtra("tareaId", taskGroup.id)
+
+                    view.context?.startActivity(intent)
+                }
             }
             else{
+                view.nameTaskGroup.setOnClickListener{
+                    val intent = Intent(view.context, TasksStudentsActivity::class.java)
+                    intent.putExtra("tareaId", taskGroup.id)
+                    intent.putExtra("isAuthor", isAuthor)
+                    view.context?.startActivity(intent)
+                }
+
                 if (taskGroup!!.FechaProgramada!!.seconds >= DataManager.getTimeStamptToday().seconds) {
                     view.btnTaskGroupEdit.visibility = View.VISIBLE
                     view.btnTaskGroupEdit.setOnClickListener {

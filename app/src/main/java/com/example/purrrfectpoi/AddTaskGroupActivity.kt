@@ -64,7 +64,7 @@ class AddTaskGroupActivity : AppCompatActivity() {
             val bundle = intent.extras
             this.tareaId = bundle!!.getString("tareaId")
 
-            setUpInfoTarea(this.tareaId!!)
+            setUpInfoTarea()
         }
         else{
             tareaCreada.FechaProgramada = DataManager.getTimeStamptToday()
@@ -76,14 +76,14 @@ class AddTaskGroupActivity : AppCompatActivity() {
         }
     }
 
-    private fun setUpInfoTarea(tareaId : String) {
+    private fun setUpInfoTarea() {
 
-        FirebaseFirestore.getInstance().collection("Tareas").document(tareaId).get()
+        FirebaseFirestore.getInstance().collection("Tareas").document(this.tareaId!!).get()
 
             .addOnSuccessListener {
 
                 //TODO: NO ES TAN NECESARIO TRAERNOS LA INFO DE "CONVERSACION" Y "TAREAS", ESTA BIEN DE TODOS MODOS TRAERLA?
-                tareaCreada.id = tareaId
+                tareaCreada.id = this.tareaId!!
                 tareaCreada.Nombre = if(it.get("Nombre") != null) it.get("Nombre") as String else ""
                 tareaCreada.Descripcion = if(it.get("Descripcion") != null) it.get("Descripcion") as String else ""
                 tareaCreada.FechaCreacion = if(it.get("FechaCreacion") != null) it.get("FechaCreacion") as Timestamp else null

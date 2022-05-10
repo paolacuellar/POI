@@ -85,11 +85,7 @@ class GroupTasksFragment:Fragment() {
 
                 var authorGroup = if(responseGrupo.get("Creador") != null) responseGrupo.get("Creador") as DocumentReference else null
 
-                if (authorGroup?.id.toString() == DataManager.emailUsuario)
-                    setAuthorViews()
-                else
-                    setStudentView()
-
+                setViews(authorGroup?.id.toString() == DataManager.emailUsuario)
 
                 var arrayTareasGrupo = if(responseGrupo.get("Tareas") != null) responseGrupo.get("Tareas") as ArrayList<DocumentReference> else arrayListOf()
 
@@ -126,13 +122,14 @@ class GroupTasksFragment:Fragment() {
 
 
 
-    private fun setAuthorViews() {
-        this.buttonAddTask.visibility = View.VISIBLE
+    private fun setViews(isAuthor: Boolean) {
+        if (isAuthor) {
+            this.buttonAddTask.visibility = View.VISIBLE
+        }
+        else{
+            this.buttonAddTask.visibility = View.GONE
+        }
 
-        this.tasksGrupoAdapter.isAuthor = true
-    }
-
-    private fun setStudentView() {
-        this.buttonAddTask.visibility = View.GONE
+        this.tasksGrupoAdapter.isAuthor = isAuthor
     }
 }

@@ -62,6 +62,7 @@
         <entry key="..\:/Documentos/FCFM/8 Semestre/7mo Progra Orientada a la internet/PIA/POI/app/src/main/res/layout/activity_register.xml" value="0.22" />
         <entry key="..\:/Documentos/FCFM/8 Semestre/7mo Progra Orientada a la internet/PIA/POI/app/src/main/res/layout/activity_task_ac.xml" value="0.25" />
         <entry key="..\:/Documentos/FCFM/8 Semestre/7mo Progra Orientada a la internet/PIA/POI/app/src/main/res/layout/activity_task_details.xml" value="0.23783783783783785" />
+        <entry key="..\:/Documentos/FCFM/8 Semestre/7mo Progra Orientada a la internet/PIA/POI/app/src/main/res/layout/activity_tasks_students.xml" value="0.2456081081081081" />
         <entry key="..\:/Documentos/FCFM/8 Semestre/7mo Progra Orientada a la internet/PIA/POI/app/src/main/res/layout/fragment_chats.xml" value="0.36666666666666664" />
         <entry key="..\:/Documentos/FCFM/8 Semestre/7mo Progra Orientada a la internet/PIA/POI/app/src/main/res/layout/fragment_group_chat.xml" value="0.23783783783783785" />
         <entry key="..\:/Documentos/FCFM/8 Semestre/7mo Progra Orientada a la internet/PIA/POI/app/src/main/res/layout/fragment_group_members.xml" value="0.16283783783783784" />
@@ -77,6 +78,7 @@
         <entry key="..\:/Documentos/FCFM/8 Semestre/7mo Progra Orientada a la internet/PIA/POI/app/src/main/res/layout/item_spinner.xml" value="0.19966216216216215" />
         <entry key="..\:/Documentos/FCFM/8 Semestre/7mo Progra Orientada a la internet/PIA/POI/app/src/main/res/layout/item_task.xml" value="0.25" />
         <entry key="..\:/Documentos/FCFM/8 Semestre/7mo Progra Orientada a la internet/PIA/POI/app/src/main/res/layout/item_task_group.xml" value="0.33" />
+        <entry key="..\:/Documentos/FCFM/8 Semestre/7mo Progra Orientada a la internet/PIA/POI/app/src/main/res/layout/item_task_student.xml" value="0.23783783783783785" />
         <entry key="..\:/Documentos/FCFM/8 Semestre/7mo Progra Orientada a la internet/PIA/POI/app/src/main/res/layout/list_item.xml" value="0.33" />
         <entry key="..\:/Documentos/FCFM/8 Semestre/7mo Progra Orientada a la internet/PIA/POI/app/src/main/res/menu/menu_navigation.xml" value="0.2277027027027027" />
         <entry key="..\:/Documentos/FCFM/8 Semestre/7mo Progra Orientada a la internet/PIA/POI/app/src/main/res/menu/menu_navigation_group.xml" value="0.21317567567567566" />
