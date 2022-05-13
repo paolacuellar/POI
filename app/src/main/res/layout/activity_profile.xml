@@ -242,5 +242,14 @@
         app:spanCount="3"
         tools:listitem="@layout/item_reward" />
 
+    <Switch
+        android:id="@+id/Switch_EcryptName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Encriptar Datos:"
+        app:layout_constraintEnd_toEndOf="@+id/profile_image_foto"
+        app:layout_constraintStart_toStartOf="@+id/profile_image_foto"
+        app:layout_constraintTop_toTopOf="@+id/profile_btn_editar" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
