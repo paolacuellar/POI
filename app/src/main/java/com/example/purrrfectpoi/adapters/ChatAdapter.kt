@@ -124,7 +124,7 @@ class ChatAdapter(val chatMsgs: MutableList<MensajesModel>) : RecyclerView.Adapt
                             }
 
                         }
-                        else if (Msg.NombreDocumento.isNotEmpty()) {
+                        else if (Msg.Documento.isNotEmpty()) {
 
                             view.myMessageContentDocument.visibility = View.VISIBLE
                             view.myArchiveName.setText(Msg.NombreDocumento)
@@ -211,7 +211,7 @@ class ChatAdapter(val chatMsgs: MutableList<MensajesModel>) : RecyclerView.Adapt
                             }
 
                         }
-                        else if (Msg.NombreDocumento.isNotEmpty()) {
+                        else if (Msg.Documento.isNotEmpty()) {
 
                             view.otherMessageContentDocument.visibility = View.VISIBLE
                             view.otherArchiveName.setText(Msg.NombreDocumento)

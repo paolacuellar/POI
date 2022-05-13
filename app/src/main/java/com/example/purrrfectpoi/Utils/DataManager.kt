@@ -12,6 +12,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.LifecycleOwner
 import com.google.firebase.Timestamp
+import com.google.firebase.firestore.FirebaseFirestore
 import java.math.BigInteger
 import java.text.SimpleDateFormat
 import java.util.*
@@ -132,5 +133,41 @@ object DataManager {
         val dateTimestampLimit = Timestamp(date.time / 1000, 0)
 
         return dateTimestampLimit
+    }
+
+    fun updateBadges(opc: String) {
+        FirebaseFirestore.getInstance().collection("Usuarios").document(this.emailUsuario!!)
+            .get()
+            .addOnSuccessListener { responseUsuario ->
+
+                var cantGrupos = responseUsuario.get("CantidadGrupos") as Long
+                var cantPosts = responseUsuario.get("CantidadPosts") as Long
+                var cantTareas = responseUsuario.get("CantidadTareas") as Long
+
+                when(opc) {
+                    "Grupos" ->{
+                        cantGrupos++
+                        FirebaseFirestore.getInstance().collection("Usuarios").document(this.emailUsuario!!)
+                            .update(
+                                "CantidadGrupos", cantGrupos
+                            )
+                    }
+                    "Posts" ->{
+                        cantPosts++
+                        FirebaseFirestore.getInstance().collection("Usuarios").document(this.emailUsuario!!)
+                            .update(
+                                "CantidadPosts", cantPosts
+                            )
+                    }
+                    "Tareas" ->{
+                        cantTareas++
+                        FirebaseFirestore.getInstance().collection("Usuarios").document(this.emailUsuario!!)
+                            .update(
+                                "CantidadTareas", cantTareas
+                            )
+                    }
+                }
+
+            }
     }
 }

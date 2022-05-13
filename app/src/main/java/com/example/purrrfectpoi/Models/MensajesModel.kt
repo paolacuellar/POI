@@ -9,6 +9,7 @@ class MensajesModel {
     var Texto : String = ""
     var Autor : DocumentReference? = null
     var Foto : String = ""
+    var Documento : String = ""
     var NombreDocumento : String = ""
     var Latitud : String = ""
     var Longitud : String = ""

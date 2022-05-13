@@ -18,6 +18,7 @@ import android.view.View
 import android.widget.*
 import androidx.core.app.ActivityCompat
 import androidx.core.content.getSystemService
+import androidx.documentfile.provider.DocumentFile
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.purrrfectpoi.Models.MensajesModel
@@ -47,9 +48,6 @@ class ChatActivity : AppCompatActivity() {
     var idChat : String? = null;
     var chatTo : String? = null;
     var chatFrom : String? = null;
-
-    var otherPhoto : String? = null;
-    var myPhoto : String? = null;
 
     private lateinit var db : FirebaseFirestore
     private lateinit var documentReferenceUserLogged : DocumentReference
@@ -115,6 +113,7 @@ class ChatActivity : AppCompatActivity() {
                             msgAux.Texto = if (doc.get("Texto") != null)    doc.get("Texto") as String else ""
                             msgAux.Autor = doc.get("Autor") as DocumentReference
                             msgAux.Foto = if(doc.get("Foto") != null)    doc.get("Foto") as String else ""
+                            msgAux.Documento = if(doc.get("Documento") != null)    doc.get("Documento") as String else ""
                             msgAux.NombreDocumento = if(doc.get("NombreDocumento") != null)    doc.get("NombreDocumento") as String else ""
                             msgAux.Latitud = if(doc.get("Latitud") != null)    doc.get("Latitud") as String else ""
                             msgAux.Longitud = if(doc.get("Longitud") != null)    doc.get("Longitud") as String else ""
@@ -145,7 +144,7 @@ class ChatActivity : AppCompatActivity() {
             }
             override fun onDocumentClick(view: View, position: Int) {
                 val manager = applicationContext.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
-                FirebaseStorage.getInstance().getReference("files/Mensajes/${msgParam[position].NombreDocumento}").downloadUrl
+                FirebaseStorage.getInstance().getReference("files/Mensajes/${msgParam[position].Documento}").downloadUrl
                     .addOnSuccessListener {
                         val request = DownloadManager.Request(it)
                         request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
@@ -285,8 +284,8 @@ class ChatActivity : AppCompatActivity() {
         }
         else if (requestCode == 333 && resultCode == Activity.RESULT_OK && data != null) {
             var filepath = data.data!!
-            var index = data.resolveType(applicationContext)?.indexOf("/")
-            var ext = data.resolveType(applicationContext)?.drop(index!! + 1)
+            var index = DocumentFile.fromSingleUri(this, filepath)?.type?.indexOf("/")
+            var ext = DocumentFile.fromSingleUri(this, filepath)?.type?.drop(index!! + 1)
             var strFile = UUID.randomUUID().toString() + "." + ext
             var pathFile = "files/Mensajes/${strFile}"
             var fileRef = FirebaseStorage.getInstance().reference.child(pathFile)
@@ -297,7 +296,8 @@ class ChatActivity : AppCompatActivity() {
                     db.collection("Conversacion").document(idChat!!).collection("Mensajes")
                         .add(
                             hashMapOf(
-                                "NombreDocumento" to strFile,
+                                "Documento" to strFile,
+                                "NombreDocumento" to DocumentFile.fromSingleUri(this, filepath)?.name,
                                 "Autor" to documentReferenceUserLogged,
                                 "FechaCreacion" to FieldValue.serverTimestamp()
                             )

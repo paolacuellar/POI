@@ -4,13 +4,13 @@ import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.RecyclerView
 import com.example.purrrfectpoi.AddTaskGroupActivity
 import com.example.purrrfectpoi.Models.TareasModel
 import com.example.purrrfectpoi.R
 import com.example.purrrfectpoi.TaskActivity
 import com.example.purrrfectpoi.TasksStudentsActivity
-import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.psm.hiring.Utils.DataManager
 import kotlinx.android.synthetic.main.item_task_group.view.*
@@ -38,7 +38,7 @@ class GroupTasksAdapter(val tasksGroup: MutableList<TareasModel>, val groupId: S
        
        val taskGroup : TareasModel = tasksGroup.get(position)
 
-        holder.render(taskGroup, position, groupId, isAuthor)
+        holder.render(this, taskGroup, position, groupId, isAuthor)
         /*
         if(buttonVisible){
             holder.view.newChatButton.visibility = View.VISIBLE
@@ -59,8 +59,18 @@ class GroupTasksAdapter(val tasksGroup: MutableList<TareasModel>, val groupId: S
         this.notifyDataSetChanged()
     }
 
+    fun deleteItem(idTask: String) {
+        for (index in 0..tasksGroup.count() - 1) {
+            if (tasksGroup.get(index).id == idTask) {
+                tasksGroup.removeAt(index)
+                break
+            }
+        }
+        this.notifyDataSetChanged()
+    }
+
     class tasksViewHolder(val view: View, listener: onItemClickListener): RecyclerView.ViewHolder(view){
-        fun render(taskGroup: TareasModel, position: Int, groupId:String, isAuthor: Boolean){
+        fun render(adapter: GroupTasksAdapter, taskGroup: TareasModel, position: Int, groupId:String, isAuthor: Boolean){
 
             view.nameTaskGroup.setText(taskGroup.Nombre)
             val dateString : String = "Fecha de entrega: " + DataManager.TimeStampToDayHourYear(taskGroup.FechaProgramada!!)
@@ -74,6 +84,7 @@ class GroupTasksAdapter(val tasksGroup: MutableList<TareasModel>, val groupId: S
                     val intent = Intent(view.context, TaskActivity::class.java)
                     intent.putExtra("isAuthor", isAuthor)
                     intent.putExtra("tareaId", taskGroup.id)
+                    intent.putExtra("grupoId", groupId)
 
                     view.context?.startActivity(intent)
                 }
@@ -81,8 +92,9 @@ class GroupTasksAdapter(val tasksGroup: MutableList<TareasModel>, val groupId: S
             else{
                 view.nameTaskGroup.setOnClickListener{
                     val intent = Intent(view.context, TasksStudentsActivity::class.java)
-                    intent.putExtra("tareaId", taskGroup.id)
                     intent.putExtra("isAuthor", isAuthor)
+                    intent.putExtra("tareaId", taskGroup.id)
+                    intent.putExtra("grupoId", groupId)
                     view.context?.startActivity(intent)
                 }
 
@@ -90,8 +102,8 @@ class GroupTasksAdapter(val tasksGroup: MutableList<TareasModel>, val groupId: S
                     view.btnTaskGroupEdit.visibility = View.VISIBLE
                     view.btnTaskGroupEdit.setOnClickListener {
                         val intent = Intent(view.context, AddTaskGroupActivity::class.java)
-                        intent.putExtra("grupoId", groupId)
                         intent.putExtra("tareaId", taskGroup.id)
+                        intent.putExtra("grupoId", groupId)
                         view.context?.startActivity(intent)
                     }
                 }
@@ -101,7 +113,17 @@ class GroupTasksAdapter(val tasksGroup: MutableList<TareasModel>, val groupId: S
 
                 view.btnTaskGroupDelete.visibility = View.VISIBLE
                 view.btnTaskGroupDelete.setOnClickListener{
-                    //TODO: PENDIENTE BORRAR
+                    val builder = AlertDialog.Builder(view.context)
+                    builder.setTitle("Eliminar tarea")
+                    builder.setMessage("Esta acción no se puede deshacer")
+                    builder.setPositiveButton("Aceptar") { dialogInterface, which ->
+                        FirebaseFirestore.getInstance().collection("Grupos").document(groupId)
+                            .collection("Tareas").document(taskGroup.id).delete()
+                        adapter.deleteItem(taskGroup.id)
+                    }
+                    builder.setNegativeButton("Cancelar") { dialogInterface, which -> }
+                    val dialog: AlertDialog = builder.create()
+                    dialog.show()
                 }
             }
         }

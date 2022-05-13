@@ -19,13 +19,15 @@ class TasksStudentsActivity : AppCompatActivity() {
     val TAG="TasksStudentsActivity"
 
     var tareaId : String? = "";
+    var groupId : String? = "";
     var isAuthor : Boolean? = false;
 
     var btnRegresar : ImageView? =  null;
 
-    private lateinit var recyclerViewTasksStudentd : RecyclerView
+    private lateinit var recyclerViewTasksStudents : RecyclerView
     private lateinit var tasksStudentdAdapter: TasksStudentsAdapter
 
+    private lateinit var db : FirebaseFirestore
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,10 +48,14 @@ class TasksStudentsActivity : AppCompatActivity() {
             this.isAuthor = bundle!!.getBoolean("isAuthor")
         }
 
+        if (intent.hasExtra("grupoId")) {
+            val bundle = intent.extras
+            this.groupId = bundle!!.getString("grupoId")
+        }
 
-        this.recyclerViewTasksStudentd = findViewById<RecyclerView>(R.id.listTasksStudentsRecyclerView)
-        tasksStudentdAdapter = TasksStudentsAdapter(arrayListOf(), tareaId!!, isAuthor!!)
-        recyclerViewTasksStudentd.apply {
+        this.recyclerViewTasksStudents = findViewById<RecyclerView>(R.id.listTasksStudentsRecyclerView)
+        tasksStudentdAdapter = TasksStudentsAdapter(arrayListOf(), tareaId!!, isAuthor!!, groupId!!)
+        recyclerViewTasksStudents.apply {
             adapter = tasksStudentdAdapter
             layoutManager = LinearLayoutManager(context)
         }
@@ -59,41 +65,28 @@ class TasksStudentsActivity : AppCompatActivity() {
 
 
     private fun setUpRecyclerView() {
-        FirebaseFirestore.getInstance().collection("Tareas").document(tareaId!!)
+        db = FirebaseFirestore.getInstance()
+        db.collection("Grupos").document(groupId!!).collection("Tareas").document(tareaId!!).collection("TrabajosAlumnos")
             .get()
-            .addOnSuccessListener { responseTrabajo ->
+            .addOnSuccessListener { responseTareas ->
 
-                var arrayTrabajosStudents = if(responseTrabajo.get("Trabajos") != null) responseTrabajo.get("Trabajos") as ArrayList<DocumentReference> else arrayListOf()
+                var arrayTrabajosModel = arrayListOf<TrabajosModel>()
 
-                if (arrayTrabajosStudents?.size != 0) {
-                    //TODO: PARECE QUE EL "whereIn" NOMAS JALA CON 10 USUARIOS, SI ES ASÍ DEBERE HACER UN CICLO FOR DE CONSULTAS, O DEBERE MANEJARLO DE OTRA MANERA?
-                    FirebaseFirestore.getInstance().collection("Trabajos")
-                        .whereIn(FieldPath.documentId(), arrayTrabajosStudents!!)
-                        .get()
-                        .addOnSuccessListener { responseTrabajos ->
-                            var arrayTrabajosModel = arrayListOf<TrabajosModel>()
-                            for (responseTrabajo in responseTrabajos!!) {
-                                var trabajoStudent = TrabajosModel()
+                for (responseTarea in responseTareas) {
+                    var trabajoStudent = TrabajosModel()
+                    trabajoStudent.id = responseTarea.id
+                    trabajoStudent.Documento = if (responseTarea.get("Documento") != null) responseTarea.get("Documento") as String else ""
+                    trabajoStudent.TituloDocumento = if (responseTarea.get("TituloDocumento") != null) responseTarea.get("TituloDocumento") as String else ""
+                    trabajoStudent.Autor = if (responseTarea.get("Autor") != null) responseTarea.get("Autor") as DocumentReference else null
+                    trabajoStudent.FechaEntregada = if (responseTarea.get("FechaEntregada") != null) responseTarea.get("FechaEntregada") as Timestamp else null
 
-                                trabajoStudent.id = responseTrabajo.id
-
-                                trabajoStudent.TituloDocumento = if (responseTrabajo.get("TituloDocumento") != null) responseTrabajo.get("TituloDocumento") as String else ""
-                                trabajoStudent.Documento = if (responseTrabajo.get("Documento") != null) responseTrabajo.get("Documento") as String else ""
-                                trabajoStudent.Autor = if (responseTrabajo.get("Autor") != null) responseTrabajo.get("Autor") as DocumentReference else null
-                                trabajoStudent.FechaEntregada = if (responseTrabajo.get("FechaEntregada") != null) responseTrabajo.get("FechaEntregada") as Timestamp else null
-
-                                arrayTrabajosModel.add(trabajoStudent)
-                            }
-
-                            arrayTrabajosModel.sortBy { it.FechaEntregada }
-
-                            tasksStudentdAdapter.setListTareas(arrayTrabajosModel)
-
-                        }
-                        .addOnFailureListener { exception ->
-                            Log.w(ContentValues.TAG, "Error al conseguir las Tareas del Grupo", exception)
-                        }
+                    arrayTrabajosModel.add(trabajoStudent)
                 }
+
+                arrayTrabajosModel.sortBy { it.FechaEntregada }
+
+                tasksStudentdAdapter.setListTareas(arrayTrabajosModel)
+
             }
             .addOnFailureListener { exception ->
                 Log.w(ContentValues.TAG, "Error consiguiendo los Grupos", exception)

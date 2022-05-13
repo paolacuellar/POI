@@ -1,27 +1,43 @@
 package com.example.purrrfectpoi
 
+import android.app.Activity
+import android.app.DownloadManager
 import android.content.ContentValues
+import android.content.Context
+import android.content.Intent
+import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.Environment
 import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
+import androidx.documentfile.provider.DocumentFile
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.purrrfectpoi.Models.TrabajosModel
-import com.example.purrrfectpoi.adapters.ComentariosAdapter
+import com.example.purrrfectpoi.adapters.TaskFilesAdapter
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.firebase.Timestamp
 import com.google.firebase.firestore.DocumentReference
+import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.storage.FirebaseStorage
 import com.psm.hiring.Utils.DataManager
+import java.util.*
 
 class TaskActivity : AppCompatActivity() {
 
     var isAuthor : Boolean? = false;
     var tareaId : String? = "";
-    var trabajoId : String? = "";
+    var groupId : String? = "";
+    var fechaProgramadaTarea : Timestamp? = null;
+
+    var filepath : Uri? = null;
+    var strFile : String? = null;
 
     var trabajoEntregado = TrabajosModel()
     
@@ -34,13 +50,12 @@ class TaskActivity : AppCompatActivity() {
     var AddFileButton : Button? = null;
 
     private lateinit var recyclerViewFilesTask : RecyclerView
-    private lateinit var filesTaskAdapter: ComentariosAdapter
+    private lateinit var filesTaskAdapter: TaskFilesAdapter
 
     var SendTaskButton : FloatingActionButton? = null;
     
     private lateinit var db : FirebaseFirestore
     private lateinit var documentReferenceUserLogged : DocumentReference
-    
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -56,6 +71,9 @@ class TaskActivity : AppCompatActivity() {
         this.AddFileButton = findViewById<Button>(R.id.btnNewArchiveTask)
         this.SendTaskButton = findViewById<FloatingActionButton>(R.id.donetask_btn_floating)
 
+        documentReferenceUserLogged = FirebaseFirestore.getInstance().collection("Usuarios")
+            .document(DataManager.emailUsuario!!)
+
         if (intent.hasExtra("isAuthor")) {
             val bundle = intent.extras
             this.isAuthor = bundle!!.getBoolean("isAuthor")
@@ -66,43 +84,59 @@ class TaskActivity : AppCompatActivity() {
             this.tareaId = bundle!!.getString("tareaId")
         }
 
-        setUpInfoGeneral()
-
-        if (intent.hasExtra("trabajoId")) {
+        if (intent.hasExtra("grupoId")) {
             val bundle = intent.extras
-            this.tareaId = bundle!!.getString("trabajoId")
-
-            setUpRecyclerViewTrabajos()
+            this.groupId = bundle!!.getString("grupoId")
         }
+
+        setUpInfoGeneral()
+        setUpRecyclerViewTrabajos()
 
         this.btnRegresar?.setOnClickListener {
             onBackPressed()
         }
 
-
     }
 
     private fun setUpInfoGeneral() {
-        setViews(this.isAuthor!!)
+        var trabajosParam : MutableList<TrabajosModel> = mutableListOf()
+        filesTaskAdapter = TaskFilesAdapter(trabajosParam)
+        recyclerViewFilesTask.apply {
+            adapter = filesTaskAdapter
+            layoutManager = LinearLayoutManager(context)
+        }
+        filesTaskAdapter.setOnItemClickListener(object : TaskFilesAdapter.onItemClickListener{
+            override fun onItemClick(position: Int) {
+                val manager = applicationContext.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
+                FirebaseStorage.getInstance().getReference("files/Tareas/${trabajosParam[position].Documento}").downloadUrl
+                    .addOnSuccessListener {
+                        val request = DownloadManager.Request(it)
+                        request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
+                        request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, trabajosParam[position].TituloDocumento)
+                        manager.enqueue(request)
+                        Toast.makeText(this@TaskActivity, "Archivo descargado", Toast.LENGTH_SHORT).show()
+                    }
+            }
+        })
 
         setUpInfoTarea()
     }
-
-    
     
     private fun setUpInfoTarea() {
-
-        FirebaseFirestore.getInstance().collection("Tareas").document(this.tareaId!!).get()
+        db = FirebaseFirestore.getInstance()
+        db.collection("Grupos").document(groupId!!).collection("Tareas").document(tareaId!!).get()
 
             .addOnSuccessListener {
                 
                 val nombreTarea = if(it.get("Nombre") != null) it.get("Nombre") as String else ""
                 val descripcionTarea = if(it.get("Descripcion") != null) it.get("Descripcion") as String else ""
-                val fechaProgramadaTarea = if(it.get("FechaProgramada") != null) it.get("FechaProgramada") as Timestamp else null
+                fechaProgramadaTarea = if(it.get("FechaProgramada") != null) it.get("FechaProgramada") as Timestamp else null
 
                 TaskNameText?.setText(nombreTarea)
                 TaskDescriptionText?.setText(descripcionTarea)
                 TaskDateText!!.setText(DataManager.TimeStampToDayHourYear(fechaProgramadaTarea))
+
+                setViews(this.isAuthor!!)
 
             }
             .addOnFailureListener { exception ->
@@ -111,21 +145,21 @@ class TaskActivity : AppCompatActivity() {
     }
 
     private fun setUpRecyclerViewTrabajos(){
-
-        FirebaseFirestore.getInstance().collection("Trabajos").document(this.trabajoId!!)
+        db = FirebaseFirestore.getInstance()
+        db.collection("Grupos").document(groupId!!).collection("Tareas").document(tareaId!!).collection("TrabajosAlumnos")
+            .whereEqualTo("Autor", documentReferenceUserLogged)
             .get()
-            .addOnSuccessListener { responseTrabajo ->
-                var arrayTrabajosModel = arrayListOf<TrabajosModel>()
+            .addOnSuccessListener { responseTrabajos ->
 
+                for (responseTrabajo in responseTrabajos) {
+                    trabajoEntregado.id = responseTrabajo.id
+                    trabajoEntregado.Documento = if (responseTrabajo.get("Documento") != null) responseTrabajo.get("Documento") as String else ""
+                    trabajoEntregado.TituloDocumento = if(responseTrabajo.get("TituloDocumento") != null) responseTrabajo.get("TituloDocumento") as String else ""
+                    trabajoEntregado.Autor = if (responseTrabajo.get("Autor") != null) responseTrabajo.get("Autor") as DocumentReference else null
+                    trabajoEntregado.FechaEntregada = if (responseTrabajo.get("FechaEntregada") != null) responseTrabajo.get("FechaEntregada") as Timestamp else null
 
-                trabajoEntregado.id = responseTrabajo.id
-                trabajoEntregado.Autor = if (responseTrabajo.get("Autor") != null) responseTrabajo.get("Autor") as DocumentReference else null
-                trabajoEntregado.FechaEntregada = if (responseTrabajo.get("FechaEntregada") != null) responseTrabajo.get("FechaEntregada") as Timestamp else null
-                trabajoEntregado.Documento = if (responseTrabajo.get("Documento") != null) responseTrabajo.get("Documento") as String else ""
-
-                arrayTrabajosModel.add(trabajoEntregado)
-
-                //TODO: HACER //tasksGrupoAdapter.setListTareas(arrayTrabajosModel)
+                    filesTaskAdapter.addItem(trabajoEntregado)
+                }
 
             }
             .addOnFailureListener { exception ->
@@ -134,24 +168,104 @@ class TaskActivity : AppCompatActivity() {
 
     }
 
+    private fun addFile() {
+        var i = Intent ()
+        i.setType("*/*")
+        i.setAction(Intent.ACTION_GET_CONTENT)
+        startActivityForResult(Intent.createChooser(i, "Choose File"), 333)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if (requestCode == 333 && resultCode == Activity.RESULT_OK && data != null) {
+            filepath = data.data!!
+            var index = DocumentFile.fromSingleUri(this, filepath!!)?.type?.indexOf("/")
+            var ext = DocumentFile.fromSingleUri(this, filepath!!)?.type?.drop(index!! + 1)
+            strFile = UUID.randomUUID().toString() + "." + ext
+
+            trabajoEntregado.TituloDocumento = DocumentFile.fromSingleUri(this, filepath!!)?.name.toString()
+
+            filesTaskAdapter.clearList()
+            filesTaskAdapter.addItem(trabajoEntregado)
+
+            SendTaskButton?.visibility = View.VISIBLE
+        }
+    }
+
+    private fun sendTask() {
+        var pathFile = "files/Tareas/${strFile}"
+        var fileRef = FirebaseStorage.getInstance().reference.child(pathFile)
+        fileRef.putFile(filepath!!)
+            .addOnSuccessListener { responseFileUpload ->
+
+                db = FirebaseFirestore.getInstance()
+                db.collection("Grupos").document(groupId!!).collection("Tareas").document(tareaId!!).collection("TrabajosAlumnos")
+                    .add(
+                        hashMapOf(
+                            "Documento" to strFile,
+                            "TituloDocumento" to DocumentFile.fromSingleUri(this, filepath!!)?.name,
+                            "Autor" to documentReferenceUserLogged,
+                            "FechaEntregada" to FieldValue.serverTimestamp()
+                        )
+                    )
+                    .addOnSuccessListener {
+
+                        if (trabajoEntregado.id.isNotEmpty()) {
+                            FirebaseFirestore.getInstance().collection("Grupos").document(groupId!!).collection("Tareas")
+                                .document(tareaId!!).collection("TrabajosAlumnos").document(trabajoEntregado.id)
+                                .delete()
+                            FirebaseStorage.getInstance().reference.child("files/Tareas/${trabajoEntregado.Documento}")
+                                .delete()
+                        }
+                        else {
+                            DataManager.updateBadges("Tareas")
+                        }
+
+                        db.collection("Grupos").document(groupId!!).collection("Tareas").document(tareaId!!).collection("TrabajosAlumnos").document(it.id)
+                            .get()
+                            .addOnSuccessListener { responseTrabajo ->
+
+                                trabajoEntregado.id = responseTrabajo.id
+                                trabajoEntregado.Documento = if (responseTrabajo.get("Documento") != null) responseTrabajo.get("Documento") as String else ""
+                                trabajoEntregado.TituloDocumento = if(responseTrabajo.get("TituloDocumento") != null) responseTrabajo.get("TituloDocumento") as String else ""
+                                trabajoEntregado.Autor = if (responseTrabajo.get("Autor") != null) responseTrabajo.get("Autor") as DocumentReference else null
+                                trabajoEntregado.FechaEntregada = if (responseTrabajo.get("FechaEntregada") != null) responseTrabajo.get("FechaEntregada") as Timestamp else null
+
+                                Toast.makeText(this, "Tarea enviada", Toast.LENGTH_SHORT).show()
+
+                                SendTaskButton?.visibility = View.GONE
+
+                            }
+
+                    }
+
+            }
+    }
+
     private fun setViews(isAuthor: Boolean) {
         if (isAuthor) {
             this.AddFileButton?.visibility = View.GONE
             this.SendTaskButton?.visibility = View.GONE
         }
-        else{
-            this.AddFileButton?.visibility = View.VISIBLE
-            this.SendTaskButton?.visibility = View.VISIBLE
+        else {
+            if (DataManager.getTimeStamptToday().seconds <= fechaProgramadaTarea!!.seconds) {
+                this.AddFileButton?.visibility = View.VISIBLE
+                this.SendTaskButton?.visibility = View.VISIBLE
 
-            this.AddFileButton?.setOnClickListener {
-                //addFile()
+                this.AddFileButton?.setOnClickListener {
+                    addFile()
+                }
+
+                this.SendTaskButton?.visibility = View.GONE
+                this.SendTaskButton?.setOnClickListener {
+                    sendTask()
+                }
             }
-
-            this.SendTaskButton?.setOnClickListener {
-                //sendTaskButton()
+            else {
+                this.AddFileButton?.visibility = View.GONE
+                this.SendTaskButton?.visibility = View.GONE
             }
-
-
         }
     }
 }

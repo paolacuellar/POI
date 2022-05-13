@@ -143,6 +143,8 @@ class NewPostActivity : AppCompatActivity() {
                     )
                 ).addOnSuccessListener { responsePost ->
 
+                    DataManager.updateBadges("Posts")
+
                     if (filepath != null) {
                         var strPhoto = UUID.randomUUID().toString() + ".jpg"
                         var pathImage = "images/Publicaciones/${strPhoto}"

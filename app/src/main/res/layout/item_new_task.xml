@@ -36,27 +36,19 @@
             android:background="@drawable/shape_with_shadow">
 
             <TextView
+                android:id="@+id/nameArchiveTask"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/tasks_archive_tarea"
                 android:layout_marginStart="54dp"
-                android:layout_marginEnd="45dp"
                 android:layout_marginTop="12dp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
+                android:maxLines="1"
+                android:text="@string/tasks_archive_tarea"
                 android:textColor="@color/black"
                 android:textSize="16sp"
                 android:textStyle="bold"
-                android:maxLines="1"/>
-
-            <ImageButton
-                android:layout_width="45dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="15dp"
-                android:background="@drawable/trash_background"
-                android:src="@drawable/ic_trash_white"
-                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
+
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.cardview.widget.CardView>

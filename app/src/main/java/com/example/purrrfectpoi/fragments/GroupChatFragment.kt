@@ -19,6 +19,7 @@ import android.widget.EditText
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
+import androidx.documentfile.provider.DocumentFile
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -116,6 +117,7 @@ class GroupChatFragment:Fragment() {
                                         msgAux.Texto = if (doc.get("Texto") != null)    doc.get("Texto") as String else ""
                                         msgAux.Autor = doc.get("Autor") as DocumentReference
                                         msgAux.Foto = if(doc.get("Foto") != null)    doc.get("Foto") as String else ""
+                                        msgAux.Documento = if(doc.get("Documento") != null)    doc.get("Documento") as String else ""
                                         msgAux.NombreDocumento = if(doc.get("NombreDocumento") != null)    doc.get("NombreDocumento") as String else ""
                                         msgAux.Latitud = if(doc.get("Latitud") != null)    doc.get("Latitud") as String else ""
                                         msgAux.Longitud = if(doc.get("Longitud") != null)    doc.get("Longitud") as String else ""
@@ -154,7 +156,7 @@ class GroupChatFragment:Fragment() {
 
             override fun onDocumentClick(view: View, position: Int) {
                 val manager = activity?.applicationContext?.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
-                FirebaseStorage.getInstance().getReference("files/Mensajes/${msgParam[position].NombreDocumento}").downloadUrl
+                FirebaseStorage.getInstance().getReference("files/Mensajes/${msgParam[position].Documento}").downloadUrl
                     .addOnSuccessListener {
                         val request = DownloadManager.Request(it)
                         request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
@@ -303,8 +305,8 @@ class GroupChatFragment:Fragment() {
         }
         else if (requestCode == 333 && resultCode == Activity.RESULT_OK && data != null) {
             var filepath = data.data!!
-            var index = data.resolveType(requireActivity().applicationContext)?.indexOf("/")
-            var ext = data.resolveType(requireActivity().applicationContext)?.drop(index!! + 1)
+            var index = DocumentFile.fromSingleUri(requireActivity().applicationContext, filepath)?.type?.indexOf("/")
+            var ext = DocumentFile.fromSingleUri(requireActivity().applicationContext, filepath)?.type?.drop(index!! + 1)
             var strFile = UUID.randomUUID().toString() + "." + ext
             var pathFile = "files/Mensajes/${strFile}"
             var fileRef = FirebaseStorage.getInstance().reference.child(pathFile)
@@ -315,7 +317,8 @@ class GroupChatFragment:Fragment() {
                     db.collection("Conversacion").document(idGroupChat!!).collection("Mensajes")
                         .add(
                             hashMapOf(
-                                "NombreDocumento" to strFile,
+                                "Documento" to strFile,
+                                "NombreDocumento" to DocumentFile.fromSingleUri(requireActivity().applicationContext, filepath)?.name,
                                 "Autor" to documentReferenceUserLogged,
                                 "FechaCreacion" to FieldValue.serverTimestamp()
                             )

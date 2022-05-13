@@ -39,8 +39,6 @@ class GroupTasksFragment:Fragment() {
         savedInstanceState: Bundle?
     ): View? = inflater.inflate(R.layout.fragment_group_tasks,container,false)
 
-
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -87,33 +85,28 @@ class GroupTasksFragment:Fragment() {
 
                 setViews(authorGroup?.id.toString() == DataManager.emailUsuario)
 
-                var arrayTareasGrupo = if(responseGrupo.get("Tareas") != null) responseGrupo.get("Tareas") as ArrayList<DocumentReference> else arrayListOf()
+                FirebaseFirestore.getInstance().collection("Grupos").document(grupoId!!).collection("Tareas")
+                    .get()
+                    .addOnSuccessListener { responseTareas ->
 
-                if (arrayTareasGrupo?.size != 0) {
-                    //TODO: PARECE QUE EL "whereIn" NOMAS JALA CON 10 USUARIOS, SI ES ASÍ DEBERE HACER UN CICLO FOR DE CONSULTAS, O DEBERE MANEJARLO DE OTRA MANERA?
-                    FirebaseFirestore.getInstance().collection("Tareas")
-                        .whereIn(FieldPath.documentId(), arrayTareasGrupo!!)
-                        .get()
-                        .addOnSuccessListener { responseTareas ->
-                            var arrayTareasModel = arrayListOf<TareasModel>()
-                            for (responseTarea in responseTareas!!) {
-                                var tareaEncargada = TareasModel()
+                        var arrayTareasModel = arrayListOf<TareasModel>()
+                        for (responseTarea in responseTareas!!) {
+                            var tareaEncargada = TareasModel()
+                            tareaEncargada.id = responseTarea.id
+                            tareaEncargada.Nombre = if (responseTarea.get("Nombre") != null) responseTarea.get("Nombre") as String else ""
+                            tareaEncargada.FechaProgramada = if (responseTarea.get("FechaProgramada") != null) responseTarea.get("FechaProgramada") as Timestamp else null
 
-                                tareaEncargada.id = responseTarea.id
-                                tareaEncargada.Nombre = if (responseTarea.get("Nombre") != null) responseTarea.get("Nombre") as String else ""
-                                tareaEncargada.FechaProgramada = if (responseTarea.get("FechaProgramada") != null) responseTarea.get("FechaProgramada") as Timestamp else null
-
-                                arrayTareasModel.add(tareaEncargada)
-                            }
-
-                            arrayTareasModel.sortBy { it.FechaProgramada }
-                            tasksGrupoAdapter.setListTareas(arrayTareasModel)
-
+                            arrayTareasModel.add(tareaEncargada)
                         }
-                        .addOnFailureListener { exception ->
-                            Log.w(TAG, "Error al conseguir las Tareas del Grupo", exception)
-                        }
-                }
+
+                        arrayTareasModel.sortBy { it.FechaProgramada }
+                        tasksGrupoAdapter.setListTareas(arrayTareasModel)
+
+                    }
+                    .addOnFailureListener { exception ->
+                        Log.w(TAG, "Error al conseguir las Tareas del Grupo", exception)
+                    }
+
             }
             .addOnFailureListener { exception ->
                 Log.w(ContentValues.TAG, "Error consiguiendo los Grupos", exception)

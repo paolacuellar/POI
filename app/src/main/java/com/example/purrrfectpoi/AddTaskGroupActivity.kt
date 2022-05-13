@@ -33,10 +33,11 @@ class AddTaskGroupActivity : AppCompatActivity() {
 
     private lateinit var calendar : Calendar
 
+    private lateinit var db : FirebaseFirestore
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_task_ac)
-
 
         this.header_back = findViewById<ImageView>(R.id.add_tasks_group_header_back)
         this.btn_Crear_Tarea_Grupo = findViewById<Button>(R.id.add_task_btn_confirm)
@@ -55,7 +56,6 @@ class AddTaskGroupActivity : AppCompatActivity() {
         }
 
         if (intent.hasExtra("grupoId")) {
-            //if (true){
             val bundle = intent.extras
             this.grupoId = bundle!!.getString("grupoId")
         }
@@ -77,8 +77,8 @@ class AddTaskGroupActivity : AppCompatActivity() {
     }
 
     private fun setUpInfoTarea() {
-
-        FirebaseFirestore.getInstance().collection("Tareas").document(this.tareaId!!).get()
+        db = FirebaseFirestore.getInstance()
+        db.collection("Grupos").document(grupoId!!).collection("Tareas").document(tareaId!!).get()
 
             .addOnSuccessListener {
 
@@ -134,25 +134,17 @@ class AddTaskGroupActivity : AppCompatActivity() {
     }
 
     private fun crearTarea(){
-
-        FirebaseFirestore.getInstance().collection("Tareas")
+        db = FirebaseFirestore.getInstance()
+        db.collection("Grupos").document(grupoId!!).collection("Tareas")
             .add(
                 hashMapOf(
                     "Nombre" to tareaCreada.Nombre,
                     "Descripcion" to tareaCreada.Descripcion,
                     "FechaCreacion" to FieldValue.serverTimestamp(),
-                    "FechaProgramada" to tareaCreada.FechaProgramada,
-                    "TrabajosAlumnos" to tareaCreada.TrabajosAlumnos
+                    "FechaProgramada" to tareaCreada.FechaProgramada
                 )
             ).addOnCompleteListener { responseTaskCreation ->
                 if (responseTaskCreation.isSuccessful) {
-                    var documentReferenceTaskCreated = FirebaseFirestore.getInstance().collection("Tareas").document(responseTaskCreation.result.id)
-
-                    FirebaseFirestore.getInstance().collection("Grupos").document(grupoId!!)
-                        .update(
-                            "Tareas", FieldValue.arrayUnion(documentReferenceTaskCreated)
-                        )
-
                     DataManager.showToast(this,"Tarea creada correctamente")
 
                     salirAVentanaGrupo()
@@ -164,7 +156,8 @@ class AddTaskGroupActivity : AppCompatActivity() {
     }
 
     private fun editarTarea() {
-        FirebaseFirestore.getInstance().collection("Tareas").document(tareaId!!)
+        db = FirebaseFirestore.getInstance()
+        db.collection("Grupos").document(grupoId!!).collection("Tareas").document(tareaId!!)
             .update(
                 mapOf(
                     "Nombre" to tareaCreada.Nombre,
