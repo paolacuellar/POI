@@ -23,6 +23,10 @@ import com.google.firebase.storage.FirebaseStorage
 import com.psm.hiring.Utils.DataManager
 import org.w3c.dom.Text
 import java.util.*
+import android.widget.CompoundButton
+
+
+
 
 class ProfileActivity : AppCompatActivity() {
 
@@ -32,6 +36,7 @@ class ProfileActivity : AppCompatActivity() {
     var btn_Editar_Foto : ImageView? = null;
     var button_log_out : View? = null;
     var navbar_back : ImageView? = null;
+    var switch_Encriptar : Switch? = null;
 
     var image_Foto : ImageView? = null;
     var textCorreo : TextView? = null;
@@ -57,6 +62,7 @@ class ProfileActivity : AppCompatActivity() {
         this.btn_Editar_Foto = findViewById<ImageView>(R.id.profile_image_btn_editar_foto)
         this.navbar_back = findViewById<ImageView>(R.id.profile_image_btn_back)
         this.button_log_out = findViewById<View>(R.id.profile_button_log_out)
+        this.switch_Encriptar = findViewById<Switch>(R.id.Switch_EcryptName)
 
         this.image_Foto = findViewById<ImageView>(R.id.profile_image_foto)
         this.textCorreo = findViewById<TextView>(R.id.profile_lbl_correo)
@@ -91,6 +97,34 @@ class ProfileActivity : AppCompatActivity() {
             startActivity(vIntent)
         }
 
+        switch_Encriptar!!.setOnCheckedChangeListener(CompoundButton.OnCheckedChangeListener { buttonView, isChecked ->
+            if (isChecked) {
+                usuarioProfile.Ecriptado = isChecked
+                usuarioProfile.EcriptarInfo()
+            }
+            else {
+                usuarioProfile.DesencriptarInfo()
+                usuarioProfile.Ecriptado = isChecked
+            }
+
+            db.collection("Usuarios").document(DataManager.emailUsuario!!)
+                .update(
+                    mapOf(
+                        "Nombre" to usuarioProfile.Nombre,
+                        "ApPaterno" to usuarioProfile.ApPaterno,
+                        "ApMaterno" to usuarioProfile.ApMaterno,
+                        "Ecriptado" to usuarioProfile.Ecriptado
+                    )
+                ).addOnCompleteListener{
+                    if (it.isSuccessful) {
+                        Toast.makeText(applicationContext, "Encriptacion Activada", Toast.LENGTH_SHORT).show()
+                    }
+                    else{
+                        DataManager.showAlert(this, "Encriptacion Desactivada")
+                    }
+                }
+        })
+
     }
 
     private fun setUpInfoProfile() {
@@ -107,6 +141,11 @@ class ProfileActivity : AppCompatActivity() {
                 usuarioProfile.CantidadGrupos =   if(responseUsuario.get("CantidadGrupos") != null)  responseUsuario.get("CantidadGrupos") as Long else 0
                 usuarioProfile.CantidadPosts =   if(responseUsuario.get("CantidadPosts") != null)  responseUsuario.get("CantidadPosts") as Long else 0
                 usuarioProfile.Foto =       if(responseUsuario.get("Foto") != null)      responseUsuario.get("Foto") as String else ""
+                usuarioProfile.Ecriptado =       if(responseUsuario.get("Ecriptado") != null)      responseUsuario.get("Ecriptado") as Boolean else false
+
+                usuarioProfile.Ecriptado =       if(responseUsuario.get("Ecriptado") != null)      responseUsuario.get("Ecriptado") as Boolean else false
+
+                usuarioProfile.DesencriptarInfo()
 
                 db.collection("Carrera").document(usuarioProfile.Carrera!!.id).get().addOnSuccessListener { responseCarrera ->
                     var carreraUsuario =     if(responseCarrera.get("Nombre") != null)    responseCarrera.get("Nombre") as String else ""
@@ -115,6 +154,8 @@ class ProfileActivity : AppCompatActivity() {
                     editTextNombre?.setText(usuarioProfile.Nombre)
                     editTextApPaterno?.setText(usuarioProfile.ApPaterno)
                     editTextApMaterno?.setText(usuarioProfile.ApMaterno)
+
+                    switch_Encriptar!!.isChecked = usuarioProfile.Ecriptado
                 }
 
 
@@ -129,6 +170,7 @@ class ProfileActivity : AppCompatActivity() {
     }
 
     private fun editarUsuario() {
+
         if (!editable){
             habilitarBotones(true)
         }
@@ -153,6 +195,9 @@ class ProfileActivity : AppCompatActivity() {
                 }
 
             }else{
+
+                usuarioProfile.EcriptarInfo()
+
                 DataManager.showProgressDialog("Editando Perfil")
                 db.collection("Usuarios").document(DataManager.emailUsuario!!)
                     .update(

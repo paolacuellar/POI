@@ -195,7 +195,8 @@ class RegisterActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener
                                 "Conectado" to usuarioRegister.Conectado,
                                 "CantidadTareas" to usuarioRegister.CantidadTareas,
                                 "CantidadGrupos" to usuarioRegister.CantidadGrupos,
-                                "CantidadPosts" to usuarioRegister.CantidadPosts
+                                "CantidadPosts" to usuarioRegister.CantidadPosts,
+                                "Ecriptado" to usuarioRegister.Ecriptado
                             )
                         ).addOnCompleteListener{ responseUserCreation ->
                             if (responseUserCreation.isSuccessful) {
