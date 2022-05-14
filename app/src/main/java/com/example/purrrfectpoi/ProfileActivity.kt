@@ -21,7 +21,6 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import com.google.firebase.storage.FirebaseStorage
 import com.psm.hiring.Utils.DataManager
-import org.w3c.dom.Text
 import java.util.*
 import android.widget.CompoundButton
 
@@ -91,6 +90,9 @@ class ProfileActivity : AppCompatActivity() {
 
         this.button_log_out?.setOnClickListener {
             FirebaseAuth.getInstance().signOut()
+
+            DataManager.updateUserConnected(false)
+
             DataManager.emailUsuario = ""
             DataManager.fotoUsuario = ""
             val vIntent = Intent(this, LoginActivity::class.java)

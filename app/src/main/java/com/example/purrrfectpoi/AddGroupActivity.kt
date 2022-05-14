@@ -218,9 +218,11 @@ class AddGroupActivity : AppCompatActivity() {
                                     )
                                 } else {
                                     usuarioAux.Email = responseUsuario.id
-                                    usuarioAux.Nombre =
-                                        responseUsuario.data!!.get("Nombre") as String
+                                    usuarioAux.Nombre = responseUsuario.data!!.get("Nombre") as String
                                     usuarioAux.Foto = responseUsuario.data!!.get("Foto") as String
+
+                                    usuarioAux.Ecriptado = if(responseUsuario.get("Ecriptado") != null) responseUsuario.get("Ecriptado") as Boolean else false
+                                    usuarioAux.DesencriptarInfo()
 
                                     usuariosAdapter.addItem(usuarioAux)
 
@@ -342,6 +344,7 @@ class AddGroupActivity : AppCompatActivity() {
                         ).addOnCompleteListener { responseUserCreation ->
                             if (responseUserCreation.isSuccessful) {
                                 subirFoto(pathImage)
+                                DataManager.updateBadges("Grupos")
                             } else {
                                 DataManager.showToast(
                                     this,

@@ -23,6 +23,7 @@ class TasksStudentsActivity : AppCompatActivity() {
     var isAuthor : Boolean? = false;
 
     var btnRegresar : ImageView? =  null;
+    var firstExec: Boolean? = true;
 
     private lateinit var recyclerViewTasksStudents : RecyclerView
     private lateinit var tasksStudentdAdapter: TasksStudentsAdapter
@@ -65,6 +66,8 @@ class TasksStudentsActivity : AppCompatActivity() {
 
 
     private fun setUpRecyclerView() {
+        tasksStudentdAdapter.setListTareas(arrayListOf())
+
         db = FirebaseFirestore.getInstance()
         db.collection("Grupos").document(groupId!!).collection("Tareas").document(tareaId!!).collection("TrabajosAlumnos")
             .get()
@@ -79,6 +82,7 @@ class TasksStudentsActivity : AppCompatActivity() {
                     trabajoStudent.TituloDocumento = if (responseTarea.get("TituloDocumento") != null) responseTarea.get("TituloDocumento") as String else ""
                     trabajoStudent.Autor = if (responseTarea.get("Autor") != null) responseTarea.get("Autor") as DocumentReference else null
                     trabajoStudent.FechaEntregada = if (responseTarea.get("FechaEntregada") != null) responseTarea.get("FechaEntregada") as Timestamp else null
+                    trabajoStudent.TareaRevisada = if (responseTarea.get("TareaRevisada") != null) responseTarea.get("TareaRevisada") as Boolean else null
 
                     arrayTrabajosModel.add(trabajoStudent)
                 }
@@ -87,11 +91,18 @@ class TasksStudentsActivity : AppCompatActivity() {
 
                 tasksStudentdAdapter.setListTareas(arrayTrabajosModel)
 
+                firstExec = false
             }
             .addOnFailureListener { exception ->
                 Log.w(ContentValues.TAG, "Error consiguiendo los Grupos", exception)
             }
+
     }
 
+    override fun onResume() {
+        super.onResume()
 
+        if (!firstExec!!)
+            setUpRecyclerView()
+    }
 }

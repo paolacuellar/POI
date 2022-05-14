@@ -2,18 +2,13 @@ package com.psm.hiring.Utils
 
 import android.annotation.SuppressLint
 import android.app.ProgressDialog
+import android.content.ContentValues.TAG
 import android.content.Context
-import android.net.ConnectivityManager
-import android.net.NetworkCapabilities
 import android.util.Log
-import android.widget.EditText
-import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
-import androidx.lifecycle.LifecycleOwner
 import com.google.firebase.Timestamp
 import com.google.firebase.firestore.FirebaseFirestore
-import java.math.BigInteger
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -169,5 +164,24 @@ object DataManager {
                 }
 
             }
+    }
+
+    fun updateUserConnected(isConnected : Boolean){
+        if (emailUsuario != null) {
+            if (emailUsuario != "") {
+                FirebaseFirestore.getInstance().collection("Usuarios")
+                    .document(DataManager.emailUsuario!!)
+                    .update(
+                        mapOf(
+                            "Conectado" to isConnected
+                        )
+                    ).addOnCompleteListener {
+                        if (!it.isSuccessful) {
+                            Log.e(TAG, "Hubo un error al actualizar conexión del usuario" + it.exception?.message)
+                        }
+                    }
+            }
+        }
+
     }
 }

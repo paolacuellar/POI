@@ -27,12 +27,14 @@ import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import com.psm.hiring.Utils.DataManager
+import kotlinx.android.synthetic.main.activity_profile.*
 import java.util.*
 
 class TaskActivity : AppCompatActivity() {
 
-    var isAuthor : Boolean? = false;
+    var isAuthorTeacher : Boolean? = false;
     var tareaId : String? = "";
+    var trabajoId : String? = "";
     var groupId : String? = "";
     var fechaProgramadaTarea : Timestamp? = null;
 
@@ -45,9 +47,17 @@ class TaskActivity : AppCompatActivity() {
 
     var TaskNameText : TextView? = null;
     var TaskDateText : TextView? = null;
+
+    var TaskCalificacionText : TextView? = null;
+
+    var TextUsuarioCalificado : TextView? = null;
+    var TextUsuarioEmailCalificado : TextView? = null;
+
     var TaskDescriptionText : TextView? = null;
     
     var AddFileButton : Button? = null;
+    var AceptarTareaButton : Button? = null;
+    var RechazarTareaButton : Button? = null;
 
     private lateinit var recyclerViewFilesTask : RecyclerView
     private lateinit var filesTaskAdapter: TaskFilesAdapter
@@ -55,7 +65,7 @@ class TaskActivity : AppCompatActivity() {
     var SendTaskButton : FloatingActionButton? = null;
     
     private lateinit var db : FirebaseFirestore
-    private lateinit var documentReferenceUserLogged : DocumentReference
+    private lateinit var documentReferenceStudentAuthor : DocumentReference
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -67,17 +77,41 @@ class TaskActivity : AppCompatActivity() {
         this.TaskNameText = findViewById<TextView>(R.id.lbl_tarea_nombre)
         this.TaskDateText = findViewById<TextView>(R.id.lbl_tarea_date)
         this.TaskDescriptionText = findViewById<TextView>(R.id.lbl_tarea_details)
-        
-        this.AddFileButton = findViewById<Button>(R.id.btnNewArchiveTask)
-        this.SendTaskButton = findViewById<FloatingActionButton>(R.id.donetask_btn_floating)
 
-        documentReferenceUserLogged = FirebaseFirestore.getInstance().collection("Usuarios")
-            .document(DataManager.emailUsuario!!)
+        this.TaskCalificacionText = findViewById<TextView>(R.id.lbl_calificacion_tarea)
+
+        this.TextUsuarioCalificado = findViewById<TextView>(R.id.lbl_usuario_calificado)
+        this.TextUsuarioCalificado?.visibility = View.GONE
+        this.TextUsuarioEmailCalificado = findViewById<TextView>(R.id.lbl_correo_usuario_calificado)
+        this.TextUsuarioEmailCalificado?.visibility = View.GONE
+
+        this.AddFileButton = findViewById<Button>(R.id.btnNewArchiveTask)
+        this.AddFileButton?.visibility = View.GONE
+
+        this.AceptarTareaButton = findViewById<Button>(R.id.btnAcceptTask)
+        this.AceptarTareaButton?.visibility = View.GONE
+        this.RechazarTareaButton = findViewById<Button>(R.id.btnRejectTask)
+        this.RechazarTareaButton?.visibility = View.GONE
+
+        this.SendTaskButton = findViewById<FloatingActionButton>(R.id.donetask_btn_floating)
+        this.SendTaskButton?.visibility = View.GONE
+
 
         if (intent.hasExtra("isAuthor")) {
             val bundle = intent.extras
-            this.isAuthor = bundle!!.getBoolean("isAuthor")
+            this.isAuthorTeacher = bundle!!.getBoolean("isAuthor")
+
+            if (intent.hasExtra("studentId")) {
+                val bundle = intent.extras
+                val authorId = bundle!!.getString("studentId")
+                documentReferenceStudentAuthor = FirebaseFirestore.getInstance().collection("Usuarios").document(authorId!!)
+            }
+            else{
+                documentReferenceStudentAuthor = FirebaseFirestore.getInstance().collection("Usuarios").document(DataManager.emailUsuario!!)
+            }
+
         }
+
 
         if (intent.hasExtra("tareaId")) {
             val bundle = intent.extras
@@ -89,12 +123,17 @@ class TaskActivity : AppCompatActivity() {
             this.groupId = bundle!!.getString("grupoId")
         }
 
+        if (intent.hasExtra("trabajoId")) {
+            val bundle = intent.extras
+            this.trabajoId = bundle!!.getString("trabajoId")
+        }
+
         setUpInfoGeneral()
-        setUpRecyclerViewTrabajos()
 
         this.btnRegresar?.setOnClickListener {
             onBackPressed()
         }
+
 
     }
 
@@ -134,10 +173,11 @@ class TaskActivity : AppCompatActivity() {
 
                 TaskNameText?.setText(nombreTarea)
                 TaskDescriptionText?.setText(descripcionTarea)
-                TaskDateText!!.setText(DataManager.TimeStampToDayHourYear(fechaProgramadaTarea))
+                TaskDateText!!.setText("Fecha programada: "+ DataManager.TimeStampToDayHourYear(fechaProgramadaTarea))
 
-                setViews(this.isAuthor!!)
+                setViews(this.isAuthorTeacher!!)
 
+                setUpRecyclerViewTrabajos()
             }
             .addOnFailureListener { exception ->
                 Log.w(ContentValues.TAG, "Error al conseguir la información del Usuario", exception)
@@ -147,7 +187,7 @@ class TaskActivity : AppCompatActivity() {
     private fun setUpRecyclerViewTrabajos(){
         db = FirebaseFirestore.getInstance()
         db.collection("Grupos").document(groupId!!).collection("Tareas").document(tareaId!!).collection("TrabajosAlumnos")
-            .whereEqualTo("Autor", documentReferenceUserLogged)
+            .whereEqualTo("Autor", documentReferenceStudentAuthor)
             .get()
             .addOnSuccessListener { responseTrabajos ->
 
@@ -157,9 +197,14 @@ class TaskActivity : AppCompatActivity() {
                     trabajoEntregado.TituloDocumento = if(responseTrabajo.get("TituloDocumento") != null) responseTrabajo.get("TituloDocumento") as String else ""
                     trabajoEntregado.Autor = if (responseTrabajo.get("Autor") != null) responseTrabajo.get("Autor") as DocumentReference else null
                     trabajoEntregado.FechaEntregada = if (responseTrabajo.get("FechaEntregada") != null) responseTrabajo.get("FechaEntregada") as Timestamp else null
+                    trabajoEntregado.TareaRevisada = if (responseTrabajo.get("TareaRevisada") != null) responseTrabajo.get("TareaRevisada") as Boolean else null
+
+                    this.TextUsuarioEmailCalificado?.text = trabajoEntregado.Autor!!.id
 
                     filesTaskAdapter.addItem(trabajoEntregado)
                 }
+
+                showTaskLabelApprobedReject()
 
             }
             .addOnFailureListener { exception ->
@@ -205,7 +250,7 @@ class TaskActivity : AppCompatActivity() {
                         hashMapOf(
                             "Documento" to strFile,
                             "TituloDocumento" to DocumentFile.fromSingleUri(this, filepath!!)?.name,
-                            "Autor" to documentReferenceUserLogged,
+                            "Autor" to documentReferenceStudentAuthor,
                             "FechaEntregada" to FieldValue.serverTimestamp()
                         )
                     )
@@ -243,13 +288,9 @@ class TaskActivity : AppCompatActivity() {
             }
     }
 
-    private fun setViews(isAuthor: Boolean) {
-        if (isAuthor) {
-            this.AddFileButton?.visibility = View.GONE
-            this.SendTaskButton?.visibility = View.GONE
-        }
-        else {
-            if (DataManager.getTimeStamptToday().seconds <= fechaProgramadaTarea!!.seconds) {
+    private fun studentCanSendTask(canSendTask : Boolean){
+        if (!isAuthorTeacher!!) {
+            if (canSendTask) {
                 this.AddFileButton?.visibility = View.VISIBLE
                 this.SendTaskButton?.visibility = View.VISIBLE
 
@@ -261,11 +302,86 @@ class TaskActivity : AppCompatActivity() {
                 this.SendTaskButton?.setOnClickListener {
                     sendTask()
                 }
-            }
-            else {
+            } else {
                 this.AddFileButton?.visibility = View.GONE
                 this.SendTaskButton?.visibility = View.GONE
             }
+        }
+    }
+
+    private fun showTaskLabelApprobedReject(){
+        if (trabajoEntregado.TareaRevisada == null && DataManager.getTimeStamptToday().seconds <= fechaProgramadaTarea!!.seconds) {
+            this.TaskCalificacionText?.visibility = View.GONE
+
+            studentCanSendTask(true)
+
+        }
+        else if (trabajoEntregado.TareaRevisada == null && DataManager.getTimeStamptToday().seconds >= fechaProgramadaTarea!!.seconds){
+            this.TaskCalificacionText?.visibility = View.VISIBLE
+            this.TaskCalificacionText?.text = "Tarea no entregada"
+
+            studentCanSendTask(false)
+        }
+        else {
+            this.TaskCalificacionText?.visibility = View.VISIBLE
+            if (trabajoEntregado.TareaRevisada!!) {
+                this.TaskCalificacionText?.text = "Tarea aprobada"
+            } else {
+                this.TaskCalificacionText?.text = "Tarea reprobada"
+            }
+
+            this.AceptarTareaButton?.visibility = View.GONE
+            this.RechazarTareaButton?.visibility = View.GONE
+
+            studentCanSendTask(false)
+        }
+    }
+
+    private fun updateRevisionTask(TareaRevisada : Boolean){
+        trabajoEntregado.TareaRevisada = TareaRevisada
+
+        db.collection("Grupos").document(groupId!!).collection("Tareas").document(tareaId!!).collection("TrabajosAlumnos").document(this.trabajoId!!)
+            .update(
+                mapOf(
+                    "TareaRevisada" to  trabajoEntregado.TareaRevisada
+                )
+            ).addOnCompleteListener{
+                if (it.isSuccessful) {
+                    showTaskLabelApprobedReject()
+                }
+                else{
+                    DataManager.showAlert(this, "Se ha producido un error al editar el trabajo")
+                }
+            }
+    }
+
+    private fun setViews(isAuthor: Boolean) {
+        if (isAuthor) {
+            this.AddFileButton?.visibility = View.GONE
+            this.SendTaskButton?.visibility = View.GONE
+
+            this.AceptarTareaButton?.visibility = View.VISIBLE
+            this.RechazarTareaButton?.visibility = View.VISIBLE
+
+            this.TextUsuarioCalificado?.visibility = View.VISIBLE
+            this.TextUsuarioEmailCalificado?.visibility = View.VISIBLE
+
+            this.TaskCalificacionText?.visibility = View.GONE
+
+            this.AceptarTareaButton?.setOnClickListener {
+                updateRevisionTask(true)
+            }
+
+            this.RechazarTareaButton?.setOnClickListener {
+                updateRevisionTask(false)
+            }
+        }
+        else {
+            this.AceptarTareaButton?.visibility = View.GONE
+            this.RechazarTareaButton?.visibility = View.GONE
+
+            this.TextUsuarioCalificado?.visibility = View.GONE
+            this.TextUsuarioEmailCalificado?.visibility = View.GONE
         }
     }
 }

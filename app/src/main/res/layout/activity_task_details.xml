@@ -4,8 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".TaskActivity"
-    android:background="@drawable/libreta">
+    android:background="@drawable/libreta"
+    tools:context=".TaskActivity">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
@@ -55,10 +55,72 @@
         app:layout_constraintTop_toBottomOf="@id/toolbar" />
 
     <TextView
+        android:id="@+id/lbl_tarea_archivo_agregado"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="30dp"
+        android:layout_marginTop="10dp"
+        android:text="Archivo agregado:"
+        android:textColor="@color/coffee"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btnNewArchiveTask" />
+
+    <TextView
+        android:id="@+id/lbl_tarea_archivo_agregado4"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="30dp"
+        android:layout_marginTop="10dp"
+        android:text="Archivo agregado:"
+        android:textColor="@color/coffee"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btnNewArchiveTask" />
+
+    <TextView
+        android:id="@+id/lbl_calificacion_tarea"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="30dp"
+        android:layout_marginTop="10dp"
+        android:textColor="@color/coffee"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/list_Archive_tasks" />
+
+    <TextView
+        android:id="@+id/lbl_usuario_calificado"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Usuario:"
+        android:textColor="@color/coffee"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="@+id/lbl_tarea_nombre"
+        app:layout_constraintTop_toBottomOf="@+id/lbl_tarea_nombre" />
+
+    <TextView
+        android:id="@+id/lbl_correo_usuario_calificado"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:text="Usuario:"
+        android:textColor="@color/coffee"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="@+id/lbl_tarea_nombre"
+        app:layout_constraintStart_toEndOf="@+id/lbl_usuario_calificado"
+        app:layout_constraintTop_toTopOf="@+id/lbl_usuario_calificado" />
+
+    <TextView
         android:id="@+id/lbl_tarea_date"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="18dp"
+        android:layout_marginTop="4dp"
         android:layout_marginEnd="30dp"
         android:background="@drawable/marker"
         android:gravity="end"
@@ -67,7 +129,7 @@
         android:textSize="12sp"
         android:textStyle="normal"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/lbl_tarea_nombre" />
+        app:layout_constraintTop_toBottomOf="@+id/lbl_correo_usuario_calificado" />
 
     <TextView
         android:id="@+id/lbl_tarea_details"
@@ -88,10 +150,33 @@
         android:layout_marginTop="16dp"
         android:layout_marginEnd="30dp"
         android:backgroundTint="@color/coffee"
-        app:icon="@drawable/ic_add_plus_brown"
         android:text="AGREGAR ARCHIVO"
+        app:icon="@drawable/ic_add_plus_brown"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/lbl_tarea_details" />
+
+    <Button
+        android:id="@+id/btnAcceptTask"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:backgroundTint="@color/coffee"
+        android:text="Aceptar"
+        app:layout_constraintEnd_toStartOf="@+id/btnRejectTask"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/list_Archive_tasks" />
+
+    <Button
+        android:id="@+id/btnRejectTask"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/coffee"
+        android:text="Rechazar"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/btnAcceptTask"
+        app:layout_constraintTop_toTopOf="@+id/btnAcceptTask" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/list_Archive_tasks"
@@ -100,10 +185,9 @@
         android:layout_marginTop="10dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/btnNewArchiveTask"
+        app:layout_constraintTop_toBottomOf="@+id/lbl_tarea_archivo_agregado"
         tools:itemCount="1"
-        tools:listitem="@layout/item_new_task"
-        />
+        tools:listitem="@layout/item_new_task" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/donetask_btn_floating"
@@ -115,11 +199,11 @@
         app:backgroundTint="@color/white"
         app:borderWidth="2dp"
         app:fabSize="normal"
-        app:maxImageSize="46dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:maxImageSize="46dp"
         app:srcCompat="@drawable/ic_done_white"
-        app:useCompatPadding="true"
-        app:tint="@android:color/white"/>
+        app:tint="@android:color/white"
+        app:useCompatPadding="true" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

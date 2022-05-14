@@ -11,6 +11,7 @@ import android.widget.EditText
 import android.widget.TextView
 import com.example.purrrfectpoi.Models.AuthModel
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 import com.psm.hiring.Utils.DataManager
 import kotlin.system.exitProcess
 
@@ -84,6 +85,8 @@ class LoginActivity : AppCompatActivity() {
 
                         DataManager.emailUsuario = authLogin.Email
 
+                        DataManager.updateUserConnected(true)
+
                         val sharedPref = loginActivity.getPreferences(Context.MODE_PRIVATE)
                         with (sharedPref.edit()) {
                             putString("emailUsuario", authLogin.Email)
@@ -143,6 +146,8 @@ class LoginActivity : AppCompatActivity() {
             putString("emailUsuario", "")
             FirebaseAuth.getInstance().signOut()
             apply()
+
+            DataManager.updateUserConnected(false)
         }
 
     }

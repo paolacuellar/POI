@@ -33,6 +33,7 @@ class TasksStudentsAdapter(val tasksStudents: MutableList<TrabajosModel>, val ta
     override fun getItemCount()= tasksStudents.size
 
     fun setListTareas(arrayTrabajosModel :MutableList<TrabajosModel>){
+        tasksStudents.clear()
         for (tareaModel in arrayTrabajosModel) {
             tasksStudents.add(tareaModel)
         }
@@ -40,41 +41,43 @@ class TasksStudentsAdapter(val tasksStudents: MutableList<TrabajosModel>, val ta
     }
 
     class tasksViewHolder(val view: View): RecyclerView.ViewHolder(view){
-        fun render(taskGroup: TrabajosModel, position: Int, tareaId:String, isAuthor: Boolean, groupId: String){
+        fun render(taskWorkGroup: TrabajosModel, position: Int, tareaId:String, isAuthor: Boolean, groupId: String){
 
-            view.nameTaskStudent.setText(taskGroup.Autor?.id)
-            val dateString : String = "Fecha entregada: " + DataManager.TimeStampToDayHourYear(taskGroup.FechaEntregada!!)
+            view.nameTaskStudent.setText(taskWorkGroup.Autor?.id)
+            val dateString : String = "Fecha entregada: " + DataManager.TimeStampToDayHourYear(taskWorkGroup.FechaEntregada!!)
             view.dateTaskStudent.setText(dateString)
 
             view.nameTaskStudent.setOnClickListener{
                 val intent = Intent(view.context, TaskActivity::class.java)
                 intent.putExtra("isAuthor", isAuthor)
+                intent.putExtra("studentId", taskWorkGroup.Autor?.id)
+                intent.putExtra("trabajoId", taskWorkGroup.id)
                 intent.putExtra("tareaId", tareaId)
                 intent.putExtra("grupoId", groupId)
                 view.context?.startActivity(intent)
             }
 
-            if (taskGroup.TareaRevisada == null){
-                //TODO: DEJAR CUADRITO VACIO: view.button_tarea_revisada
+            if (taskWorkGroup.TareaRevisada == null) {
+                view.button_tarea_revisada_succes.visibility = View.GONE
+                view.button_tarea_revisada_fail.visibility = View.GONE
             }
-            else {
-                //TODO: SETTEAR PALOMITA O TACHITA
-                if (taskGroup.TareaRevisada == null) {
-                    //view.button_tarea_revisada = true
-                } else if (taskGroup.TareaRevisada == false) {
-                    //view.button_tarea_revisada = false
+            else{
+                if (taskWorkGroup.TareaRevisada == true) {
+                    view.button_tarea_revisada_succes.visibility = View.VISIBLE
+                } else if (taskWorkGroup.TareaRevisada == false) {
+                    view.button_tarea_revisada_fail.visibility = View.VISIBLE
                 }
             }
 
             view.btn_tarea_download.visibility = View.VISIBLE
 
             view.btn_tarea_download.setOnClickListener{
-                FirebaseStorage.getInstance().getReference("files/Tareas/${taskGroup.Documento}").downloadUrl
+                FirebaseStorage.getInstance().getReference("files/Tareas/${taskWorkGroup.Documento}").downloadUrl
                     .addOnSuccessListener { fileUri ->
                         val manager = view.context.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
                         val request = DownloadManager.Request(fileUri)
                         request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
-                        request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, taskGroup.TituloDocumento)
+                        request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, taskWorkGroup.TituloDocumento)
                         manager.enqueue(request)
                         Toast.makeText(view.context, "Archivo descargado", Toast.LENGTH_SHORT).show()
                     }
