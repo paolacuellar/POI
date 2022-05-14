@@ -99,74 +99,78 @@ class ProfileActivity : AppCompatActivity() {
 
         switch_Encriptar!!.setOnCheckedChangeListener(CompoundButton.OnCheckedChangeListener { buttonView, isChecked ->
             if (isChecked) {
+                DataManager.showToast(this, "Encriptacion Activada")
                 usuarioProfile.Ecriptado = isChecked
                 usuarioProfile.EcriptarInfo()
-            }
-            else {
+            } else {
+                DataManager.showToast(this, "Encriptacion Desactivada")
                 usuarioProfile.DesencriptarInfo()
                 usuarioProfile.Ecriptado = isChecked
             }
 
-            db.collection("Usuarios").document(DataManager.emailUsuario!!)
-                .update(
-                    mapOf(
-                        "Nombre" to usuarioProfile.Nombre,
-                        "ApPaterno" to usuarioProfile.ApPaterno,
-                        "ApMaterno" to usuarioProfile.ApMaterno,
-                        "Ecriptado" to usuarioProfile.Ecriptado
-                    )
-                ).addOnCompleteListener{
-                    if (it.isSuccessful) {
-                        Toast.makeText(applicationContext, "Encriptacion Activada", Toast.LENGTH_SHORT).show()
-                    }
-                    else{
-                        DataManager.showAlert(this, "Encriptacion Desactivada")
-                    }
+            if (DataManager.emailUsuario != null) {
+                if (DataManager.emailUsuario != "") {
+                    db.collection("Usuarios").document(DataManager.emailUsuario!!)
+                        .update(
+                            mapOf(
+                                "Nombre" to usuarioProfile.Nombre,
+                                "ApPaterno" to usuarioProfile.ApPaterno,
+                                "ApMaterno" to usuarioProfile.ApMaterno,
+                                "Ecriptado" to usuarioProfile.Ecriptado
+                            )
+                        ).addOnCompleteListener {
+                            if (!it.isSuccessful) {
+                                DataManager.showAlert(this, "Error:" + it.exception?.message)
+                            }
+                        }
                 }
+            }
         })
 
     }
 
     private fun setUpInfoProfile() {
-        db = FirebaseFirestore.getInstance()
-        db.collection("Usuarios").document(DataManager.emailUsuario!!).get()
-            .addOnSuccessListener { responseUsuario ->
+        if (DataManager.emailUsuario != null) {
+            db = FirebaseFirestore.getInstance()
+            db.collection("Usuarios").document(DataManager.emailUsuario!!).get()
+                .addOnSuccessListener { responseUsuario ->
 
-                usuarioProfile.Email = responseUsuario.id
-                usuarioProfile.Carrera =     if(responseUsuario.get("Carrera") != null)    responseUsuario.get("Carrera") as DocumentReference else null
-                usuarioProfile.Nombre =     if(responseUsuario.get("Nombre") != null)    responseUsuario.get("Nombre") as String else ""
-                usuarioProfile.ApPaterno =  if(responseUsuario.get("ApPaterno") != null) responseUsuario.get("ApPaterno") as String else ""
-                usuarioProfile.ApMaterno =  if(responseUsuario.get("ApMaterno") != null) responseUsuario.get("ApMaterno") as String else ""
-                usuarioProfile.CantidadTareas =   if(responseUsuario.get("CantidadTareas") != null)  responseUsuario.get("CantidadTareas") as Long else 0
-                usuarioProfile.CantidadGrupos =   if(responseUsuario.get("CantidadGrupos") != null)  responseUsuario.get("CantidadGrupos") as Long else 0
-                usuarioProfile.CantidadPosts =   if(responseUsuario.get("CantidadPosts") != null)  responseUsuario.get("CantidadPosts") as Long else 0
-                usuarioProfile.Foto =       if(responseUsuario.get("Foto") != null)      responseUsuario.get("Foto") as String else ""
-                usuarioProfile.Ecriptado =       if(responseUsuario.get("Ecriptado") != null)      responseUsuario.get("Ecriptado") as Boolean else false
+                    usuarioProfile.Email = responseUsuario.id
+                    usuarioProfile.Carrera = if (responseUsuario.get("Carrera") != null) responseUsuario.get("Carrera") as DocumentReference else null
+                    usuarioProfile.Nombre = if (responseUsuario.get("Nombre") != null) responseUsuario.get("Nombre") as String else ""
+                    usuarioProfile.ApPaterno = if (responseUsuario.get("ApPaterno") != null) responseUsuario.get("ApPaterno") as String else ""
+                    usuarioProfile.ApMaterno = if (responseUsuario.get("ApMaterno") != null) responseUsuario.get("ApMaterno") as String else ""
+                    usuarioProfile.CantidadTareas = if (responseUsuario.get("CantidadTareas") != null) responseUsuario.get("CantidadTareas") as Long else 0
+                    usuarioProfile.CantidadGrupos = if (responseUsuario.get("CantidadGrupos") != null) responseUsuario.get("CantidadGrupos") as Long else 0
+                    usuarioProfile.CantidadPosts = if (responseUsuario.get("CantidadPosts") != null) responseUsuario.get("CantidadPosts") as Long else 0
+                    usuarioProfile.Foto = if (responseUsuario.get("Foto") != null) responseUsuario.get("Foto") as String else ""
+                    usuarioProfile.Ecriptado = if (responseUsuario.get("Ecriptado") != null) responseUsuario.get("Ecriptado") as Boolean else false
+                    usuarioProfile.Ecriptado = if (responseUsuario.get("Ecriptado") != null) responseUsuario.get("Ecriptado") as Boolean else false
 
-                usuarioProfile.Ecriptado =       if(responseUsuario.get("Ecriptado") != null)      responseUsuario.get("Ecriptado") as Boolean else false
+                    usuarioProfile.DesencriptarInfo()
 
-                usuarioProfile.DesencriptarInfo()
+                    db.collection("Carrera").document(usuarioProfile.Carrera!!.id).get()
+                        .addOnSuccessListener { responseCarrera ->
+                            var carreraUsuario = if (responseCarrera.get("Nombre") != null) responseCarrera.get("Nombre") as String else ""
+                            textCarrera?.text = carreraUsuario
+                            textCorreo?.text = usuarioProfile.Email
+                            editTextNombre?.setText(usuarioProfile.Nombre)
+                            editTextApPaterno?.setText(usuarioProfile.ApPaterno)
+                            editTextApMaterno?.setText(usuarioProfile.ApMaterno)
 
-                db.collection("Carrera").document(usuarioProfile.Carrera!!.id).get().addOnSuccessListener { responseCarrera ->
-                    var carreraUsuario =     if(responseCarrera.get("Nombre") != null)    responseCarrera.get("Nombre") as String else ""
-                    textCarrera?.text = carreraUsuario
-                    textCorreo?.text = usuarioProfile.Email
-                    editTextNombre?.setText(usuarioProfile.Nombre)
-                    editTextApPaterno?.setText(usuarioProfile.ApPaterno)
-                    editTextApMaterno?.setText(usuarioProfile.ApMaterno)
+                            switch_Encriptar!!.isChecked = usuarioProfile.Ecriptado
+                        }
 
-                    switch_Encriptar!!.isChecked = usuarioProfile.Ecriptado
+
+
+                    setUpImageUser()
+
+                    setupRecyclerView()
                 }
-
-
-
-                setUpImageUser()
-
-                setupRecyclerView()
-            }
-            .addOnFailureListener { exception ->
-                Log.w(TAG, "Error al conseguir la información del Usuario", exception)
-            }
+                .addOnFailureListener { exception ->
+                    Log.w(TAG, "Error al conseguir la información del Usuario", exception)
+                }
+        }
     }
 
     private fun editarUsuario() {

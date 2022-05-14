@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.purrrfectpoi.Models.MensajesModel
+import com.example.purrrfectpoi.Models.UsuariosModel
 import com.example.purrrfectpoi.R
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
@@ -166,12 +167,15 @@ class GroupChatAdapter(val chatMsgs: MutableList<MensajesModel>) : RecyclerView.
 
                 FirebaseFirestore.getInstance().collection("Usuarios").document(Msg.Autor!!.id)
                     .get()
-                    .addOnSuccessListener {
+                    .addOnSuccessListener { responseUsuario ->
+                        var userAux = UsuariosModel()
+                        userAux.Nombre = if(responseUsuario.get("Nombre") != null)    responseUsuario.get("Nombre") as String else ""
+                        userAux.ApPaterno =  if(responseUsuario.get("ApPaterno") != null) responseUsuario.get("ApPaterno") as String else ""
+                        userAux.Ecriptado = if(responseUsuario.get("Ecriptado") != null) responseUsuario.get("Ecriptado") as Boolean else false
+                        userAux.DesencriptarInfo()
 
-                        var username = ""
-                        if (it.get("Nombre") != null) { username = it.get("Nombre") as String }
-                        if (it.get("ApPaterno") != null) { username += " " + it.get("ApPaterno") as String }
-                        Msg.FotoPerfil = it.get("Foto") as String
+                        var username = userAux.Nombre + " " + userAux.ApPaterno
+                        Msg.FotoPerfil = responseUsuario.get("Foto") as String
 
                         if (Msg.Texto.isNotEmpty()) {
 

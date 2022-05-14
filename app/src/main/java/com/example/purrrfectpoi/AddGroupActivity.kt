@@ -169,6 +169,9 @@ class AddGroupActivity : AppCompatActivity() {
                             usuarioAux.Nombre = responseUsuario.data.get("Nombre") as String
                             usuarioAux.Foto = responseUsuario.data.get("Foto") as String
 
+                            usuarioAux.Ecriptado = if(responseUsuario.get("Ecriptado") != null) responseUsuario.get("Ecriptado") as Boolean else false
+                            usuarioAux.DesencriptarInfo()
+
                             usuariosAdapter.addItem(usuarioAux)
 
                         }

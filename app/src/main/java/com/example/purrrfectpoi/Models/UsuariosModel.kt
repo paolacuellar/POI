@@ -35,6 +35,12 @@ class UsuariosModel {
             this.Nombre = Encrypt.decrypt(this.Nombre).toString()
             this.ApPaterno = Encrypt.decrypt(this.ApPaterno).toString()
             this.ApMaterno = Encrypt.decrypt(this.ApMaterno).toString()
+
+            this.Nombre = this.Nombre.replace("\n", "");
+
+            this.ApPaterno = this.ApPaterno.replace("\n", "");
+
+            this.ApMaterno = this.ApMaterno.replace("\n", "");
         }
     }
 }

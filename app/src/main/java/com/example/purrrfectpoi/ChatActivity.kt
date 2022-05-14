@@ -22,6 +22,7 @@ import androidx.documentfile.provider.DocumentFile
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.purrrfectpoi.Models.MensajesModel
+import com.example.purrrfectpoi.Models.UsuariosModel
 import com.example.purrrfectpoi.adapters.ChatAdapter
 import com.google.firebase.Timestamp
 import com.google.firebase.firestore.DocumentReference
@@ -159,13 +160,14 @@ class ChatActivity : AppCompatActivity() {
         db.collection("Usuarios").document(chatTo!!).get()
             .addOnSuccessListener { responseUsuario ->
 
-                var username : String = ""
-                if (responseUsuario.get("Nombre") != null) {
-                    username = responseUsuario.get("Nombre") as String + " "
-                }
-                if (responseUsuario.get("ApPaterno") != null) {
-                    username += responseUsuario.get("ApPaterno") as String
-                }
+                var userAux = UsuariosModel()
+                userAux.Nombre = if(responseUsuario.get("Nombre") != null)    responseUsuario.get("Nombre") as String else ""
+                userAux.ApPaterno =  if(responseUsuario.get("ApPaterno") != null) responseUsuario.get("ApPaterno") as String else ""
+                userAux.Ecriptado = if(responseUsuario.get("Ecriptado") != null) responseUsuario.get("Ecriptado") as Boolean else false
+                userAux.DesencriptarInfo()
+
+                var username = userAux.Nombre + " " + userAux.ApPaterno
+
                 txtUsername?.text = username
 
             }

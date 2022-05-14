@@ -81,6 +81,10 @@ class GroupMembersFragment:Fragment() {
                             usuarioProfile.ApMaterno = if (responseUsuario.get("ApMaterno") != null) responseUsuario.get("ApMaterno") as String else ""
                             usuarioProfile.Foto = if (responseUsuario.get("Foto") != null) responseUsuario.get("Foto") as String else ""
 
+                            usuarioProfile.Ecriptado = if(responseUsuario.get("Ecriptado") != null) responseUsuario.get("Ecriptado") as Boolean else false
+
+                            usuarioProfile.DesencriptarInfo()
+
                             miembrosGrupoAdapter.addItem(usuarioProfile)
                         }
                     }

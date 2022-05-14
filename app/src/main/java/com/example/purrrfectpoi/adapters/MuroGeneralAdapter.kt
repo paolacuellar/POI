@@ -6,6 +6,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.purrrfectpoi.Models.PublicacionesModel
+import com.example.purrrfectpoi.Models.UsuariosModel
 import com.example.purrrfectpoi.R
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
@@ -64,9 +65,9 @@ class MuroGeneralAdapter(val posts: MutableList<PublicacionesModel>) : RecyclerV
 
             FirebaseFirestore.getInstance().collection("Usuarios").document(Post.Creador!!.id)
                 .get()
-                .addOnSuccessListener { responseUser ->
+                .addOnSuccessListener { responseUsuario ->
 
-                    Post.FotoCreador = responseUser.get("Foto") as String
+                    Post.FotoCreador = responseUsuario.get("Foto") as String
                     if (Post.FotoCreador.isNotEmpty()) {
                         FirebaseStorage.getInstance().getReference("images/Usuarios/${Post.FotoCreador}").downloadUrl
                             .addOnSuccessListener {
@@ -79,12 +80,13 @@ class MuroGeneralAdapter(val posts: MutableList<PublicacionesModel>) : RecyclerV
                         view.chatUserImage!!.setImageResource(R.drawable.foto_default_perfil)
                     }
 
-                    if (responseUser.get("Nombre") != null){
-                        Post.NombreCreador = responseUser.get("Nombre") as String
-                    }
-                    if (responseUser.get("ApPaterno") != null){
-                        Post.NombreCreador += " " + responseUser.get("ApPaterno") as String
-                    }
+                    var userAux = UsuariosModel()
+                    userAux.Nombre = if(responseUsuario.get("Nombre") != null)    responseUsuario.get("Nombre") as String else ""
+                    userAux.ApPaterno =  if(responseUsuario.get("ApPaterno") != null) responseUsuario.get("ApPaterno") as String else ""
+                    userAux.Ecriptado = if(responseUsuario.get("Ecriptado") != null) responseUsuario.get("Ecriptado") as Boolean else false
+                    userAux.DesencriptarInfo()
+
+                    Post.NombreCreador = userAux.Nombre + " " + userAux.ApPaterno
                     view.chatNameText.setText(Post.NombreCreador)
                     view.textView.setText(Post.Texto)
 

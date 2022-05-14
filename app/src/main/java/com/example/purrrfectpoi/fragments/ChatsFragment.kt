@@ -127,6 +127,10 @@ class ChatsFragment: Fragment() {
                                     userAux.Foto = if(responseUsuario.get("Foto") != null)      responseUsuario.get("Foto") as String else ""
                                     userAux.Conectado = responseUsuario.get("Conectado") as Boolean
 
+                                    userAux.Ecriptado = if(responseUsuario.get("Ecriptado") != null) responseUsuario.get("Ecriptado") as Boolean else false
+
+                                    userAux.DesencriptarInfo()
+
                                     usersParam.add(userAux)
                                     arrayChats.add(chatAux.id)
                                     chatsUsuariosAdapter.addItem(userAux)
@@ -220,6 +224,8 @@ class ChatsFragment: Fragment() {
                                     userAux.ApPaterno = if (responseUser.get("ApPaterno") != null) responseUser.get("ApPaterno") as String else ""
                                     userAux.ApMaterno = if (responseUser.get("ApMaterno") != null) responseUser.get("ApMaterno") as String else ""
                                     userAux.Foto = if (responseUser.get("Foto") != null) responseUser.get("Foto") as String else ""
+                                    userAux.Ecriptado = if(responseUsuario.get("Ecriptado") != null) responseUsuario.get("Ecriptado") as Boolean else false
+                                    userAux.DesencriptarInfo()
 
                                     if (userAux.Nombre.lowercase().contains(busqueda.lowercase()) ||
                                         userAux.ApPaterno.lowercase().contains(busqueda.lowercase())) {

@@ -65,71 +65,99 @@ class MuroFragment: Fragment() {
     }
 
     private fun setUpRecyclerView() {
-        FirebaseFirestore.getInstance().collection("Usuarios").document(DataManager.emailUsuario!!)
-            .get()
-            .addOnSuccessListener { responseUsuario ->
+        if (DataManager.emailUsuario != null) {
+            FirebaseFirestore.getInstance().collection("Usuarios")
+                .document(DataManager.emailUsuario!!)
+                .get()
+                .addOnSuccessListener { responseUsuario ->
 
-                var postsParam : MutableList<PublicacionesModel> = mutableListOf()
-                muroGeneralAdapter = MuroGeneralAdapter(postsParam)
-                recyclerViewMuro.apply {
-                    adapter = muroGeneralAdapter
-                    layoutManager = LinearLayoutManager(context)
-                }
-                muroGeneralAdapter.setOnItemClickListener(object : MuroGeneralAdapter.onItemClickListener{
-                    override fun onItemClick(position: Int) {
-
-                        val intent = Intent(activity, PostActivity::class.java)
-                        intent.putExtra("IdPost", postsParam[position].id)
-                        startActivity(intent)
-
+                    var postsParam: MutableList<PublicacionesModel> = mutableListOf()
+                    muroGeneralAdapter = MuroGeneralAdapter(postsParam)
+                    recyclerViewMuro.apply {
+                        adapter = muroGeneralAdapter
+                        layoutManager = LinearLayoutManager(context)
                     }
-                })
+                    muroGeneralAdapter.setOnItemClickListener(object :
+                        MuroGeneralAdapter.onItemClickListener {
+                        override fun onItemClick(position: Int) {
 
-                var documentReferenceCarrera = responseUsuario.get("Carrera") as DocumentReference
-
-                FirebaseFirestore.getInstance().collection("Carrera").document(documentReferenceCarrera.id)
-                    .get()
-                    .addOnSuccessListener { responseCarrera ->
-
-                        idCarrera = responseCarrera.id
-                        var posts = responseCarrera.get("Publicaciones") as ArrayList<DocumentReference>
-
-                        for (post in posts) {
-
-                            FirebaseFirestore.getInstance().collection("Publicaciones")
-                                .document(post.id)
-                                .get()
-                                .addOnSuccessListener { responsePost ->
-
-                                    var postAux = PublicacionesModel()
-                                    postAux.id = responsePost.id
-                                    postAux.Texto = if(responsePost.get("Texto") != null)    responsePost.get("Texto") as String else ""
-                                    postAux.Foto = if(responsePost.get("Foto") != null)    responsePost.get("Foto") as String else ""
-                                    postAux.Creador = responsePost.get("Creador") as DocumentReference
-                                    postAux.FechaCreacion = responsePost.get("FechaCreacion") as Timestamp
-                                    postAux.Editado = responsePost.get("Editado") as Boolean
-                                    postAux.Latitud = if(responsePost.get("Latitud") != null)    responsePost.get("Latitud") as String else ""
-                                    postAux.Longitud = if(responsePost.get("Longitud") != null)    responsePost.get("Longitud") as String else ""
-
-                                    postsParam.add(postAux)
-                                    muroGeneralAdapter.addItem(postAux)
-
-                                }
-                                .addOnFailureListener { exception ->
-                                    Log.w(ContentValues.TAG, "Error consiguiendo la Publicacion", exception)
-                                }
+                            val intent = Intent(activity, PostActivity::class.java)
+                            intent.putExtra("IdPost", postsParam[position].id)
+                            startActivity(intent)
 
                         }
+                    })
 
-                    }
-                    .addOnFailureListener { exception ->
-                        Log.w(ContentValues.TAG, "Error consiguiendo la Carrera del Usuario", exception)
-                    }
+                    var documentReferenceCarrera =
+                        responseUsuario.get("Carrera") as DocumentReference
 
-            }
-            .addOnFailureListener { exception ->
-                Log.w(ContentValues.TAG, "Error consiguiendo el Usuario", exception)
-            }
+                    FirebaseFirestore.getInstance().collection("Carrera")
+                        .document(documentReferenceCarrera.id)
+                        .get()
+                        .addOnSuccessListener { responseCarrera ->
+
+                            idCarrera = responseCarrera.id
+                            var posts =
+                                responseCarrera.get("Publicaciones") as ArrayList<DocumentReference>
+
+                            for (post in posts) {
+
+                                FirebaseFirestore.getInstance().collection("Publicaciones")
+                                    .document(post.id)
+                                    .get()
+                                    .addOnSuccessListener { responsePost ->
+
+                                        var postAux = PublicacionesModel()
+                                        postAux.id = responsePost.id
+                                        postAux.Texto =
+                                            if (responsePost.get("Texto") != null) responsePost.get(
+                                                "Texto"
+                                            ) as String else ""
+                                        postAux.Foto =
+                                            if (responsePost.get("Foto") != null) responsePost.get("Foto") as String else ""
+                                        postAux.Creador =
+                                            responsePost.get("Creador") as DocumentReference
+                                        postAux.FechaCreacion =
+                                            responsePost.get("FechaCreacion") as Timestamp
+                                        postAux.Editado = responsePost.get("Editado") as Boolean
+                                        postAux.Latitud =
+                                            if (responsePost.get("Latitud") != null) responsePost.get(
+                                                "Latitud"
+                                            ) as String else ""
+                                        postAux.Longitud =
+                                            if (responsePost.get("Longitud") != null) responsePost.get(
+                                                "Longitud"
+                                            ) as String else ""
+
+                                        postsParam.add(postAux)
+                                        muroGeneralAdapter.addItem(postAux)
+
+                                    }
+                                    .addOnFailureListener { exception ->
+                                        Log.w(
+                                            ContentValues.TAG,
+                                            "Error consiguiendo la Publicacion",
+                                            exception
+                                        )
+                                    }
+
+                            }
+
+                        }
+                        .addOnFailureListener { exception ->
+                            Log.w(
+                                ContentValues.TAG,
+                                "Error consiguiendo la Carrera del Usuario",
+                                exception
+                            )
+                        }
+
+                }
+                .addOnFailureListener { exception ->
+                    Log.w(ContentValues.TAG, "Error consiguiendo el Usuario", exception)
+                }
+
+        }
 
     }
 

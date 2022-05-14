@@ -63,35 +63,37 @@ class GruposFragment: Fragment() {
     }
 
     private fun setUpRecyclerView() {
-        var documentReferenceUserLogged = FirebaseFirestore.getInstance().collection("Usuarios").document(DataManager.emailUsuario!!)
+        if (DataManager.emailUsuario != null) {
+            var documentReferenceUserLogged = FirebaseFirestore.getInstance().collection("Usuarios")
+                .document(DataManager.emailUsuario!!)
 
-        FirebaseFirestore.getInstance().collection("Grupos")
-            .whereArrayContains("Miembros", documentReferenceUserLogged)
-            .get()
-            .addOnSuccessListener { responseGrupos ->
+            FirebaseFirestore.getInstance().collection("Grupos")
+                .whereArrayContains("Miembros", documentReferenceUserLogged)
+                .get()
+                .addOnSuccessListener { responseGrupos ->
 
-                var gruposParam : MutableList<GruposModel> = mutableListOf()
+                    var gruposParam: MutableList<GruposModel> = mutableListOf()
 
-                for (responseGrupo in responseGrupos) {
-                    var grupoAux = GruposModel()
-                    grupoAux.id = responseGrupo.id
-                    grupoAux.Nombre = responseGrupo.data.get("Nombre") as String
-                    grupoAux.Foto = responseGrupo.data.get("Foto") as String
-                    grupoAux.Creador = if(responseGrupo.get("Creador") != null) responseGrupo.get("Creador") as DocumentReference else null
-                    //grupoAux.Conversacion =  if(responseGrupo.data.get("Conversacion") != null)    responseGrupo.data.get("Conversacion") as DocumentReference else null
-                    gruposParam.add(grupoAux)
+                    for (responseGrupo in responseGrupos) {
+                        var grupoAux = GruposModel()
+                        grupoAux.id = responseGrupo.id
+                        grupoAux.Nombre = responseGrupo.data.get("Nombre") as String
+                        grupoAux.Foto = responseGrupo.data.get("Foto") as String
+                        grupoAux.Creador = if (responseGrupo.get("Creador") != null) responseGrupo.get("Creador") as DocumentReference else null
+                        //grupoAux.Conversacion =  if(responseGrupo.data.get("Conversacion") != null)    responseGrupo.data.get("Conversacion") as DocumentReference else null
+                        gruposParam.add(grupoAux)
+                    }
+
+                    //TODO: LA IDEA AQUI ES MANDAR grupos POR PARAMETRO, PERO NO SE PUEDE CASTEAR, POR LO QUE SE crea grupoAux
+                    gruposAdapter = GruposAdapter(gruposParam)
+                    recyclerViewGrupos.apply {
+                        adapter = gruposAdapter
+                        layoutManager = LinearLayoutManager(context)
+                    }
                 }
-
-                //TODO: LA IDEA AQUI ES MANDAR grupos POR PARAMETRO, PERO NO SE PUEDE CASTEAR, POR LO QUE SE crea grupoAux
-                gruposAdapter = GruposAdapter(gruposParam)
-                recyclerViewGrupos.apply {
-                    adapter = gruposAdapter
-                    layoutManager = LinearLayoutManager(context)
+                .addOnFailureListener { exception ->
+                    Log.w(TAG, "Error consiguiendo los Grupos", exception)
                 }
-            }
-            .addOnFailureListener { exception ->
-                Log.w(TAG, "Error consiguiendo los Grupos", exception)
-            }
+        }
     }
-
 }
