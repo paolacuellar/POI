@@ -152,9 +152,6 @@ class RegisterActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener
             if(authRegister.Email.isEmpty()){
                 editTextEmail?.setError("Inserte un correo valido")
             }
-            else{
-                //TODO: HAY QUE VALIDAR SI EL CORREO ESTA REPETIDO? O YA QUE FIREBASE LO HAGA POR NOSOTROS?
-            }
             if(authRegister.Password.isEmpty()){
                 editTextPassword?.setError("Campo vacio")
             }
@@ -255,7 +252,7 @@ class RegisterActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener
     }
 
     override fun onNothingSelected(p0: AdapterView<*>?) {
-        TODO("Not yet implemented")
+        //TODO("Not yet implemented")
     }
 
 

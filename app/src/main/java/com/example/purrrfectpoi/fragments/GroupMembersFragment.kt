@@ -17,6 +17,7 @@ import com.example.purrrfectpoi.adapters.UsuariosChatsAdapter
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FieldPath
 import com.google.firebase.firestore.FirebaseFirestore
+import com.psm.hiring.Utils.DataManager
 
 class GroupMembersFragment:Fragment() {
 
@@ -67,53 +68,38 @@ class GroupMembersFragment:Fragment() {
 
                 var arrayMiembrosGrupo = if(responseGrupo.get("Miembros") != null) responseGrupo.get("Miembros") as ArrayList<DocumentReference> else null
 
-                //TODO: PARECE QUE EL "whereIn" NOMAS JALA CON 10 USUARIOS, SI ES ASÍ DEBERE HACER UN CICLO FOR DE CONSULTAS, O DEBERE MANEJARLO DE OTRA MANERA?
-                FirebaseFirestore.getInstance().collection("Usuarios")
-                    .whereIn(FieldPath.documentId(), arrayMiembrosGrupo!!)
-                    .get()
-                    .addOnSuccessListener { responseUsuarios ->
-                        for (responseUsuario in responseUsuarios!!) {
-                            var usuarioProfile = UsuariosModel()
 
-                            usuarioProfile.Email = responseUsuario.id
-                            usuarioProfile.Nombre = if (responseUsuario.get("Nombre") != null) responseUsuario.get("Nombre") as String else ""
-                            usuarioProfile.ApPaterno = if (responseUsuario.get("ApPaterno") != null) responseUsuario.get("ApPaterno") as String else ""
-                            usuarioProfile.ApMaterno = if (responseUsuario.get("ApMaterno") != null) responseUsuario.get("ApMaterno") as String else ""
-                            usuarioProfile.Foto = if (responseUsuario.get("Foto") != null) responseUsuario.get("Foto") as String else ""
+                if (arrayMiembrosGrupo != null) {
+                    for (miembro in arrayMiembrosGrupo) {
 
-                            usuarioProfile.Ecriptado = if(responseUsuario.get("Ecriptado") != null) responseUsuario.get("Ecriptado") as Boolean else false
+                        FirebaseFirestore.getInstance().collection("Usuarios")
+                            .document(miembro.id)
+                            .get()
+                            .addOnSuccessListener { responseUsuario ->
 
-                            usuarioProfile.DesencriptarInfo()
+                                var usuarioAux = UsuariosModel()
 
-                            miembrosGrupoAdapter.addItem(usuarioProfile)
-                        }
+                                if (responseUsuario.id != DataManager.emailUsuario) {
+                                    usuarioAux.Email = responseUsuario.id
+                                    usuarioAux.Nombre = responseUsuario.data?.get("Nombre") as String
+                                    usuarioAux.Nombre = responseUsuario.data?.get("Nombre") as String
+                                    usuarioAux.Foto = responseUsuario.data?.get("Foto") as String
+
+                                    usuarioAux.Ecriptado = if(responseUsuario.get("Ecriptado") != null) responseUsuario.get("Ecriptado") as Boolean else false
+                                    usuarioAux.DesencriptarInfo()
+
+                                    miembrosGrupoAdapter.addItem(usuarioAux)
+
+                                }
+
+                            }
+                            .addOnFailureListener { exception ->
+                                Log.w(TAG, "Error al conseguir la información del Usuario", exception)
+                            }
+
                     }
-                    .addOnFailureListener { exception ->
-                        Log.w(TAG, "Error al conseguir la información del Usuario", exception)
-                    }
-
-
-
-                /*
-                for (miembroGrupo in arrayMiembrosGrupo!!) {
-                    FirebaseFirestore.getInstance().collection("Usuarios").document(miembroGrupo.id).get()
-                        .addOnSuccessListener { responseUsuario ->
-
-                            var usuarioProfile = UsuariosModel()
-
-                            usuarioProfile.Email = responseUsuario.id
-                            usuarioProfile.Nombre =     if(responseUsuario.get("Nombre") != null)    responseUsuario.get("Nombre") as String else ""
-                            usuarioProfile.ApPaterno =  if(responseUsuario.get("ApPaterno") != null) responseUsuario.get("ApPaterno") as String else ""
-                            usuarioProfile.ApMaterno =  if(responseUsuario.get("ApMaterno") != null) responseUsuario.get("ApMaterno") as String else ""
-                            usuarioProfile.Foto =       if(responseUsuario.get("Foto") != null)      responseUsuario.get("Foto") as String else ""
-
-                            miembrosGrupoAdapter.addItem(usuarioProfile)
-                        }
-                        .addOnFailureListener { exception ->
-                            Log.w(TAG, "Error al conseguir la información del Usuario", exception)
-                        }
                 }
-                */
+
             }
             .addOnFailureListener { exception ->
                 Log.w(ContentValues.TAG, "Error consiguiendo los Grupos", exception)

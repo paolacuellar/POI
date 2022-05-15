@@ -84,7 +84,6 @@ class GruposFragment: Fragment() {
                         gruposParam.add(grupoAux)
                     }
 
-                    //TODO: LA IDEA AQUI ES MANDAR grupos POR PARAMETRO, PERO NO SE PUEDE CASTEAR, POR LO QUE SE crea grupoAux
                     gruposAdapter = GruposAdapter(gruposParam)
                     recyclerViewGrupos.apply {
                         adapter = gruposAdapter

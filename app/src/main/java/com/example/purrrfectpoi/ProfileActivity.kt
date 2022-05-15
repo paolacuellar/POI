@@ -318,7 +318,6 @@ class ProfileActivity : AppCompatActivity() {
 
                 var listaMedallas : MutableList<MedallasModel> = mutableListOf()
 
-                //TODO: VALIDAR QUE SI EL USUARIO YA TIENE LA MEDALLA O NO
                 for (responseMedalla in responseMedallas) {
                     var medallaAux = MedallasModel()
                     medallaAux.id = responseMedalla.id

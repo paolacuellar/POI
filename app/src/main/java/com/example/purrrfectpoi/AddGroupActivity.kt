@@ -1,6 +1,7 @@
 package com.example.purrrfectpoi
 
 import android.app.Activity
+import android.content.ContentValues
 import android.content.ContentValues.TAG
 import android.content.Intent
 import android.net.Uri
@@ -14,9 +15,11 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.purrrfectpoi.Models.GruposModel
+import com.example.purrrfectpoi.Models.PublicacionesModel
 import com.example.purrrfectpoi.Models.UsuariosModel
 import com.example.purrrfectpoi.adapters.UsuariosGruposAdapter
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.google.firebase.Timestamp
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FieldPath
 import com.google.firebase.firestore.FirebaseFirestore
@@ -115,7 +118,6 @@ class AddGroupActivity : AppCompatActivity() {
 
             .addOnSuccessListener {
 
-                //TODO: NO ES TAN NECESARIO TRAERNOS LA INFO DE "CONVERSACION" Y "TAREAS", ESTA BIEN DE TODOS MODOS TRAERLA?
                 grupoCreado.id = grupoId
                 grupoCreado.Nombre = if(it.get("Nombre") != null) it.get("Nombre") as String else ""
                 grupoCreado.Descripcion = if(it.get("Descripcion") != null) it.get("Descripcion") as String else ""
@@ -154,20 +156,20 @@ class AddGroupActivity : AppCompatActivity() {
 
         if (grupoCreado.Miembros.isNotEmpty()) {
 
-            //TODO: PARECE QUE EL "whereIn" NOMAS JALA CON 10 USUARIOS, SI ES ASÍ DEBERE HACER UN CICLO FOR DE CONSULTAS, O DEBERE MANEJARLO DE OTRA MANERA?
-            FirebaseFirestore.getInstance().collection("Usuarios")
-                .whereIn(FieldPath.documentId(), grupoCreado.Miembros)
-                .get()
-                .addOnSuccessListener { responseUsuarios ->
+            for (miembro in grupoCreado.Miembros) {
 
-                    for (responseUsuario in responseUsuarios) {
+                FirebaseFirestore.getInstance().collection("Usuarios")
+                    .document(miembro.id)
+                    .get()
+                    .addOnSuccessListener { responseUsuario ->
+
                         var usuarioAux = UsuariosModel()
 
                         if (responseUsuario.id != DataManager.emailUsuario) {
                             usuarioAux.Email = responseUsuario.id
-                            usuarioAux.Nombre = responseUsuario.data.get("Nombre") as String
-                            usuarioAux.Nombre = responseUsuario.data.get("Nombre") as String
-                            usuarioAux.Foto = responseUsuario.data.get("Foto") as String
+                            usuarioAux.Nombre = responseUsuario.data?.get("Nombre") as String
+                            usuarioAux.Nombre = responseUsuario.data?.get("Nombre") as String
+                            usuarioAux.Foto = responseUsuario.data?.get("Foto") as String
 
                             usuarioAux.Ecriptado = if(responseUsuario.get("Ecriptado") != null) responseUsuario.get("Ecriptado") as Boolean else false
                             usuarioAux.DesencriptarInfo()
@@ -175,14 +177,13 @@ class AddGroupActivity : AppCompatActivity() {
                             usuariosAdapter.addItem(usuarioAux)
 
                         }
+
+                    }
+                    .addOnFailureListener { exception ->
+                        Log.w(TAG, "Error al conseguir los usuarios del grupo", exception)
                     }
 
-
-
-                }
-                .addOnFailureListener { exception ->
-                    Log.w(TAG, "Error al conseguir los usuarios del grupo", exception)
-                }
+            }
         }
 
 
@@ -262,7 +263,6 @@ class AddGroupActivity : AppCompatActivity() {
             listaMiembros = usuariosAdapter.listaUsuariosGrupo
 
 
-        //TODO: AGREGAR VALIDACION DE QUE LA LISTA DE USUARIOS DEBE SER MAYOR A 5
         if(     grupoCreado.Nombre.isEmpty()
             ||  grupoCreado.Descripcion.isEmpty()
             ||  listaMiembros!!.count() < 5
@@ -311,7 +311,6 @@ class AddGroupActivity : AppCompatActivity() {
 
 
     private fun crearGrupo(){
-        //TODO: AGREGAR CODIGO PARA INCREMENTAR EL NUMERO DE GRUPOS CREADOS EN EL USUARIO
 
         grupoCreado.Foto = UUID.randomUUID().toString() + ".jpg"
         var pathImage = "images/Grupos/${grupoCreado.Foto}"

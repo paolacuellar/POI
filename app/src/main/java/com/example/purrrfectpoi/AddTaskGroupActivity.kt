@@ -82,7 +82,6 @@ class AddTaskGroupActivity : AppCompatActivity() {
 
             .addOnSuccessListener {
 
-                //TODO: NO ES TAN NECESARIO TRAERNOS LA INFO DE "CONVERSACION" Y "TAREAS", ESTA BIEN DE TODOS MODOS TRAERLA?
                 tareaCreada.id = this.tareaId!!
                 tareaCreada.Nombre = if(it.get("Nombre") != null) it.get("Nombre") as String else ""
                 tareaCreada.Descripcion = if(it.get("Descripcion") != null) it.get("Descripcion") as String else ""
