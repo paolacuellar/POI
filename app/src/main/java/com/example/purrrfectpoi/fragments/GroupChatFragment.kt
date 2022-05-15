@@ -28,10 +28,7 @@ import com.example.purrrfectpoi.Models.MensajesModel
 import com.example.purrrfectpoi.R
 import com.example.purrrfectpoi.adapters.GroupChatAdapter
 import com.google.firebase.Timestamp
-import com.google.firebase.firestore.DocumentReference
-import com.google.firebase.firestore.FieldValue
-import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.Query
+import com.google.firebase.firestore.*
 import com.google.firebase.storage.FirebaseStorage
 import com.psm.hiring.Utils.DataManager
 import java.util.*
@@ -50,7 +47,15 @@ class GroupChatFragment:Fragment() {
     var idGrupo : String? = null;
     var idGroupChat : String? = null;
 
-    private lateinit var db : FirebaseFirestore
+
+    val FS = FirebaseFirestoreSettings.Builder()
+        .setPersistenceEnabled(true)
+        .build()
+
+    private var db : FirebaseFirestore = FirebaseFirestore.getInstance().apply {
+        this.firestoreSettings = FS
+    }
+    
     private lateinit var documentReferenceUserLogged : DocumentReference
 
     override fun onCreateView(
@@ -94,7 +99,6 @@ class GroupChatFragment:Fragment() {
     }
 
     private fun updateChat() {
-        db = FirebaseFirestore.getInstance()
         db.collection("Grupos").document(idGrupo!!)
             .get()
             .addOnSuccessListener { responseGrupo ->
@@ -102,33 +106,45 @@ class GroupChatFragment:Fragment() {
                 if (responseGrupo.get("Conversacion") != null) {
 
                     var idChatGrupo = responseGrupo.get("Conversacion") as DocumentReference
-                    db.collection("Conversacion").document(idChatGrupo.id).collection("Mensajes")
-                        .addSnapshotListener { snapshot, e ->
 
-                            if  (e != null) {
-                                return@addSnapshotListener
-                            }
+                    db.enableNetwork().addOnCompleteListener {
 
-                            if (snapshot != null) {
-                                for (doc in snapshot) {
-                                    if (doc.get("FechaCreacion") != null) {
-                                        var msgAux = MensajesModel()
-                                        msgAux.id = doc.id
-                                        msgAux.Texto = if (doc.get("Texto") != null)    doc.get("Texto") as String else ""
-                                        msgAux.Autor = doc.get("Autor") as DocumentReference
-                                        msgAux.Foto = if(doc.get("Foto") != null)    doc.get("Foto") as String else ""
-                                        msgAux.Documento = if(doc.get("Documento") != null)    doc.get("Documento") as String else ""
-                                        msgAux.NombreDocumento = if(doc.get("NombreDocumento") != null)    doc.get("NombreDocumento") as String else ""
-                                        msgAux.Latitud = if(doc.get("Latitud") != null)    doc.get("Latitud") as String else ""
-                                        msgAux.Longitud = if(doc.get("Longitud") != null)    doc.get("Longitud") as String else ""
-                                        msgAux.FechaCreacion = doc.get("FechaCreacion") as Timestamp
+                        db.collection("Conversacion").document(idChatGrupo.id)
+                            .collection("Mensajes")
+                            .addSnapshotListener { snapshot, e ->
 
-                                        groupChatAdapter.addItem(msgAux)
+                                if (e != null) {
+                                    return@addSnapshotListener
+                                }
+
+                                if (snapshot != null) {
+                                    for (doc in snapshot) {
+                                        if (doc.get("FechaCreacion") != null) {
+                                            var msgAux = MensajesModel()
+                                            msgAux.id = doc.id
+                                            msgAux.Texto =
+                                                if (doc.get("Texto") != null) doc.get("Texto") as String else ""
+                                            msgAux.Autor = doc.get("Autor") as DocumentReference
+                                            msgAux.Foto =
+                                                if (doc.get("Foto") != null) doc.get("Foto") as String else ""
+                                            msgAux.Documento =
+                                                if (doc.get("Documento") != null) doc.get("Documento") as String else ""
+                                            msgAux.NombreDocumento =
+                                                if (doc.get("NombreDocumento") != null) doc.get("NombreDocumento") as String else ""
+                                            msgAux.Latitud =
+                                                if (doc.get("Latitud") != null) doc.get("Latitud") as String else ""
+                                            msgAux.Longitud =
+                                                if (doc.get("Longitud") != null) doc.get("Longitud") as String else ""
+                                            msgAux.FechaCreacion =
+                                                doc.get("FechaCreacion") as Timestamp
+
+                                            groupChatAdapter.addItem(msgAux)
+                                        }
                                     }
                                 }
-                            }
 
-                        }
+                            }
+                    }
 
                 }
 
@@ -167,7 +183,7 @@ class GroupChatFragment:Fragment() {
             }
         })
 
-        db = FirebaseFirestore.getInstance()
+        
         db.collection("Grupos").document(idGrupo!!)
             .get()
             .addOnSuccessListener { responseGrupo ->
@@ -189,7 +205,7 @@ class GroupChatFragment:Fragment() {
         } else {
             txtMsg?.setText("")
 
-            db = FirebaseFirestore.getInstance()
+            
             db.collection("Grupos").document(idGrupo!!)
                 .get()
                 .addOnSuccessListener { responseGrupo ->
@@ -276,7 +292,7 @@ class GroupChatFragment:Fragment() {
             imageRef.putFile(filepath)
                 .addOnSuccessListener { responseImageUpload ->
 
-                    db = FirebaseFirestore.getInstance()
+                    
                     db.collection("Conversacion").document(idGroupChat!!).collection("Mensajes")
                         .add(
                             hashMapOf(
@@ -292,7 +308,7 @@ class GroupChatFragment:Fragment() {
             var lat = data.getStringExtra("Latitud")
             var lon = data.getStringExtra("Longitud")
 
-            db = FirebaseFirestore.getInstance()
+            
             db.collection("Conversacion").document(idGroupChat!!).collection("Mensajes")
                 .add(
                     hashMapOf(
@@ -313,7 +329,7 @@ class GroupChatFragment:Fragment() {
             fileRef.putFile(filepath)
                 .addOnSuccessListener { responseFileUpload ->
 
-                    db = FirebaseFirestore.getInstance()
+                    
                     db.collection("Conversacion").document(idGroupChat!!).collection("Mensajes")
                         .add(
                             hashMapOf(

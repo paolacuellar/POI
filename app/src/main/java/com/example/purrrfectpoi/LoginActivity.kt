@@ -12,6 +12,7 @@ import android.widget.TextView
 import com.example.purrrfectpoi.Models.AuthModel
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.FirebaseFirestoreSettings
 import com.psm.hiring.Utils.DataManager
 import kotlin.system.exitProcess
 
