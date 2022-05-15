@@ -223,6 +223,7 @@ class GroupChatAdapter(val chatMsgs: MutableList<MensajesModel>) : RecyclerView.
                         else if (Msg.Documento.isNotEmpty()) {
 
                             view.otherMessageContentDocument.visibility = View.VISIBLE
+                            view.otherMessageContentDocument_tv_nameUserMessage.setText(username)
                             view.otherArchiveName.setText(Msg.NombreDocumento)
                             view.otherMessageContentDocument_tv_otherdate.setText(Msg.FechaCreacion?.toDate().toString())
                             if (Msg.FotoPerfil.isNotEmpty()) {

@@ -67,7 +67,22 @@ class UsuariosChatsAdapter(val userChats: MutableList<UsuariosModel>, val button
     class UsuariosChatsViewHolder(val view: View, listener: onItemClickListener): RecyclerView.ViewHolder(view){
         fun render(UserChat: UsuariosModel, position: Int){
 
-            view.statusTextView.setText(if (UserChat.Conectado) "Conectado" else "Desconectado")
+            FirebaseFirestore.getInstance().collection("Usuarios").document(UserChat.Email)
+                .addSnapshotListener { snapshot, e ->
+                    if  (e != null) {
+                        return@addSnapshotListener
+                    }
+                    if (snapshot != null) {
+                        val isConnected = snapshot.get("Conectado") as Boolean
+                        if (isConnected) {
+                            view.statusTextView.setText("Conectado")
+                        }
+                        else {
+                            view.statusTextView.setText("Desconectado")
+                        }
+                    }
+                }
+
             view.chatNameText.setText(if (!UserChat.Nombre.isEmpty()) UserChat.Nombre + " " + UserChat.ApPaterno else "Error")
             if (UserChat.Foto.isNotEmpty()) {
                 FirebaseStorage.getInstance().getReference("images/Usuarios/${UserChat.Foto}").downloadUrl

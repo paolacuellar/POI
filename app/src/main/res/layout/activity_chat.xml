@@ -53,21 +53,22 @@
         android:layout_height="0dp"
         android:layout_marginStart="21dp"
         android:layout_marginEnd="21dp"
-        app:layout_constraintBottom_toTopOf="@+id/constraintLayout2"
+        app:layout_constraintBottom_toTopOf="@+id/gridLayout3"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/toolbar"
         tools:listitem="@layout/item_message" />
 
     <GridLayout
+        android:id="@+id/gridLayout3"
         android:layout_width="match_parent"
         android:layout_height="98dp"
+        android:layout_marginStart="21dp"
+        android:layout_marginEnd="21dp"
         android:alignmentMode="alignMargins"
         android:columnCount="3"
         android:columnOrderPreserved="false"
         android:rowCount="1"
-        android:layout_marginStart="21dp"
-        android:layout_marginEnd="21dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/constraintLayout2"
         app:layout_constraintStart_toStartOf="parent">
@@ -97,13 +98,14 @@
                 app:iconTint="@color/coffee"
                 tools:ignore="TouchTargetSizeCheck" />
         </LinearLayout>
+
         <LinearLayout
             android:layout_width="118dp"
             android:layout_height="match_parent"
-            android:background="@drawable/search_background"
             android:layout_marginLeft="-10dp"
+            android:background="@drawable/search_background"
 
-           >
+            >
 
             <Button
                 android:id="@+id/sendDocumentButton"
@@ -123,12 +125,12 @@
                 app:iconTint="@color/coffee"
                 tools:ignore="TouchTargetSizeCheck" />
         </LinearLayout>
+
         <LinearLayout
             android:layout_width="118dp"
             android:layout_height="match_parent"
-            android:background="@drawable/search_background"
             android:layout_marginLeft="-10dp"
-            >
+            android:background="@drawable/search_background">
 
             <Button
                 android:id="@+id/sendLocationButton"
