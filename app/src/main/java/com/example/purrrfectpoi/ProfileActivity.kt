@@ -23,8 +23,7 @@ import com.google.firebase.storage.FirebaseStorage
 import com.psm.hiring.Utils.DataManager
 import java.util.*
 import android.widget.CompoundButton
-
-
+import androidx.recyclerview.widget.GridLayoutManager
 
 
 class ProfileActivity : AppCompatActivity() {
@@ -340,7 +339,7 @@ class ProfileActivity : AppCompatActivity() {
                 medallasAdapter = MedallasAdapter(listaMedallas)
                 recyclerViewMedallas.apply {
                     adapter = medallasAdapter
-                    layoutManager = LinearLayoutManager(context)
+                    layoutManager = GridLayoutManager(context,3)
                 }
             }
             .addOnFailureListener { exception ->
