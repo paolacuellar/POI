@@ -2,6 +2,7 @@ package com.example.purrrfectpoi
 
 import android.app.Activity
 import android.app.DownloadManager
+import android.content.ActivityNotFoundException
 import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
@@ -42,7 +43,8 @@ class TaskActivity : AppCompatActivity() {
     var strFile : String? = null;
 
     var trabajoEntregado = TrabajosModel()
-    
+    var nombreTarea = ""
+
     var btnRegresar : ImageView? = null;
 
     var TaskNameText : TextView? = null;
@@ -58,6 +60,7 @@ class TaskActivity : AppCompatActivity() {
     var AddFileButton : Button? = null;
     var AceptarTareaButton : Button? = null;
     var RechazarTareaButton : Button? = null;
+    var booleanTareaRevisada: Boolean? = null;
 
     private lateinit var recyclerViewFilesTask : RecyclerView
     private lateinit var filesTaskAdapter: TaskFilesAdapter
@@ -167,7 +170,7 @@ class TaskActivity : AppCompatActivity() {
 
             .addOnSuccessListener {
                 
-                val nombreTarea = if(it.get("Nombre") != null) it.get("Nombre") as String else ""
+                nombreTarea = if(it.get("Nombre") != null) it.get("Nombre") as String else ""
                 val descripcionTarea = if(it.get("Descripcion") != null) it.get("Descripcion") as String else ""
                 fechaProgramadaTarea = if(it.get("FechaProgramada") != null) it.get("FechaProgramada") as Timestamp else null
 
@@ -316,24 +319,31 @@ class TaskActivity : AppCompatActivity() {
             studentCanSendTask(true)
 
         }
-        else if (trabajoEntregado.TareaRevisada == null && DataManager.getTimeStamptToday().seconds >= fechaProgramadaTarea!!.seconds){
-            this.TaskCalificacionText?.visibility = View.VISIBLE
-            this.TaskCalificacionText?.text = "Tarea no entregada"
-
-            studentCanSendTask(false)
-        }
         else {
-            this.TaskCalificacionText?.visibility = View.VISIBLE
-            if (trabajoEntregado.TareaRevisada!!) {
-                this.TaskCalificacionText?.text = "Tarea aprobada"
+            if (trabajoEntregado.TareaRevisada == null && DataManager.getTimeStamptToday().seconds >= fechaProgramadaTarea!!.seconds) {
+                this.TaskCalificacionText?.visibility = View.VISIBLE
+                this.TaskCalificacionText?.text = "Tarea no entregada"
+                booleanTareaRevisada = null
+                studentCanSendTask(false)
             } else {
-                this.TaskCalificacionText?.text = "Tarea reprobada"
+                this.TaskCalificacionText?.visibility = View.VISIBLE
+                if (trabajoEntregado.TareaRevisada!!) {
+                    this.TaskCalificacionText?.text = "Tarea aprobada"
+                    booleanTareaRevisada = true
+                } else {
+                    this.TaskCalificacionText?.text = "Tarea reprobada"
+                    booleanTareaRevisada = false
+                }
+
+
+
+                this.AceptarTareaButton?.visibility = View.GONE
+                this.RechazarTareaButton?.visibility = View.GONE
+
+                studentCanSendTask(false)
             }
 
-            this.AceptarTareaButton?.visibility = View.GONE
-            this.RechazarTareaButton?.visibility = View.GONE
 
-            studentCanSendTask(false)
         }
     }
 
@@ -348,12 +358,50 @@ class TaskActivity : AppCompatActivity() {
             ).addOnCompleteListener{
                 if (it.isSuccessful) {
                     showTaskLabelApprobedReject()
+                    sendEmail(booleanTareaRevisada)
                 }
                 else{
                     DataManager.showAlert(this, "Se ha producido un error al editar el trabajo")
                 }
             }
     }
+
+    private fun sendEmail(booleanTareaRevisada : Boolean?){
+        if (booleanTareaRevisada != null && isAuthorTeacher!! == true){
+
+            val emailIntent=Intent(Intent.ACTION_SEND)
+            emailIntent.type="text/html"
+            val autor = trabajoEntregado.Autor!!.id
+            emailIntent.putExtra(Intent.EXTRA_EMAIL, arrayOf(autor))
+
+            var stringAsunto = ""
+            var stringDescripcion = ""
+            if (booleanTareaRevisada) {
+                stringAsunto = "Su tarea de Tea-ms fue revisada y aprobada"
+                stringDescripcion = "La tarea \"${nombreTarea}\" de Tea-ms fue revisada y aprobada"
+            }
+            else{
+                stringAsunto = "Su tarea fue Tea-ms fue revisada y reprobada"
+                stringDescripcion = "La tarea \"${nombreTarea}\"de Tea-ms fue revisada y reprobada"
+            }
+
+            emailIntent.putExtra(Intent.EXTRA_SUBJECT, stringAsunto)
+            emailIntent.putExtra(Intent.EXTRA_TEXT, stringDescripcion)
+
+            try{
+                Toast.makeText(this,"Abriendo mensajeria ...",Toast.LENGTH_SHORT).show()
+                startActivity(Intent.createChooser(emailIntent,"Enviar Correo ..."))
+            }catch(ex: ActivityNotFoundException){
+                Toast.makeText(
+                    this,
+                    "No hay ningun cliente de correo instalado.",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+
+        }
+    }
+
 
     private fun setViews(isAuthor: Boolean) {
         if (isAuthor) {
