@@ -167,9 +167,9 @@ class AddGroupActivity : AppCompatActivity() {
 
                         if (responseUsuario.id != DataManager.emailUsuario) {
                             usuarioAux.Email = responseUsuario.id
-                            usuarioAux.Nombre = responseUsuario.data?.get("Nombre") as String
-                            usuarioAux.Nombre = responseUsuario.data?.get("Nombre") as String
-                            usuarioAux.Foto = responseUsuario.data?.get("Foto") as String
+                            usuarioAux.Nombre = if(responseUsuario.get("Nombre") != null) responseUsuario.get("Nombre") as String else ""
+                            usuarioAux.Nombre = if(responseUsuario.get("Nombre") != null) responseUsuario.get("Nombre") as String else ""
+                            usuarioAux.Foto = if(responseUsuario.get("Foto") != null) responseUsuario.get("Foto") as String else ""
 
                             usuarioAux.Ecriptado = if(responseUsuario.get("Ecriptado") != null) responseUsuario.get("Ecriptado") as Boolean else false
                             usuarioAux.DesencriptarInfo()
@@ -219,8 +219,8 @@ class AddGroupActivity : AppCompatActivity() {
                                     )
                                 } else {
                                     usuarioAux.Email = responseUsuario.id
-                                    usuarioAux.Nombre = responseUsuario.data!!.get("Nombre") as String
-                                    usuarioAux.Foto = responseUsuario.data!!.get("Foto") as String
+                                    usuarioAux.Nombre = if(responseUsuario.get("Nombre") != null) responseUsuario.get("Nombre") as String else ""
+                                    usuarioAux.Foto = if(responseUsuario.get("Foto") != null) responseUsuario.get("Foto") as String else ""
 
                                     usuarioAux.Ecriptado = if(responseUsuario.get("Ecriptado") != null) responseUsuario.get("Ecriptado") as Boolean else false
                                     usuarioAux.DesencriptarInfo()

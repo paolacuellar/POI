@@ -97,8 +97,7 @@ class MuroFragment: Fragment() {
                         .addOnSuccessListener { responseCarrera ->
 
                             idCarrera = responseCarrera.id
-                            var posts =
-                                responseCarrera.get("Publicaciones") as ArrayList<DocumentReference>
+                            var posts = if(responseCarrera.get("Publicaciones") != null)  responseCarrera.get("Publicaciones") as ArrayList<DocumentReference> else arrayListOf()
 
                             for (post in posts) {
 

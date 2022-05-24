@@ -81,54 +81,68 @@ class PostActivity : AppCompatActivity() {
         db.collection("Publicaciones").document(idPost!!).get()
             .addOnSuccessListener { responsePost ->
 
-                postText?.text = if(responsePost.get("Texto") != null)    responsePost.get("Texto") as String else ""
-                var fotoPost : String = ""
-                fotoPost = responsePost.get("Foto") as String
+                postText?.text =
+                    if (responsePost.get("Texto") != null) responsePost.get("Texto") as String else ""
+                var fotoPost: String = ""
+                fotoPost =
+                    if (responsePost.get("Foto") != null) responsePost.get("Foto") as String else ""
                 if (fotoPost.isNotEmpty()) {
-                    FirebaseStorage.getInstance().getReference("images/Publicaciones/${fotoPost}").downloadUrl
+                    FirebaseStorage.getInstance()
+                        .getReference("images/Publicaciones/${fotoPost}").downloadUrl
                         .addOnSuccessListener {
                             Glide.with(this)
                                 .load(it.toString())
                                 .into(postImage!!)
                         }
-                }
-                else {
+                } else {
                     postImage!!.visibility = View.GONE
                 }
 
-                var documentReferenceCreator = responsePost.get("Creador") as DocumentReference
+                var documentReferenceCreator =
+                    if (responsePost.get("Creador") != null) responsePost.get("Creador") as DocumentReference else null
 
-                db.collection("Usuarios").document(documentReferenceCreator.id).get()
-                    .addOnSuccessListener { responseUsuario ->
+                if (documentReferenceCreator != null) {
 
-                        var fotoAux : String = ""
-                        fotoAux = responseUsuario.get("Foto") as String
-                        if (fotoAux.isNotEmpty()) {
-                            FirebaseStorage.getInstance().getReference("images/Usuarios/${fotoAux}").downloadUrl
-                                .addOnSuccessListener {
-                                    Glide.with(this)
-                                        .load(it.toString())
-                                        .into(fotoPerfil!!)
-                                }
+                    db.collection("Usuarios").document(documentReferenceCreator!!.id).get()
+                        .addOnSuccessListener { responseUsuario ->
+
+                            var fotoAux: String = ""
+                            fotoAux =
+                                if (responseUsuario.get("Foto") != null) responseUsuario.get("Foto") as String else ""
+
+                            if (fotoAux.isNotEmpty()) {
+                                FirebaseStorage.getInstance()
+                                    .getReference("images/Usuarios/${fotoAux}").downloadUrl
+                                    .addOnSuccessListener {
+                                        Glide.with(this)
+                                            .load(it.toString())
+                                            .into(fotoPerfil!!)
+                                    }
+                            } else {
+                                fotoPerfil!!.setImageResource(R.drawable.foto_default_perfil)
+                            }
+
+                            var userAux = UsuariosModel()
+                            userAux.Nombre =
+                                if (responseUsuario.get("Nombre") != null) responseUsuario.get("Nombre") as String else ""
+                            userAux.ApPaterno =
+                                if (responseUsuario.get("ApPaterno") != null) responseUsuario.get("ApPaterno") as String else ""
+                            userAux.Ecriptado =
+                                if (responseUsuario.get("Ecriptado") != null) responseUsuario.get("Ecriptado") as Boolean else false
+                            userAux.DesencriptarInfo()
+
+                            var username = userAux.Nombre + " " + userAux.ApPaterno
+                            nombreUsuario?.text = username
+
                         }
-                        else {
-                            fotoPerfil!!.setImageResource(R.drawable.foto_default_perfil)
+                        .addOnFailureListener { exception ->
+                            Log.w(
+                                ContentValues.TAG,
+                                "Error al conseguir la información del Usuario",
+                                exception
+                            )
                         }
-
-                        var userAux = UsuariosModel()
-                        userAux.Nombre = if(responseUsuario.get("Nombre") != null)    responseUsuario.get("Nombre") as String else ""
-                        userAux.ApPaterno =  if(responseUsuario.get("ApPaterno") != null) responseUsuario.get("ApPaterno") as String else ""
-                        userAux.Ecriptado = if(responseUsuario.get("Ecriptado") != null) responseUsuario.get("Ecriptado") as Boolean else false
-                        userAux.DesencriptarInfo()
-        
-                        var username = userAux.Nombre + " " + userAux.ApPaterno
-                        nombreUsuario?.text = username
-
-                    }
-                    .addOnFailureListener { exception ->
-                        Log.w(ContentValues.TAG, "Error al conseguir la información del Usuario", exception)
-                    }
-
+                }
             }
             .addOnFailureListener { exception ->
                 Log.w(ContentValues.TAG, "Error al conseguir la información del Post", exception)
@@ -165,7 +179,7 @@ class PostActivity : AppCompatActivity() {
                     }
                 })
 
-                var coms = responsePost.get("Comentarios") as ArrayList<DocumentReference>
+                var coms =  if(responsePost.get("Comentarios") != null)  responsePost.get("Comentarios") as ArrayList<DocumentReference> else arrayListOf()
                 for (com in coms) {
 
                     db.collection("Comentarios").document(com.id)

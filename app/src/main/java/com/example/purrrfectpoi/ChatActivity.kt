@@ -117,13 +117,13 @@ class ChatActivity : AppCompatActivity() {
                                 var msgAux = MensajesModel()
                                 msgAux.id = doc.id
                                 msgAux.Texto = if (doc.get("Texto") != null)    doc.get("Texto") as String else ""
-                                msgAux.Autor = doc.get("Autor") as DocumentReference
+                                msgAux.Autor = if(doc.get("Autor") != null) doc.get("Autor") as DocumentReference else null
                                 msgAux.Foto = if(doc.get("Foto") != null)    doc.get("Foto") as String else ""
                                 msgAux.Documento = if(doc.get("Documento") != null)    doc.get("Documento") as String else ""
                                 msgAux.NombreDocumento = if(doc.get("NombreDocumento") != null)    doc.get("NombreDocumento") as String else ""
                                 msgAux.Latitud = if(doc.get("Latitud") != null)    doc.get("Latitud") as String else ""
                                 msgAux.Longitud = if(doc.get("Longitud") != null)    doc.get("Longitud") as String else ""
-                                msgAux.FechaCreacion = doc.get("FechaCreacion") as Timestamp
+                                msgAux.FechaCreacion = if(doc.get("FechaCreacion") != null) doc.get("FechaCreacion") as Timestamp else null
 
                                 chatAdapter.addItem(msgAux)
                             }

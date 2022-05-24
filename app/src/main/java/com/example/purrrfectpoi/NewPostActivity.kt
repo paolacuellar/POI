@@ -75,7 +75,7 @@ class NewPostActivity : AppCompatActivity() {
             .addOnSuccessListener { responseUsuario ->
 
                 var fotoAux : String = ""
-                fotoAux = responseUsuario.get("Foto") as String
+                fotoAux = if(responseUsuario.get("Foto") != null)  responseUsuario.get("Foto") as String else ""
                 if (fotoAux.isNotEmpty()) {
                     FirebaseStorage.getInstance().getReference("images/Usuarios/${fotoAux}").downloadUrl
                         .addOnSuccessListener {
