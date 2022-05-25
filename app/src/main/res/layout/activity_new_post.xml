@@ -137,23 +137,4 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="32dp"
-        android:layout_marginStart="36dp"
-        android:background="@android:color/transparent"
-        android:gravity="left"
-
-        android:paddingLeft="10dp"
-        android:text="Añadir ubicación"
-        android:textColor="@color/coffee"
-        android:textSize="11dp"
-
-        android:textStyle="bold"
-        app:icon="@drawable/ic_map_pin_brown"
-        app:iconPadding="4dp"
-        app:iconTint="@color/coffee"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/constraintLayout" />
-
 </androidx.constraintlayout.widget.ConstraintLayout>

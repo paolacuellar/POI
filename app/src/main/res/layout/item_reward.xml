@@ -42,7 +42,7 @@
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="@+id/view3" />
 
-        <de.hdodenhof.circleimageview.CircleImageView
+        <ImageView
             android:id="@+id/item_medalla_foto"
             android:layout_width="0dp"
             android:layout_height="0dp"
